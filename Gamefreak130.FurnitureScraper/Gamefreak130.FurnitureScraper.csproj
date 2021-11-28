@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{A319EA10-EE99-4BCC-A955-8ECBBF0A1E36}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Gamefreak130.FurnitureScraperSpace</RootNamespace>
+    <AssemblyName>Gamefreak130.FurnitureScraper</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <LangVersion>preview</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ScriptCore">
+      <HintPath>..\..\CommonUtils\lib\ScriptCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SimIFace">
+      <HintPath>..\..\CommonUtils\lib\SimIFace.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sims3GameplayObjects">
+      <HintPath>..\..\CommonUtils\lib\Sims3GameplayObjects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sims3GameplaySystems">
+      <HintPath>..\..\CommonUtils\lib\Sims3GameplaySystems_edit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sims3Metadata">
+      <HintPath>..\..\CommonUtils\lib\Sims3Metadata.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sims3StoreObjects">
+      <HintPath>..\..\CommonUtils\lib\Sims3StoreObjects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>..\..\CommonUtils\lib\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>..\..\CommonUtils\lib\System.Xml.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UI">
+      <HintPath>..\..\CommonUtils\lib\UI_edit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>..\..\CommonUtils\lib\mscorlib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonUtils\Common\LinqBridge\DelegatingComparer.cs">
+      <Link>Common\LinqBridge\DelegatingComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\LinqBridge\Key.cs">
+      <Link>Common\LinqBridge\Key.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\LinqBridge\KeyComparer.cs">
+      <Link>Common\LinqBridge\KeyComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\LinqBridge\OrderedEnumerable.cs">
+      <Link>Common\LinqBridge\OrderedEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Loggers\EventLogger.cs">
+      <Link>Common\Loggers\EventLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Loggers\ExceptionLogger.cs">
+      <Link>Common\Loggers\ExceptionLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Loggers\Logger.cs">
+      <Link>Common\Loggers\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Action.cs">
+      <Link>System\Action.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\ExtensionAttribute.cs">
+      <Link>System\ExtensionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Func.cs">
+      <Link>System\Func.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.Aggregation.cs">
+      <Link>System\Enumerable.Aggregation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.cs">
+      <Link>System\Enumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.Enumeration.cs">
+      <Link>System\Enumerable.Enumeration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\IGrouping.cs">
+      <Link>System\IGrouping.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\ILookup.cs">
+      <Link>System\ILookup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\IOrderedEnumerable.cs">
+      <Link>System\IOrderedEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Lookup.cs">
+      <Link>System\Lookup.cs</Link>
+    </Compile>
+    <Compile Include="FurnitureScraper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gamefreak130.FurnitureScraper.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

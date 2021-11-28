@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base>
+  <Current_Tuning>
+    <kCJackB value="True">
+      <!--True: Enables Crackerjack Bonanza mode. False: Triggers the apocalypse. Maybe.-->
+    </kCJackB>
+  </Current_Tuning>
+</base>
