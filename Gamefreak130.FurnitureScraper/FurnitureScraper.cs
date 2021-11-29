@@ -107,14 +107,17 @@ namespace Gamefreak130
                                 CustomXmlWriter xmlWriter = new(fileHandle);
                                 xmlWriter.WriteStartDocument();
                                 xmlWriter.WriteStartElement("ProductList");
-                                foreach (BuildBuyProduct product in from item
-                                                                    in buildController.mCurrentCatalogGrid.Items
-                                                                    where item.mTag is BuildBuyProduct
-                                                                    select item.mTag as BuildBuyProduct)
+                                foreach (object tag in from item
+                                                       in buildController.mCurrentCatalogGrid.Items
+                                                       select item.mTag)
                                 {
+                                    BuildBuyProduct product = tag is BuildBuyProduct ? tag as BuildBuyProduct : (tag as BuildBuyPreset).Product;
                                     xmlWriter.WriteStartElement("Item");
                                     xmlWriter.WriteElementString("Title", XmlConvert.EncodeName(product.CatalogName));
-                                    xmlWriter.WriteElementString("Description", XmlConvert.EncodeName(product.Description));
+                                    if (tag is BuildBuyProduct)
+                                    {
+                                        xmlWriter.WriteElementString("Description", XmlConvert.EncodeName(product.Description));
+                                    }
                                     xmlWriter.WriteEndElement();
                                 }
                                 xmlWriter.WriteEndDocument();
