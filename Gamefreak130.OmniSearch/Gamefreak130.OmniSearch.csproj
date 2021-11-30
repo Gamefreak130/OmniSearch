@@ -97,6 +97,9 @@
     <Compile Include="..\..\commonutils\common\loggers\Logger.cs">
       <Link>Common\Loggers\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\GlobalSuppressions.cs">
+      <Link>Common\GlobalSuppressions.cs</Link>
+    </Compile>
     <Compile Include="..\..\commonutils\system\Action.cs">
       <Link>System\Action.cs</Link>
     </Compile>
@@ -126,6 +129,9 @@
     </Compile>
     <Compile Include="..\..\commonutils\system\linq\Lookup.cs">
       <Link>System\Lookup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\ValueTuple.cs">
+      <Link>System\ValueTuple.cs</Link>
     </Compile>
     <Compile Include="OmniSearchSpace.Models.cs" />
     <Compile Include="OmniSearchSpace.PersistedSettings.cs" />
