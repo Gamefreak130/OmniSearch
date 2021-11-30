@@ -109,6 +109,9 @@
     <Compile Include="..\..\commonutils\system\Func.cs">
       <Link>System\Func.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\System\HashSet.cs">
+      <Link>System\HashSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\commonutils\system\linq\Enumerable.Aggregation.cs">
       <Link>System\Enumerable.Aggregation.cs</Link>
     </Compile>
