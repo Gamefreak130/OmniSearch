@@ -21,7 +21,7 @@ namespace Gamefreak130
 
         private static void OnWorldLoadFinished(object sender, EventArgs e) 
             => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {
-                   Simulator.AddObject(new OneShotFunctionTask(StartFurnitureScraper, StopWatch.TickStyles.Seconds, 1));
+                   Simulator.AddObject(new OneShotFunctionTask(StartFurnitureScraper));
                    return ListenerAction.Keep;
                });
 

@@ -124,20 +124,20 @@ namespace Gamefreak130.OmniSearchSpace.Models
             }
             for (int i = 0; i < docList.Count; i++)
             {
-                foreach (var (word, count) in new Dictionary<string, double>(tfidfMatrix[i]).Select(kvp => (kvp.Key, kvp.Value)))
+                foreach (var group in new Dictionary<string, double>(tfidfMatrix[i]).Select(kvp => new { word = kvp.Key, count = kvp.Value }))
                 {
-                    tfidfMatrix[i][word] = Math.Log10(1 + count) * Math.Log10(docList.Count / wordOccurences[word].Count);
+                    tfidfMatrix[i][group.word] = Math.Log10(1 + group.count) * Math.Log10(docList.Count / wordOccurences[group.word].Count);
                 }
             }
 
             Dictionary<string, double> queryVector = new();
             double queryMagnitude = 0;
-            foreach (var (word, count) in Regex.Split(query, TOKEN_SPLITTER).GroupBy(word => word, (word, elements) => (word, elements.Count())))
+            foreach (var group in Regex.Split(query, TOKEN_SPLITTER).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
             {
-                if (wordOccurences.ContainsKey(word))
+                if (wordOccurences.ContainsKey(group.word))
                 {
-                    double tfidf = Math.Log10(1 + count) * Math.Log10(docList.Count / wordOccurences[word].Count);
-                    queryVector[word] = tfidf;
+                    double tfidf = Math.Log10(1 + group.count) * Math.Log10(docList.Count / wordOccurences[group.word].Count);
+                    queryVector[group.word] = tfidf;
                     queryMagnitude += tfidf * tfidf;
                 }
             }
@@ -168,71 +168,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
                               .OrderByDescending(x => similarities[x.i])
                               .Select(x => LogWeight(x.doc, (float)similarities[x.i]));
             }
-
-            /*Dictionary<string, float[]> tfidfMatrix = new();
-            int i;
-
-            for (i = 0; i < docList.Count; i++)
-            {
-                foreach (string word in Regex.Split(Regex.Replace(docList[i].Title, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(word => word.Length > 0))
-                {
-                    if (!tfidfMatrix.ContainsKey(word))
-                    {
-                        tfidfMatrix[word] = new float[docList.Count];
-                    }
-                    tfidfMatrix[word][i] += PersistedSettings.kTitleWeight;
-                }
-                foreach (string word in Regex.Split(Regex.Replace(docList[i].Description, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(word => word.Length > 0))
-                {
-                    if (!tfidfMatrix.ContainsKey(word))
-                    {
-                        tfidfMatrix[word] = new float[docList.Count];
-                    }
-                    tfidfMatrix[word][i] += PersistedSettings.kDescriptionWeight;
-                }
-            }
-
-            float[] queryEmbedding = new float[tfidfMatrix.Keys.Count];
-            string[] queryTokens = Regex.Split(query, TOKEN_SPLITTER);
-            i = 0;
-            foreach (var (word, embedding) in tfidfMatrix.Select(kvp => (kvp.Key, kvp.Value)))
-            {
-                int df = embedding.Count(val => val > 0);
-                double idf = Math.Log10(embedding.Length / df);
-                for (int j = 0; j < embedding.Length; j++)
-                {
-                    embedding[j] = (float)(Math.Log10(1 + embedding[j]) * idf);
-                }
-
-                int queryFreq = queryTokens.Count(token => token == word);
-                queryEmbedding[i] = (float)(Math.Log10(1 + queryFreq) * idf);
-                i++;
-            }
-
-            if (queryEmbedding.Any(val => val != 0))
-            {
-                double queryMagnitude = Math.Sqrt(queryEmbedding.Sum(val => val * val));
-                List<float> similarities = new(docList.Count);
-                for (i = 0; i < docList.Count; i++)
-                {
-                    double docMagnitude = 0;
-                    double dot = 0;
-                    int j = 0;
-                    foreach (float[] embedding in tfidfMatrix.Values)
-                    {
-                        float num = embedding[i];
-                        docMagnitude += num * num;
-                        dot += num * queryEmbedding[j];
-                        j++;
-                    }
-                    docMagnitude = Math.Sqrt(docMagnitude);
-                    similarities.Add(docMagnitude != 0 ? (float)(dot / (docMagnitude * queryMagnitude)) : 0);
-                }
-                return docList.Select((doc, i) => new { doc, i })
-                              .Where(x => similarities[x.i] != 0)
-                              .OrderByDescending(x => similarities[x.i])
-                              .Select(x => LogWeight(x.doc, similarities[x.i]));
-            }*/
             return new T[0];
         }
     }

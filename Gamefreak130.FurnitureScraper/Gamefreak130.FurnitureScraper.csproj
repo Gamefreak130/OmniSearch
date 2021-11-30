@@ -96,6 +96,9 @@
     <Compile Include="..\..\CommonUtils\Common\Loggers\Logger.cs">
       <Link>Common\Loggers\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\GlobalSuppressions.cs">
+      <Link>Common\GlobalSuppressions.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\System\Action.cs">
       <Link>System\Action.cs</Link>
     </Compile>
@@ -104,9 +107,6 @@
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Func.cs">
       <Link>System\Func.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.Aggregation.cs">
-      <Link>System\Enumerable.Aggregation.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.cs">
       <Link>System\Enumerable.cs</Link>
