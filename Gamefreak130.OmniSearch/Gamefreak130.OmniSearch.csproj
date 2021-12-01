@@ -133,6 +133,9 @@
     <Compile Include="..\..\commonutils\system\linq\Lookup.cs">
       <Link>System\Lookup.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\System\ValueTuple.cs">
+      <Link>System\ValueTuple.cs</Link>
+    </Compile>
     <Compile Include="OmniSearchSpace.Models.cs" />
     <Compile Include="OmniSearchSpace.PersistedSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,9 +5,9 @@ namespace Gamefreak130.OmniSearchSpace
     public static class PersistedSettings
     {
         [Tunable, TunableComment("Weight applied to the title/name of an object when searching")]
-        public static float kTitleWeight = 1f;
+        public static float kTitleWeight = 0.6f;
 
         [Tunable, TunableComment("Weight applied to the description of an object when searching")]
-        public static float kDescriptionWeight = 0.5f;
+        public static float kDescriptionWeight = 0.4f;
     }
 }
