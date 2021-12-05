@@ -1,9 +1,7 @@
 ﻿using Gamefreak130.OmniSearchSpace.Helpers;
 using System;
 using System.Collections.Generic;
-#if DEBUG
 using System.Diagnostics;
-#endif
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -47,9 +45,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected T LogWeight(Document<T> document, float weight)
         {
-#if DEBUG
             Debugger.Log(0, "", $"{document.Title}\n{document.Description}\n{weight}\n\n");
-#endif
             return document.Tag;
         }
     }
@@ -59,6 +55,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
         public override IEnumerable<T> Search(IEnumerable<Document<T>> documents, string query) 
             => from document in documents
                // Little trick I learned from StackOverflow to efficiently count substring occurrences
+               // https://stackoverflow.com/questions/541954/how-would-you-count-occurrences-of-a-string-actually-a-char-within-a-string
                let titleWeight = (document.Title.Length - document.Title.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kTitleWeight
                let descWeight = (document.Description.Length - document.Description.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kDescriptionWeight
                let weight = titleWeight + descWeight
