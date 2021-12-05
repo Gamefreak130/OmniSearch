@@ -1,0 +1,1188 @@
+
+Decor: 1959 items
+
+RESULTS FOR "gnom" using ExactMatch:
+
+sleeping gnome mcmulty
+gregor mcmulty was a fine man, if not a wee bit short... and with a tendency for narcolepsy. his knack for sleeping in people's yards earned him the nickname "sleeping gnome." garden gnome-hood is not how one would typically choose to be remembered, but you take immortality however it comes.
+1.4
+RELEVANT
+
+a gnome called delphy
+a rare glimpse into the life of the reclusive delphinius gnome. legend has it that one hair plucked from the beard of this benevolent forest frolicker will make them very, very grumpy, and so they shave their beards from time to time without telling anyone or updating their profile pics on gnomebook. i mean, who does that? amiright?
+1.4
+
+zombie lawn gnome
+will fishing with a brain as your bait get you more fish? are there zombie fish swimming beneath your feet at this very moment??? these are questions that only the zombie lawn gnome could answer.
+1
+RELEVANT
+
+char-le-gnome
+the char-le-gnome ornament adds a regal, but playful touch to any casino or card shark's home.
+1
+RELEVANT
+
+canine stray gnome
+place this gnome on your lawn to lure stray dogs to your yard, or keep them away!
+1
+RELEVANT
+
+feline stray gnome
+place this gnome on your lawn to lure stray cats to your yard, or keep them away!
+1
+RELEVANT
+
+wildlife stray gnome
+place this gnome on your lawn to lure wildlife to your yard, or keep them away!
+1
+RELEVANT
+
+“llamas in legion” official franchise poster
+everyone with a tv knows about mecha gnome! while the valiant llamanauts bravely fight evil across the galaxy, they face their greatest challenges as one unit: the mighty mecha gnome.
+0.8
+
+happy st. patrick's day- lucky gnome
+kiss us, we're irish (...and also, we are giving you two lucky st. patrick's day gifts to help celebrate)! happy st. patrick's day!
+0.6
+RELEVANT
+
+holiday good cheer gnome
+have a case of the holiday blues? bring this little guy into your sim’s life and, who knows, he might even bring some presents!
+0.6
+RELEVANT
+
+gnome mercy wall poster by goteamgo
+nothing makes the opposition quake like pointy hats and natty beards. our team won’t just clobber yours; they’ll stomp on you with their magical bell-adorned shoes!
+0.6
+
+disordered study stack
+when your study materials look this messy, everyone will know you've just been too busy hitting the books to have time to actually organize them. use care when you dig through the stack to find your homework—you never know what you will pull out: a dirty sock, old slices of pizza, or perhaps even a lost gnome!
+0.4
+
+the founding crew
+captain pugwash and his first mate alvilda were the first pirates to arrive.  however, they never would have made it if they didn't have plumbeard, the trusty pirate gnome, guiding the way.
+0.4
+
+the perma-palm
+like garden gnomes and plastic flamingos, palm trees add a touch of class to any yard. but not every yard can support a palm. enter the perma-palm. with genetically improved fronds and all-weather roots, this tree thrives in even the harshest environments.
+0.4
+
+artificial cannon co.'s non-projectile-launching cannon
+after one too many run-ins with lawsuits, we've decided to put our warning in the name of this cannon. this cannon will look great on your stage or in your home, and it will shoot out some lovely (non-flammable, safe, and environmentally friendly!) sparks, but it will not shoot out any other things including--but not limited to!--cannonballs, clown sims, daredevil sims, sim dogs, pies, fish, jellyfish, llamas, or gnomes. there is absolutely no additional functionality on this cannon!
+0.4
+
+15 results, 8/15 relevant
+
+Took about 18.9995 milliseconds
+
+RESULTS FOR "gnom" using TermFrequency:
+
+0 results
+
+Took about 55.0334 milliseconds
+
+RESULTS FOR "gnom" using TFIDFUnigram:
+
+0 results
+
+Took about 122.9982 milliseconds
+
+RESULTS FOR "gnom" using TFIDFBigram:
+
+0 results
+
+Took about 190.0005 milliseconds
+
+RESULTS FOR "gnome" using ExactMatch:
+
+sleeping gnome mcmulty
+gregor mcmulty was a fine man, if not a wee bit short... and with a tendency for narcolepsy. his knack for sleeping in people's yards earned him the nickname "sleeping gnome." garden gnome-hood is not how one would typically choose to be remembered, but you take immortality however it comes.
+1.4
+RELEVANT
+
+a gnome called delphy
+a rare glimpse into the life of the reclusive delphinius gnome. legend has it that one hair plucked from the beard of this benevolent forest frolicker will make them very, very grumpy, and so they shave their beards from time to time without telling anyone or updating their profile pics on gnomebook. i mean, who does that? amiright?
+1.4
+
+zombie lawn gnome
+will fishing with a brain as your bait get you more fish? are there zombie fish swimming beneath your feet at this very moment??? these are questions that only the zombie lawn gnome could answer.
+1
+RELEVANT
+
+char-le-gnome
+the char-le-gnome ornament adds a regal, but playful touch to any casino or card shark's home.
+1
+RELEVANT
+
+canine stray gnome
+place this gnome on your lawn to lure stray dogs to your yard, or keep them away!
+1
+RELEVANT
+
+feline stray gnome
+place this gnome on your lawn to lure stray cats to your yard, or keep them away!
+1
+RELEVANT
+
+wildlife stray gnome
+place this gnome on your lawn to lure wildlife to your yard, or keep them away!
+1
+RELEVANT
+
+“llamas in legion” official franchise poster
+everyone with a tv knows about mecha gnome! while the valiant llamanauts bravely fight evil across the galaxy, they face their greatest challenges as one unit: the mighty mecha gnome.
+0.8
+
+happy st. patrick's day- lucky gnome
+kiss us, we're irish (...and also, we are giving you two lucky st. patrick's day gifts to help celebrate)! happy st. patrick's day!
+0.6
+RELEVANT
+
+holiday good cheer gnome
+have a case of the holiday blues? bring this little guy into your sim’s life and, who knows, he might even bring some presents!
+0.6
+RELEVANT
+
+gnome mercy wall poster by goteamgo
+nothing makes the opposition quake like pointy hats and natty beards. our team won’t just clobber yours; they’ll stomp on you with their magical bell-adorned shoes!
+0.6
+
+disordered study stack
+when your study materials look this messy, everyone will know you've just been too busy hitting the books to have time to actually organize them. use care when you dig through the stack to find your homework—you never know what you will pull out: a dirty sock, old slices of pizza, or perhaps even a lost gnome!
+0.4
+
+the founding crew
+captain pugwash and his first mate alvilda were the first pirates to arrive.  however, they never would have made it if they didn't have plumbeard, the trusty pirate gnome, guiding the way.
+0.4
+
+the perma-palm
+like garden gnomes and plastic flamingos, palm trees add a touch of class to any yard. but not every yard can support a palm. enter the perma-palm. with genetically improved fronds and all-weather roots, this tree thrives in even the harshest environments.
+0.4
+
+artificial cannon co.'s non-projectile-launching cannon
+after one too many run-ins with lawsuits, we've decided to put our warning in the name of this cannon. this cannon will look great on your stage or in your home, and it will shoot out some lovely (non-flammable, safe, and environmentally friendly!) sparks, but it will not shoot out any other things including--but not limited to!--cannonballs, clown sims, daredevil sims, sim dogs, pies, fish, jellyfish, llamas, or gnomes. there is absolutely no additional functionality on this cannon!
+0.4
+
+15 results, 8/15 relevant
+
+Took about 8.0006 milliseconds
+
+RESULTS FOR "gnome" using TermFrequency:
+
+sleeping gnome mcmulty
+gregor mcmulty was a fine man, if not a wee bit short... and with a tendency for narcolepsy. his knack for sleeping in people's yards earned him the nickname "sleeping gnome." garden gnome-hood is not how one would typically choose to be remembered, but you take immortality however it comes.
+1.4
+RELEVANT
+
+zombie lawn gnome
+will fishing with a brain as your bait get you more fish? are there zombie fish swimming beneath your feet at this very moment??? these are questions that only the zombie lawn gnome could answer.
+1
+RELEVANT
+
+char-le-gnome
+the char-le-gnome ornament adds a regal, but playful touch to any casino or card shark's home.
+1
+RELEVANT
+
+canine stray gnome
+place this gnome on your lawn to lure stray dogs to your yard, or keep them away!
+1
+RELEVANT
+
+feline stray gnome
+place this gnome on your lawn to lure stray cats to your yard, or keep them away!
+1
+RELEVANT
+
+wildlife stray gnome
+place this gnome on your lawn to lure wildlife to your yard, or keep them away!
+1
+RELEVANT
+
+a gnome called delphy
+a rare glimpse into the life of the reclusive delphinius gnome. legend has it that one hair plucked from the beard of this benevolent forest frolicker will make them very, very grumpy, and so they shave their beards from time to time without telling anyone or updating their profile pics on gnomebook. i mean, who does that? amiright?
+1
+
+“llamas in legion” official franchise poster
+everyone with a tv knows about mecha gnome! while the valiant llamanauts bravely fight evil across the galaxy, they face their greatest challenges as one unit: the mighty mecha gnome.
+0.8
+
+happy st. patrick's day- lucky gnome
+kiss us, we're irish (...and also, we are giving you two lucky st. patrick's day gifts to help celebrate)! happy st. patrick's day!
+0.6
+RELEVANT
+
+holiday good cheer gnome
+have a case of the holiday blues? bring this little guy into your sim’s life and, who knows, he might even bring some presents!
+0.6
+RELEVANT
+
+gnome mercy wall poster by goteamgo
+nothing makes the opposition quake like pointy hats and natty beards. our team won’t just clobber yours; they’ll stomp on you with their magical bell-adorned shoes!
+0.6
+
+disordered study stack
+when your study materials look this messy, everyone will know you've just been too busy hitting the books to have time to actually organize them. use care when you dig through the stack to find your homework—you never know what you will pull out: a dirty sock, old slices of pizza, or perhaps even a lost gnome!
+0.4
+
+the founding crew
+captain pugwash and his first mate alvilda were the first pirates to arrive.  however, they never would have made it if they didn't have plumbeard, the trusty pirate gnome, guiding the way.
+0.4
+
+13 results, 8/13 relevant
+
+Took about 70.0005 milliseconds
+
+RESULTS FOR "gnome" using TFIDFUnigram:
+
+feline stray gnome
+place this gnome on your lawn to lure stray cats to your yard, or keep them away!
+0.4439797
+RELEVANT
+
+canine stray gnome
+place this gnome on your lawn to lure stray dogs to your yard, or keep them away!
+0.4387914
+RELEVANT
+
+wildlife stray gnome
+place this gnome on your lawn to lure wildlife to your yard, or keep them away!
+0.4305047
+RELEVANT
+
+char-le-gnome
+the char-le-gnome ornament adds a regal, but playful touch to any casino or card shark's home.
+0.3702037
+RELEVANT
+
+zombie lawn gnome
+will fishing with a brain as your bait get you more fish? are there zombie fish swimming beneath your feet at this very moment??? these are questions that only the zombie lawn gnome could answer.
+0.3217268
+RELEVANT
+
+sleeping gnome mcmulty
+gregor mcmulty was a fine man, if not a wee bit short... and with a tendency for narcolepsy. his knack for sleeping in people's yards earned him the nickname "sleeping gnome." garden gnome-hood is not how one would typically choose to be remembered, but you take immortality however it comes.
+0.3093932
+RELEVANT
+
+holiday good cheer gnome
+have a case of the holiday blues? bring this little guy into your sim’s life and, who knows, he might even bring some presents!
+0.3044761
+RELEVANT
+
+a gnome called delphy
+a rare glimpse into the life of the reclusive delphinius gnome. legend has it that one hair plucked from the beard of this benevolent forest frolicker will make them very, very grumpy, and so they shave their beards from time to time without telling anyone or updating their profile pics on gnomebook. i mean, who does that? amiright?
+0.2676638
+
+“llamas in legion” official franchise poster
+everyone with a tv knows about mecha gnome! while the valiant llamanauts bravely fight evil across the galaxy, they face their greatest challenges as one unit: the mighty mecha gnome.
+0.2526753
+
+gnome mercy wall poster by goteamgo
+nothing makes the opposition quake like pointy hats and natty beards. our team won’t just clobber yours; they’ll stomp on you with their magical bell-adorned shoes!
+0.2339587
+
+happy st. patrick's day- lucky gnome
+kiss us, we're irish (...and also, we are giving you two lucky st. patrick's day gifts to help celebrate)! happy st. patrick's day!
+0.2009029
+RELEVANT
+
+the founding crew
+captain pugwash and his first mate alvilda were the first pirates to arrive.  however, they never would have made it if they didn't have plumbeard, the trusty pirate gnome, guiding the way.
+0.1707565
+
+disordered study stack
+when your study materials look this messy, everyone will know you've just been too busy hitting the books to have time to actually organize them. use care when you dig through the stack to find your homework—you never know what you will pull out: a dirty sock, old slices of pizza, or perhaps even a lost gnome!
+0.1414698
+
+13 results, 8/13 relevant
+
+Took about 140.9993 milliseconds
+
+RESULTS FOR "gnome" using TFIDFBigram:
+
+gnome mercy wall poster by goteamgo
+nothing makes the opposition quake like pointy hats and natty beards. our team won’t just clobber yours; they’ll stomp on you with their magical bell-adorned shoes!
+0.1919522
+
+wildlife stray gnome
+place this gnome on your lawn to lure wildlife to your yard, or keep them away!
+0.1527273
+RELEVANT
+
+canine stray gnome
+place this gnome on your lawn to lure stray dogs to your yard, or keep them away!
+0.150522
+RELEVANT
+
+feline stray gnome
+place this gnome on your lawn to lure stray cats to your yard, or keep them away!
+0.1490272
+RELEVANT
+
+char-le-gnome
+the char-le-gnome ornament adds a regal, but playful touch to any casino or card shark's home.
+0.1241323
+RELEVANT
+
+holiday good cheer gnome
+have a case of the holiday blues? bring this little guy into your sim’s life and, who knows, he might even bring some presents!
+0.1201749
+RELEVANT
+
+happy st. patrick's day- lucky gnome
+kiss us, we're irish (...and also, we are giving you two lucky st. patrick's day gifts to help celebrate)! happy st. patrick's day!
+0.1053093
+RELEVANT
+
+zombie lawn gnome
+will fishing with a brain as your bait get you more fish? are there zombie fish swimming beneath your feet at this very moment??? these are questions that only the zombie lawn gnome could answer.
+0.09993033
+RELEVANT
+
+8 results, 7/8 relevant
+
+Took about 221.0002 milliseconds
+
+RESULTS FOR "modern sculpture" using ExactMatch:
+
+0 results
+
+Took about 1.9983 milliseconds
+
+RESULTS FOR "modern sculpture" using TermFrequency:
+
+atwood’s flood sculpture by modern arcology
+as the rain falls, sims descend along the helix of their own flawed genomes into a jungle of barbarism. awe any audience into solemn silence with this water sculpture!
+1.6
+RELEVANT
+
+the panther modern fountain by modern arcology
+bold cubist lines make this fountain a mesmerizing centerpiece for any open space. nothing says high-class like a fountain and the panther modern is guaranteed to drop jaws.
+1.6
+RELEVANT
+
+the not-so-modern wall sculpture
+modernity is all the rage and this overpriced wall piece is a shining example of a bygone era. it is large, heavy, and nonfunctional. all of the things the modern era is not.
+1.6
+
+artesia table sculpture by modern arcology
+imagine a future where water could travel upward from the base of this sculpture to nourish the plant at its top. unfortunately, that’s not real and neither is the plant.
+1.6
+RELEVANT
+
+sea of tranquility floor sculpture by modern arcology
+gaze into the placid water; imagine yourself as a smooth grey stone, resting below the surface. it’s so quiet, so still. buy yourself peace of mind today!
+1.2
+RELEVANT
+
+“the hollow earth” sculpture by modern arcology
+we all know the world is full of glittering technology, but those advances only happened because simkind made peace with their environment. “the hollow earth” symbolizes civilization’s mortality…or something like that.
+1.2
+RELEVANT
+
+babylon’s garden plant sculpture by modern arcology
+turn your home into a lush garden by hanging these plants overhead! it’s a good thing they’re fake, because you could never reach high enough to water them.
+1.2
+RELEVANT
+
+umbrella sculpture
+what's better than a real umbrella? a sculpture of an umbrella! it gives it class...
+1
+
+mid-century modern bathroom- wall mount towel stackomatic 
+this totally boss mid-century modern bathroom set will transport you to a simpler time when the bathtubs were reasonably deep, the lotion and perfume were kept securely behind the sliding door of the bathroom cabinet, and the extra towels were neatly rolled. ah, the good old days!
+1
+RELEVANT
+
+mid-century modern bathroom- towel stackomatic
+this totally boss mid-century modern bathroom set will transport you to a simpler time when the bathtubs were reasonably deep, the lotion and perfume were kept securely behind the sliding door of the bathroom cabinet, and the extra towels were neatly rolled. ah, the good old days!
+1
+RELEVANT
+
+food sample sculpture
+create the perfect japanese restaurant or dining room and put some pizazz into dinner! impress your guests with the chun co. teppanyaki grill and give your dining room a refresh with japanese inspired decor. for a modern, minimalist style and meals that really perform, the itadakimasu! japanese inspired dining has got you covered!
+1
+
+mid-century modern bathroom- shine o' smile toothbrush holder
+this totally boss mid-century modern bathroom set will transport you to a simpler time when the bathtubs were reasonably deep, the lotion and perfume were kept securely behind the sliding door of the bathroom cabinet, and the extra towels were neatly rolled. ah, the good old days!
+1
+RELEVANT
+
+mid-century modern bedroom- primo wall art
+may dreams of skyscrapers, muscle cars and space travel fill your mind as you slumber away in our mid-century modern bedroom, and may the nightmares of polyester pantsuits and sea monkeys to come, never disturb you.  
+1
+RELEVANT
+
+faire vine wall sculpture
+decorate your walls with the lovely faire vine wall sculpture.  it looks so real, you’ll think they are
+magically growing in front of you. 
+
+1
+
+slick surfboard sculpture
+show off your mastery of the waves with this clever surfboard sculpture! shark not included.
+1
+
+haute hip panther sculpture
+beware! this sleek and surreptitious panther sculpture might have your guests mistaken it for the real thing!
+1
+RELEVANT
+
+modern sign
+it's a sign of the times... modern times!
+1
+RELEVANT
+
+mid-century modern bedroom- bedside candy keeper
+may dreams of skyscrapers, muscle cars and space travel fill your mind as you slumber away in our mid-century modern bedroom, and may the nightmares of polyester pantsuits and sea monkeys to come, never disturb you.  
+1
+RELEVANT
+
+lookin' fine table sculpture
+there is absolutely nothing wrong with this table sculpture…..or is there…?
+1
+
+rough rodeo table sculpture
+yee-haw! looks like this horse was a real arm-jerker. based on the famous rodeo horse freight trained and his rider slick steven. no animals were hurt in the making of this sculpture.
+1
+
+183 results, 13/20 relevant
+
+Took about 205.9994 milliseconds
+
+RESULTS FOR "modern sculpture" using TFIDFUnigram:
+
+modern sign
+it's a sign of the times... modern times!
+0.4342201
+RELEVANT
+
+the not-so-modern wall sculpture
+modernity is all the rage and this overpriced wall piece is a shining example of a bygone era. it is large, heavy, and nonfunctional. all of the things the modern era is not.
+0.3401588
+
+artesia table sculpture by modern arcology
+imagine a future where water could travel upward from the base of this sculpture to nourish the plant at its top. unfortunately, that’s not real and neither is the plant.
+0.2789643
+RELEVANT
+
+modern tower
+modern tower resort rabbit hole replacement rug by misty, script courtesy of velocitygrass.
+0.2691958
+
+the panther modern fountain by modern arcology
+bold cubist lines make this fountain a mesmerizing centerpiece for any open space. nothing says high-class like a fountain and the panther modern is guaranteed to drop jaws.
+0.2586613
+RELEVANT
+
+babylon’s garden plant sculpture by modern arcology
+turn your home into a lush garden by hanging these plants overhead! it’s a good thing they’re fake, because you could never reach high enough to water them.
+0.2462353
+RELEVANT
+
+atwood’s flood sculpture by modern arcology
+as the rain falls, sims descend along the helix of their own flawed genomes into a jungle of barbarism. awe any audience into solemn silence with this water sculpture!
+0.235005
+RELEVANT
+
+ultra modern 
+contemporary and undeniably fashionable are words that describe this work of art. by placing this ultra modern piece onto your wall, you’ll turn your home into an art gallery.
+0.233978
+
+sea of tranquility floor sculpture by modern arcology
+gaze into the placid water; imagine yourself as a smooth grey stone, resting below the surface. it’s so quiet, so still. buy yourself peace of mind today!
+0.2159095
+RELEVANT
+
+dandelion sculpture
+dandelion sculpture
+0.2083244
+RELEVANT
+
+umbrella sculpture
+what's better than a real umbrella? a sculpture of an umbrella! it gives it class...
+0.1945312
+
+“the hollow earth” sculpture by modern arcology
+we all know the world is full of glittering technology, but those advances only happened because simkind made peace with their environment. “the hollow earth” symbolizes civilization’s mortality…or something like that.
+0.1906425
+RELEVANT
+
+lookin' fine table sculpture
+there is absolutely nothing wrong with this table sculpture…..or is there…?
+0.1864513
+
+mural moderne
+this painting is a modern take on a classic.
+0.1839949
+
+fantastical façade projection paneling by modern arcology
+the bigger the projection panel, the more vivid the vistas! modern arcology takes their wall-screen technology to the next level with this enormous panoramic display.
+0.170799
+RELEVANT
+
+mid-century modern bedroom- primo wall art
+may dreams of skyscrapers, muscle cars and space travel fill your mind as you slumber away in our mid-century modern bedroom, and may the nightmares of polyester pantsuits and sea monkeys to come, never disturb you.  
+0.1703226
+RELEVANT
+
+balanced beams
+this sculpture is a masterpiece of modern minimalist art, while simultaneously being monstrously sized. it can serve as an excellent accent to entryways or a curiosity to admire in the middle of a room or yard.
+0.1674602
+RELEVANT
+
+mid-century modern bedroom- bedside candy keeper
+may dreams of skyscrapers, muscle cars and space travel fill your mind as you slumber away in our mid-century modern bedroom, and may the nightmares of polyester pantsuits and sea monkeys to come, never disturb you.  
+0.1622538
+RELEVANT
+
+mid-century modern bathroom- towel stackomatic
+this totally boss mid-century modern bathroom set will transport you to a simpler time when the bathtubs were reasonably deep, the lotion and perfume were kept securely behind the sliding door of the bathroom cabinet, and the extra towels were neatly rolled. ah, the good old days!
+0.1618425
+RELEVANT
+
+mid-century modern bedroom- mirror has 7 faces
+this totally boss mid-century modern bathroom set will transport you to a simpler time when the bathtubs were reasonably deep, the lotion and perfume were kept securely behind the sliding door of the bathroom cabinet, and the extra towels were neatly rolled. ah, the good old days!
+0.1612907
+RELEVANT
+
+183 results, 14/20 relevant
+
+Took about 211.9976 milliseconds
+
+RESULTS FOR "modern sculpture" using TFIDFBigram:
+
+modern tower
+modern tower resort rabbit hole replacement rug by misty, script courtesy of velocitygrass.
+0.3725815
+
+modern sign
+it's a sign of the times... modern times!
+0.3391679
+RELEVANT
+
+modern stone arch
+nothing will get in the way of your big day! celebrate the happiest day of your life with the live, laugh, love set. even if you can't get married on the beaches of the mediterranean sea, this set will make any venue feel like a destination wedding! 
+0.199765
+
+dandelion sculpture
+dandelion sculpture
+0.1608009
+RELEVANT
+
+modern oval rug
+it used to be that rugs were all woven in specific, traditional patterns. nowadays, rug designers can get away with almost anything. i mean, look at this one. what is it, faux-llama skin, a world map, or two space pirates dueling? hey, that's kind of nifty!
+0.1473257
+
+pan of plants sculpture
+every sim needs a long pan full of plants!
+0.08761356
+
+umbrella sculpture
+what's better than a real umbrella? a sculpture of an umbrella! it gives it class...
+0.08598135
+
+lookin' fine table sculpture
+there is absolutely nothing wrong with this table sculpture…..or is there…?
+0.08427926
+
+slick surfboard sculpture
+show off your mastery of the waves with this clever surfboard sculpture! shark not included.
+0.07913787
+
+unquenchable thirst water bucket sculpture
+do not be fooled here. water is reality. thirst is illusion. 
+0.07649128
+
+nektosha sculpture
+whether your sims are getting ready to act out the first thanksgiving or are just looking for some southwest style, this set will put you in the mood for the harvest! live like a chieftain with these native american styled furniture, decorations, and outfits!
+0.07349438
+
+haute hip panther sculpture
+beware! this sleek and surreptitious panther sculpture might have your guests mistaken it for the real thing!
+0.07301082
+RELEVANT
+
+lovely geisha table sculpture
+straight from the flower and willow world, the strength and grace of the geisha sculpture transcends your tabletop. 
+0.07201055
+
+india inspired bedroom- bangalore wall sculpture
+peaceful relaxation and luxurious slumber may bring your sims' dreams of exotic adventures as they find rejuvination in our india inspirations bedroom set.
+0.07149374
+
+tasty fruit sculpture
+the art of fruit carving is an ancient craft from the days when sims had ample time to play with their food.
+0.07123311
+
+haute hacienda kitchen- wall chilies sculpture
+the hand-crafted art style and old town charm of the haute hacienda kitchen will surely add some spice to your sims' lives.
+0.07089315
+
+haute hacienda kitchen- prickly pear sculpture
+the hand-crafted art style and old town charm of the haute hacienda kitchen will surely add some spice to your sims' lives.
+0.07089315
+
+that's my dame table sculpture
+this piece is an exact replica of ava astoria in the silent film classic "don't take any wooden nickels".
+0.06887212
+
+harvest moon drum sculpture
+whether your sims are getting ready to act out the first thanksgiving or are just looking for some southwest style, this set will put you in the mood for the harvest! live like a chieftain with these native american styled furniture, decorations, and outfits!
+0.06816763
+
+haute hacienda dining room- desert cactus sculpture
+start some new family traditions as loved ones gather in the cozy and comfortable, and still oh so artful, haute hacienda dining room. 
+0.06701725
+
+56 results, 3/20 relevant
+
+Took about 204.0011 milliseconds
+
+RESULTS FOR "into the future sculpture" using ExactMatch:
+
+0 results
+
+Took about 11.9997 milliseconds
+
+RESULTS FOR "into the future sculpture" using TermFrequency:
+
+gap at the edge of the world
+this masterpiece by the artist christopho has been heralded as the pinnacle of the "urbanomorphic abstractionism" movement. the artist describes the piece as "deconstructing the crisis of a man living in the modern world through a representation of the space between a subway platform and the rails."
+4.8
+
+moonset in the west
+hear the chirp of crickets and the mourning howls of coyotes. let your eyes roam from one end of the desertscape to the other. smell the aroma of the cactus flower wafting across the sand. touch the rough grain of the pine frame. taste…well, no. this painting only embodies four of the five senses.
+4.6
+
+pirate herald’s tropical umbrella
+pirate herald, a famous plundering artist, was commissioned to create a sculpture by the buccaneers for art alliance. while in seclusion for 5 years he reached deep into the depths of his soul, finally presenting the work to the baa. pirates everywhere rejoiced at the originality and unique form that herald’s sculpture brought to the world. by popular demand replicas were made and distributed to stores everywhere. won’t you hop on board and welcome this fabulous piece into your home?
+4
+
+lift off!
+when viewing this piece, one can imagine the thrill of a spacecraft lifting off! the countdown, the roar of the engines, the excitement of the crew... are they going to the moon? or perhaps to a far off planet? or maybe they are going to land in your own backyard? the sky is the limit when imagination combines with the complexities of this gorgeous decorative piece.
+4
+
+the head and the shoulders
+here is a segment from a much larger painting depicting an entire person. it was divided into about a dozen parts, each of which was framed individually. one of the segments showed most of an elbow. another showed a thigh. the one with the right hand wasn’t too bad. but this is the best segment: the head and the shoulders.
+4
+
+finding peace
+this captivating work has caused endless debate in art circles for decades. most of the controversy surrounds the title of the work: “finding peace.” some suggest that peace is the name of the young woman in the portrait. others believe that she came to this place in the woods to begin a quest for personal peace, where still others argue that the painting clearly shows the moment that the woman achieves peace. who was this young dreamer, and what will bring her peace?
+4
+
+into the future
+this genre-defining sculpture was created by the senior class art students and donated to the sims university to proudly display. the students involved in creating this sculpture couldn’t divulge their inspiration for this puzzling piece, except that they believe it’s a sign of things to come…
+3.8
+RELEVANT
+
+the reflektor
+the designers of the reflektor mirror combed beaches throughout the world in search of the finest sand to create the glass in this mirror. mined from an island where an ancient civilization worshiped the llama, the sand used to create the glass in this mirror is rumored to give a reflection so pure, you won’t even recognize yourself!
+3.8
+
+the dance wall
+the perfect complement to our famous “the dance floor,” this electric wall sculpture will bombard your party pad with all the light and color you could ever need. show your friends that the party doesn’t end with the floor – it’s all around them! the dance wall: it’s a little bit of dance floor… for your wall.
+3.4
+
+the gazing pharaoh
+crafted for the tomb or home bereft of a terrifying reminder of traditions past, the gazing pharaoh is a statue unlike any other. stalwart and unwavering in its posture, the pharaoh is a constant reminder that at any moment organs can be removed, stored in jars, and the rest of the remains wrapped in the cheapest toilet paper available. the gazing pharaoh truly makes any home grand!
+3.4
+
+xopeckuato the great
+this charming sculpture celebrates the guardian xopeckuato, spirit of endless oceans. young and old alike will be delighted by his deep blank stare. the intricate tile work surrounding his visage is second to none in the world. welcome xopeckuato into your home or garden to remind you of the greatness of the open seas!
+3.4
+
+grim's roof sculpture
+remember that creepy house at the end of the block that kids would dare each other to go knock on the door? grim’s ghastly manor is that place. a burned out bell tower, hidden catacombs, and a doorway to summon the grim reaper himself are just some of the eerie things that are afoot here. but hidden amongst the shadows is the secret to genetic mergers, eternal life, and awesome guitar riffs.
+3.4
+
+wall-installed digital fishiness display
+place the wall-installed digital fishiness display in your home or office and enjoy the serenity provided by a fish tank while avoiding the responsibility of keeping your fish well-fed. the unique clicker control lets you change the fishy display as often as your tastes change. finally, technology that allows you to bring the beauty of the sea into your home without acknowledging that messy fragility of life!
+3.2
+
+futureshock loft- moisture minimization station
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+3.2
+RELEVANT
+
+sun spot
+the sun, it burns us! yet without its brilliance life couldn’t survive. no wonder civilizations stretching back to the dawn of time have worshipped the sun. bring a little bit of that brilliance into your home with the sun spot wall sculpture. its rays stream out in all directions from its reflective center, bringing to mind the first light of dawn breaking through the clouds. and unlike some other suns we could mention, this one won’t blind you for staring at it.
+3.2
+
+longhorn wall ornaments
+gas prices have driven many an economical monstrosity to the top of the scrap heap.  among the heap risers, are the town cars of the great lone star state.  thousands of longhorn ornaments have been rescued from the maw of the crusher.  get yours now, before the bulls come calling!
+3.2
+
+homemade jar planters
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+3.2
+
+traditional wedding arch
+tradition may demand that couples tie the knot underneath a wedding arch, but few wedding arches are as untraditional as this one! the vines you see adorning the arch are not plants at all, but fine silk woven by the artist monks of shang simla. each leaf and stem are individually mounted on the faux wood frame and the massive amounts of adhesive is used to ensure that nary a leaf will wave in the wind during the ceremony.
+3.2
+
+simon's signs
+once upon a time a young man named simon use to give lost travelers directions to help them find their way. left at the fork in the road to reach the crater with the lake…straight ahead to the crystal quarry…two lefts and a slight right at the mushroom grove to reach the lover’s lookout. unfortunately with the advent of signage he was force to retire.
+3.2
+
+futureshock loft- teeth tech 2.0
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+3.2
+RELEVANT
+
+1528 results, 3/20 relevant
+
+Took about 712.0014 milliseconds
+
+RESULTS FOR "into the future sculpture" using TFIDFUnigram:
+
+into the future
+this genre-defining sculpture was created by the senior class art students and donated to the sims university to proudly display. the students involved in creating this sculpture couldn’t divulge their inspiration for this puzzling piece, except that they believe it’s a sign of things to come…
+0.2783544
+RELEVANT
+
+artesia table sculpture by modern arcology
+imagine a future where water could travel upward from the base of this sculpture to nourish the plant at its top. unfortunately, that’s not real and neither is the plant.
+0.2404253
+RELEVANT
+
+the fountainfoot blueprint set
+architecture helps us to understand our past, present, and future. it's a culmination of trends and values in a physical form. hopefully, by understanding our past, we can avoid follies in the future.
+0.205507
+
+futureshock loft- teeth tech 2.0
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+0.1940216
+RELEVANT
+
+futureshock loft- moisture minimization station
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+0.1936094
+RELEVANT
+
+star powered mirror
+want to be famous? with fans and simoleons galore? envision your future by gazing deeply into this guitar shaped mirror! frame your face with fame and fortune!
+0.1891956
+
+drip drop faux drainpipe: 2nd floor drain ex
+behold, the future of second floor drainage solutions is now! and it’s compatible with foundations to boot! of course, this drainpipe is purely for looks but you can just imagine the water rushing through it safely to the ground and away from your house or building. don’t delay in adding this to your place, or the future will pass you by!
+0.1727266
+
+soothsayer's crystal ball
+clear your mind, focus your attention and rest the gaze of your scrying eyes on the future.  in the smooth spherical surface of the soothsayer’s crystal ball you will suddenly see; the future is crystal clear, your friends and family members are in awe of your predictive prowess, and your complexion has never looked better.
+0.1698143
+
+rook
+strong, steady fortress
+upholds the future, unmoved
+protects ancient kings
+0.1652373
+
+flux flora
+the future doesn't have to be cold, mechanic, and lifeless. add some green to your, otherwise, fast-paced lifestyle.
+0.1618496
+RELEVANT
+
+crystal ball stand
+gaze into this crystal ball and what will you see? the future? an evil eye searching in vain from the darkest depths of the underworld? ask again later? only those who dare to purchase will know!
+0.1591742
+
+dandelion sculpture
+dandelion sculpture
+0.1549662
+
+bunny picture portrait
+this great children's portrait is both cute and adorable. divided into three separate pictures with two ears and a small tail, the bunny picture portrait is a great snapshot of time that will be treasured in the future.
+0.1526203
+
+umbrella sculpture
+what's better than a real umbrella? a sculpture of an umbrella! it gives it class...
+0.1447058
+
+block robot from tfwikwtci
+in the distant future, alien robots will land on earth. they will not look like what we expect. their odd shape will frighten us and their lack of limbs will disturb us. we have been sent a message from them in the terms of this sculpture. are we doomed or will they be friendly?
+0.1415572
+RELEVANT
+
+atwood’s flood sculpture by modern arcology
+as the rain falls, sims descend along the helix of their own flawed genomes into a jungle of barbarism. awe any audience into solemn silence with this water sculpture!
+0.1392324
+RELEVANT
+
+lookin' fine table sculpture
+there is absolutely nothing wrong with this table sculpture…..or is there…?
+0.1386955
+
+lightsplosion!
+kids and adults love lightsplosion! using the newest breakthrough technology, fiber optics, the lightsplosion! can fill any space with a million tiny lights. it’s the same tech they use on the space shuttle! part light, part sculpture, all future – lightsplosion!
+0.1362092
+
+the modern orchid
+the orchid is actually one of the world's oldest flowers, dating from around 80 million years ago. what better way to update it than by pairing it with our vase of the future, made from the latest in space-age technology: crystallized glass?
+0.1196548
+
+the forgotten road
+this wagon wheel reproduction has been crafted from its very own piece of timber; lovingly shaved, sheered and carved until all that remained was a pair of perfect wagon wheels.  remember the past by harvesting our future.
+0.1177549
+
+295 results, 7/20 relevant
+
+Took about 267 milliseconds
+
+RESULTS FOR "into the future sculpture" using TFIDFBigram:
+
+into the future
+this genre-defining sculpture was created by the senior class art students and donated to the sims university to proudly display. the students involved in creating this sculpture couldn’t divulge their inspiration for this puzzling piece, except that they believe it’s a sign of things to come…
+0.2575521
+RELEVANT
+
+dandelion sculpture
+dandelion sculpture
+0.109689
+
+rook
+strong, steady fortress
+upholds the future, unmoved
+protects ancient kings
+0.08426665
+
+soothsayer's crystal ball
+clear your mind, focus your attention and rest the gaze of your scrying eyes on the future.  in the smooth spherical surface of the soothsayer’s crystal ball you will suddenly see; the future is crystal clear, your friends and family members are in awe of your predictive prowess, and your complexion has never looked better.
+0.07593238
+
+flux flora
+the future doesn't have to be cold, mechanic, and lifeless. add some green to your, otherwise, fast-paced lifestyle.
+0.07134508
+RELEVANT
+
+drip drop faux drainpipe: 2nd floor drain ex
+behold, the future of second floor drainage solutions is now! and it’s compatible with foundations to boot! of course, this drainpipe is purely for looks but you can just imagine the water rushing through it safely to the ground and away from your house or building. don’t delay in adding this to your place, or the future will pass you by!
+0.07120214
+
+futureshock loft- moisture minimization station
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+0.06662395
+RELEVANT
+
+futureshock loft- teeth tech 2.0
+with our ultra-sleek futureshock loft collection, loft living takes a giant leap into the inevitable. surround yourself in futuristic furnishings that will transport you to a time in the distant future when intergalactic travel happens via teleportation, when information is downloaded from a super computer directly into your brain, and when making your bed...well, that pretty much stays the same...but in the future!
+0.06531489
+RELEVANT
+
+pan of plants sculpture
+every sim needs a long pan full of plants!
+0.05976485
+
+umbrella sculpture
+what's better than a real umbrella? a sculpture of an umbrella! it gives it class...
+0.05865145
+
+lookin' fine table sculpture
+there is absolutely nothing wrong with this table sculpture…..or is there…?
+0.05749038
+
+blackfyre stained glass sculpture
+blackfyre presents a window into the days of yore: a stained glass sculpture from a bygone age, its warm glow hinting at a roaring hearth inside a manor, with a mutton shank sizzling on a spit, flagons of nectar, loud and off-key singing, even louder and more off-key women...or, you know, whatever.
+0.05456186
+
+slick surfboard sculpture
+show off your mastery of the waves with this clever surfboard sculpture! shark not included.
+0.05398323
+
+crystal ball stand
+gaze into this crystal ball and what will you see? the future? an evil eye searching in vain from the darkest depths of the underworld? ask again later? only those who dare to purchase will know!
+0.05283558
+
+unquenchable thirst water bucket sculpture
+do not be fooled here. water is reality. thirst is illusion. 
+0.05217788
+
+the fountainfoot blueprint set
+architecture helps us to understand our past, present, and future. it's a culmination of trends and values in a physical form. hopefully, by understanding our past, we can avoid follies in the future.
+0.05159633
+
+the modern orchid
+the orchid is actually one of the world's oldest flowers, dating from around 80 million years ago. what better way to update it than by pairing it with our vase of the future, made from the latest in space-age technology: crystallized glass?
+0.05150675
+
+bunny picture portrait
+this great children's portrait is both cute and adorable. divided into three separate pictures with two ears and a small tail, the bunny picture portrait is a great snapshot of time that will be treasured in the future.
+0.05081351
+
+nektosha sculpture
+whether your sims are getting ready to act out the first thanksgiving or are just looking for some southwest style, this set will put you in the mood for the harvest! live like a chieftain with these native american styled furniture, decorations, and outfits!
+0.05013357
+
+haute hip panther sculpture
+beware! this sleek and surreptitious panther sculpture might have your guests mistaken it for the real thing!
+0.04980372
+
+102 results, 4/20 relevant
+
+Took about 273.0011 milliseconds
+
+RESULTS FOR "small wall with incredibly thick paint and a shining rock face on the cliff facing the sky and smiling" using ExactMatch:
+
+0 results
+
+Took about 1.9984 milliseconds
+
+RESULTS FOR "small wall with incredibly thick paint and a shining rock face on the cliff facing the sky and smiling" using TermFrequency:
+
+country breakfast wall shelf
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+8.2
+
+family treasures wall shelf
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+8.2
+
+homemade jar planters
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+7.6
+
+painted milk jug
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+7.6
+
+grandma's pantry
+enjoy the pleasures of a simpler time with the country livin' set! show off your sims' country sensibilities and diy spirit with the included furniture and clothing! marvel at the wonders of living on a farm with the fresh eggs and plucky chickens from the fowl and feathers chicken coop! perfect for sims who have always dreamed about starting a new life in the country, this set will turn any house into a country home.
+7.6
+
+laganaphyllis simnovorii (aka the cow plant)
+our fan favorite laganaphyllis simnovorii returns, as diabolically fun as you remember and with new gameplay you’ll never forget!  a swig of the milk of the cow plant adds days to your sims’ lives and washes away any regret you may have at the fate of the unsuspecting sim from whom its created.  feed it, pet it, play with it, give it a treat, praise it and scold it to create a loving pet, or a ruthless henchman, the choice is yours, and the fate of your friends and neighbors is yours too.
+7.4
+
+the great lord so-and-so's shield and sword
+the great lord so-and-so is a character of legend: he defeated a giant dragon and a particularly ferocious mound of ants.  he was brave, courageous, and very handsome.  he was also known for having undue interests in the ladies of other castles.  the last time he visited one of these ladies, the lord of that castle took care of him and had this mounted on his wall.
+7
+
+put some birds on it
+create a nursery for the ages! dress your little one in brand new outfits and decorate your nursery with furniture made for the discerning baby. the included gift of speech baby monitor will allow your baby to communicate his wants and needs, and, if those needs happen to be a bath or a diaper change, the dirty no more changing and bathing station has got you covered! get ready to take your nursery to the next level with the lullabies and nursery rhymes set!
+7
+
+swiftgro gardening station
+with the right tools and setup, gardening can be one of the most rewarding things you'll ever experience. enter the swiftgro gardening station. with features like an automatic sprinkling system, a composter, and a seed identifier, gardening has never been so fun - and easy! if you're a self-employed gardener, a green thumb, or just starting to work your way up to becoming an agricultural mastermind, then look no further. the swiftgro gardening station makes gardening a breeze! swiftgro gardening tip: there is a rumor that using sunlight from the plants vs. zombies sunflower in the composter yields excellent results, so be sure to experiment.
+6.8
+
+the head and the shoulders
+here is a segment from a much larger painting depicting an entire person. it was divided into about a dozen parts, each of which was framed individually. one of the segments showed most of an elbow. another showed a thigh. the one with the right hand wasn’t too bad. but this is the best segment: the head and the shoulders.
+6.6
+
+mirror of the meadow
+last autumn, one of our top designers sat beneath a tree in a wide meadow and searched for inspiration. while she rested, she saw a single leaf removed from its branch and carried, looping and twirling on a light breeze, to the surface of a pond. moving to the pond, she looked down at the leaf and saw her own reflection. she knew she had her design: the mirror of the meadow.
+6.6
+
+the dance wall
+the perfect complement to our famous “the dance floor,” this electric wall sculpture will bombard your party pad with all the light and color you could ever need. show your friends that the party doesn’t end with the floor – it’s all around them! the dance wall: it’s a little bit of dance floor… for your wall.
+6.400001
+
+gap at the edge of the world
+this masterpiece by the artist christopho has been heralded as the pinnacle of the "urbanomorphic abstractionism" movement. the artist describes the piece as "deconstructing the crisis of a man living in the modern world through a representation of the space between a subway platform and the rails."
+6.400001
+
+falling leaves mobile
+create a nursery for the ages! dress your little one in brand new outfits and decorate your nursery with furniture made for the discerning baby. the included gift of speech baby monitor will allow your baby to communicate his wants and needs, and, if those needs happen to be a bath or a diaper change, the dirty no more changing and bathing station has got you covered! get ready to take your nursery to the next level with the lullabies and nursery rhymes set!
+6.4
+
+wishing well
+armed with an ancient treasure map, three brothers made their way across the desert and found the fabled well of wishes! the first brother wished for wealth and he was showered with gold. the second brother wished for power and when he returned home he was appointed the mayor of his town. the third brother wished for love, met the girl of his dreams, started a family, and founded a town near the well that survives to this day.
+6.4
+
+playtime rug
+create a nursery for the ages! dress your little one in brand new outfits and decorate your nursery with furniture made for the discerning baby. the included gift of speech baby monitor will allow your baby to communicate his wants and needs, and, if those needs happen to be a bath or a diaper change, the dirty no more changing and bathing station has got you covered! get ready to take your nursery to the next level with the lullabies and nursery rhymes set!
+6.4
+
+being a wallflower
+with the stones throw greenhouse, you're sure to have the best harvest in years! the included furniture and clothing will get you in the right mindset for the cooler weather, and with the new greenhouse, you'll be able to grow excellent crops in a fraction of the time! use your newfound leisure time to enjoy the fruits (and vegetables!) of your labors.
+6.2
+
+more furnished cabinet
+it’s funny how one’s definition of “furnished” changes over the years. there’s a time when “furnished” means one crate to sit on and one to hold a bowl of cereal on while you watch the tv on the floor. then, at a certain age, a room is not completely furnished until the number of decorative pieces matches the number of functional ones. get closer to furnished with the more furnished cabinet.
+6
+
+bridge extender over troubled waters
+long ago, there was a beautiful city built on the sands of a charming ocean shore.  sims often said it was built upon the love and passion of all those who resided there.  if only they also had built on a stronger foundation than sand since much of the city was swept away with the tides.  love still stands, however, amongst the waterways and awe-inspiring architecture of this: the last venue of amore. 
+5.6
+
+bridge over troubled waters
+long ago, there was a beautiful city built on the sands of a charming ocean shore.  sims often said it was built upon the love and passion of all those who resided there.  if only they also had built on a stronger foundation than sand since much of the city was swept away with the tides.  love still stands, however, amongst the waterways and awe-inspiring architecture of this: the last venue of amore. 
+5.6
+
+1847 results, 0/20 relevant
+
+Took about 1004.9987 milliseconds
+
+RESULTS FOR "small wall with incredibly thick paint and a shining rock face on the cliff facing the sky and smiling" using TFIDFUnigram:
+
+longevity wall hanging
+for a long and healthy life all you must do is display the image of the great crane on a north facing wall (and eat right and exercise…).
+0.1549058
+
+small ceritificate
+a small certificate for your wall
+0.1388643
+
+rock all night
+it's your decision whether you party all day or not.
+0.1304335
+
+the scholar's rock
+all rock sculptures are either made by nature, or by days of work from a sim and her chisel. the plaster ones are just fake. don't buy them.
+0.1261975
+
+the warrior's rock
+all rock sculptures are either made by nature, or by days of work from a sim and her chisel. the plaster ones are just fake. don't buy them.
+0.124898
+
+the politician's rock
+all rock sculptures are either made by nature, or by days of work from a sim and her chisel. the plaster ones are just fake. don't buy them.
+0.1225916
+
+paint and stencils by secret bohemia
+relive your street art filled youth with stencils and paint. these won’t actually make you a better street artist, but will evoke memories of a hooligan past!
+0.1017087
+
+love to the fourth power
+to paint a heart for your valentine, that’s special. to paint four hearts for your valentine? that just shows that your love knows no bounds. 
+0.1003005
+
+the not-so-modern wall sculpture
+modernity is all the rage and this overpriced wall piece is a shining example of a bygone era. it is large, heavy, and nonfunctional. all of the things the modern era is not.
+0.09924175
+
+small animals
+is there anything cuter than small animals you ask? of course there is! young small animals! place this painting in your house today to remind you that no matter how cute you think your small animal is, there is a younger, cuter animal out there somewhere.
+0.09019551
+
+small ivy
+this ivy is so small and scared that it's curled up into a tiny ball. give it a good, loving home and let this ivy flourish!
+0.08458629
+
+small barrier rope
+unrestricted access is a thing of the past. with the small barrier rope, you can limit the access of a room or building to only allow your favorite sims. use with small doors or arches only.
+0.08124402
+
+gothique armor 
+this knight in shining armor is exactly what your home needs for that chic gothic decor you've been longing for. 
+0.07802389
+
+bunny in the rain
+this clever piece features an adorable bunny caught in a sudden rain storm. the brilliant red umbrella draws the viewer's attention to the bunny's plight. though smiling, one must theorize that he is cold and wet and possibly lonely. it makes one ponder the questions who is this bunny? where is he? why is he alone? what does a wet bunny smell like?
+0.07676386
+
+the savvier seller store mod rug - small
+the savvier seller store mod rug - small. set up your shop and start selling!
+0.07632811
+
+misty lighthouse
+it's a fog-shrouded lighthouse... or smoky chimney... or just a big, gray rock. it's so small and blurry, you can decide for yourself. "that's the great thing about art," says painter d. dreamer.
+0.07560822
+
+mirror of a thousand faces
+can't decide whether to hang a small or a large mirror? with the mirror of a thousand faces, you don't have to choose! stand back and enjoy a kaleidoscope of your face reflected in the fine diamante crystal mirrors.
+0.072757
+
+in yo’ face wall sign by goteamgo
+this sign is perfect for the ostentatious sports fan in your life. emblazoned with authentic team logos, it beams a winning attitude across the room and directly into your retinas.
+0.07183884
+
+pressed fruit curtains
+just as a thick coating of fondant can turn the worst looking cakes into culinary masterpieces, these pressed fruit curtains can turn the dullest of rooms into a palace of fruity synergy! place them over a window now, and enjoy the benefits of daylight diffused by a sweet treat!
+0.06823
+
+stink mask perfume
+centuries ago, perfumes were used in lieu of basic hygiene. little has changed today, as studies show most perfume wearers are stinky types that loathe bathing. if that sounds like you, then the thick musk of stink mask might be exactly what you need.
+0.06751686
+
+1068 results, 0/20 relevant
+
+Took about 581.9982 milliseconds
+
+RESULTS FOR "small wall with incredibly thick paint and a shining rock face on the cliff facing the sky and smiling" using TFIDFBigram:
+
+small ceritificate
+a small certificate for your wall
+0.1220802
+
+fish swimming in stone
+one night in late summer the drum maker qing had a dream where three fish swam in a pond made of clouds. the fish dove down from the sky and touched the mountains where they played together until dawn. when she awoke qing immediately set to work and immortalized her vision in stone.
+0.09962928
+
+paint and stencils by secret bohemia
+relive your street art filled youth with stencils and paint. these won’t actually make you a better street artist, but will evoke memories of a hooligan past!
+0.07464846
+
+small ivy
+this ivy is so small and scared that it's curled up into a tiny ball. give it a good, loving home and let this ivy flourish!
+0.07435235
+
+smalltower
+small tower resort rabbit hole replacement rug by misty, script courtesy of velocitygrass.
+0.07184913
+
+the not-so-modern wall sculpture
+modernity is all the rage and this overpriced wall piece is a shining example of a bygone era. it is large, heavy, and nonfunctional. all of the things the modern era is not.
+0.06857728
+
+winter wall garland 
+spruce up your wall with this lovely winter wall garland during the holiday season! 
+0.06577848
+
+holographic huckster holo-billboard by arasika industries
+when sims purchase products, they’re forking over hard-earned simoleons. it’s crucial they trust the retailer, and nothing builds trust faster than a shining holographic billboard!
+0.06458361
+
+small barrier rope
+unrestricted access is a thing of the past. with the small barrier rope, you can limit the access of a room or building to only allow your favorite sims. use with small doors or arches only.
+0.0619783
+
+top of the wall with a view by castle kits, inc.
+castle kits, inc created this top section to be placed at the top of your castle-in-a-box walls, it comes with a window so you can keep an eye out for raiders, or your neighbor's dog.
+0.06117756
+
+small prismatic floor panel by van allen décor
+van allen created glass panels so light and yet so strong, they became building materials! the result is an array of beautiful, naturally lit structures that feel light as air.
+0.05732132
+
+ultra stylish towel rack
+every bathroom needs towels? liven up your bare wall with the ultra stylish towel rack. 
+0.05730024
+
+ancient stone mural
+this slab of marble was said to have been etched by the sky god. or maybe it's just an ancient soap opera. either way, it's a great conversation piece!
+0.05514781
+
+small animals
+is there anything cuter than small animals you ask? of course there is! young small animals! place this painting in your house today to remind you that no matter how cute you think your small animal is, there is a younger, cuter animal out there somewhere.
+0.05375455
+
+littlest keepsake
+immortalize baby's tiny fingers and precious toes forever with paint and ceramics. you'll be embarrassing your kids with this memento well into their adult years. just be careful not to drop it!
+0.05362992
+
+ye olde water tower
+small and possibly leaky, this water tower is still a decent back-up system for a drought.
+0.05362677
+
+weather blocker
+block out the sun, the sky, the rain, the stars, this clever weather blocker blocks out everything! except wind. weather blocker is not recommended for windy environments.
+0.05174935
+
+corner for the top of the wall by castle kits, inc.
+castle kits, inc has created a corner for the top of the wall with a window for its castle-in-a-box.
+0.05104966
+
+sick of being ill
+you channeled your angst with splashes of paint and used anything within reach as a paintbrush. but you’re not going to bother explaining the meaning behind it because no one would “get it”.
+
+0.05006114
+
+artistic glass pane
+ever wanted your very own glass pane to place anywhere? well now you can enjoy the thrill of owning a practically invisible wall with this very artistic glass pane!
+0.04657659
+
+172 results, 0/20 relevant
+
+Took about 272.0014 milliseconds
