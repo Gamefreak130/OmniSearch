@@ -21,11 +21,6 @@ static class Helpers
 {
     public static void RunQuery(string inFile, string query)
     {
-        // Get all available search models
-        List<ISearchModel<object>> models = new List<Type>(typeof(ISearchModel<>).Assembly.GetTypes()).FindAll(type => !type.IsAbstract && !type.IsNested && type.Namespace == "Gamefreak130.OmniSearchSpace.Models")
-                                                                                                      .ConvertAll(type => type.MakeGenericType(typeof(object))
-                                                                                                                              .GetConstructor(new Type[0])
-                                                                                                                              .Invoke(null) as ISearchModel<object>);
         // Load documents from corpus XML
         List<Document<object>> docs = new();
         using (XmlReader reader = XmlReader.Create(inFile))
@@ -42,6 +37,11 @@ static class Helpers
             }
         }
 
+        // Get all available search models                                                                                          
+        List<ISearchModel<object>> models = new List<Type>(typeof(ISearchModel<>).Assembly.GetTypes()).FindAll(type => !type.IsAbstract && !type.IsNested && type.Namespace == "Gamefreak130.OmniSearchSpace.Models")
+                                                                                                      .ConvertAll(type => type.MakeGenericType(typeof(object))
+                                                                                                      .GetConstructor(new[] { typeof(IEnumerable<Document<object>>) })
+                                                                                                      .Invoke(new[] { docs }) as ISearchModel<object>);
         // Conduct search using each available model
         foreach (var model in models)
         {
@@ -53,7 +53,7 @@ static class Helpers
 
             // Although we're merely incrementing a count here, the procedure to select the item will log info to the debugger,
             // Simulating a significantly complex in-game procedure such as loading item thumbnails and generating UI elements
-            foreach (object _ in model.Search(docs, query))
+            foreach (object _ in model.Search(query))
             {
                 count++;
             }
