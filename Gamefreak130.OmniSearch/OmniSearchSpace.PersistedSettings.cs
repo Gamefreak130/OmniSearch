@@ -3,7 +3,7 @@
 namespace Gamefreak130.OmniSearchSpace
 {
     public static class PersistedSettings
-    {
+    {// TODO add xml
         [Tunable, TunableComment("Weight applied to the title/name of an object when searching")]
         public static float kTitleWeight = 0.6f;
 
@@ -15,5 +15,8 @@ namespace Gamefreak130.OmniSearchSpace
 
         [Tunable, TunableComment("Range 0-1: Minimum fraction of query terms that an object must contain in its title or description to be returned as a result")]
         public static float kQuerySimilarityThreshold = 0.5f;
+
+        [Tunable, TunableComment("Tick rate of the model preprocessing function. Set to your monitor's refresh rate for best results.")]
+        public static int kPreprocessingTickRate = 60;
     }
 }

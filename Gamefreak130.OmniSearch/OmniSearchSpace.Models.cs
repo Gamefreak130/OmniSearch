@@ -1,4 +1,5 @@
 ﻿using Gamefreak130.OmniSearchSpace.Helpers;
+using Sims3.SimIFace;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -88,6 +89,8 @@ namespace Gamefreak130.OmniSearchSpace.Models
         // ChampionLists is a set of the "top documents" in the corpus with the highest frequencies of a given word
         private readonly Dictionary<string, List<int>> mChampionLists;
 
+        public bool Yielding { get; set; }
+
         private const double IDF_THRESHOLD = 0.6;
 
         public TFIDF(IEnumerable<Document<T>> documents) : base(documents)
@@ -96,6 +99,14 @@ namespace Gamefreak130.OmniSearchSpace.Models
             mTfidfMatrix = new(mDocuments.Count);
             mWordOccurences = new();
             mChampionLists = new();
+        }
+
+        private bool ShouldYield(DateTime lastTick)
+            => Simulator.CheckYieldingContext(false) && Yielding && (DateTime.Now - lastTick).Milliseconds >= 1000f / PersistedSettings.kPreprocessingTickRate;
+
+        public void Preprocess()
+        {
+            DateTime lastTick = DateTime.Now;
 
             // Iterate over every word of every document to calculate term and document frequency
             for (int i = 0; i < mDocuments.Count; i++)
@@ -131,6 +142,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
                     mWordOccurences[word].Add(i);
                 }
                 mTfidfMatrix.Add(embedding);
+                if (ShouldYield(lastTick))
+                {
+                    Simulator.Sleep(0);
+                    lastTick = DateTime.Now;
+                }
             }
 
             // Iterate over every document again to turn TF vector embeddings into TF-IDF embeddings
@@ -152,6 +168,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 {
                     mWordOccurences.Remove(word);
                 }
+                if (ShouldYield(lastTick))
+                {
+                    Simulator.Sleep(0);
+                    lastTick = DateTime.Now;
+                }
             }
 
             // Build champion lists
@@ -160,6 +181,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 mChampionLists[word] = mWordOccurences[word].OrderByDescending(x => mTfidfMatrix[x][word])
                                                             .Take(PersistedSettings.kChampionListLength)
                                                             .ToList();
+                if (ShouldYield(lastTick))
+                {
+                    Simulator.Sleep(0);
+                    lastTick = DateTime.Now;
+                }
             }
         }
 
