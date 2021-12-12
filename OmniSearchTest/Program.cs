@@ -3,6 +3,7 @@ using Gamefreak130.OmniSearchSpace.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Xml;
 
 #if DEBUG
@@ -38,17 +39,21 @@ static class Helpers
         }
 
         // Get all available search models                                                                                          
-        List<ISearchModel<object>> models = new List<Type>(typeof(ISearchModel<>).Assembly.GetTypes()).FindAll(type => !type.IsAbstract && !type.IsNested && type.Namespace == "Gamefreak130.OmniSearchSpace.Models")
-                                                                                                      .ConvertAll(type => type.MakeGenericType(typeof(object))
-                                                                                                      .GetConstructor(new[] { typeof(IEnumerable<Document<object>>) })
-                                                                                                      .Invoke(new[] { docs }) as ISearchModel<object>);
+        List<ConstructorInfo> models = new List<Type>(typeof(ISearchModel<>).Assembly.GetTypes()).FindAll(type => !type.IsAbstract && !type.IsNested && type.Namespace == "Gamefreak130.OmniSearchSpace.Models")
+                                                                                                 .ConvertAll(type => type.MakeGenericType(typeof(object))
+                                                                                                 .GetConstructor(new[] { typeof(IEnumerable<Document<object>>) }));
         // Conduct search using each available model
-        foreach (var model in models)
+        foreach (ConstructorInfo ctor in models)
         {
+            DateTime start = DateTime.Now;
+
+            ISearchModel<object> model = ctor.Invoke(new[] { docs }) as ISearchModel<object>;
+            Debugger.Log(0, "", $"Construction took about {(DateTime.Now - start).TotalMilliseconds} milliseconds\n\n");
+
             Type modelType = model.GetType();
             Debugger.Log(0, "", $"RESULTS FOR \"{query}\" using {modelType.Name.Substring(0, modelType.Name.IndexOf("`"))}:\n\n");
 
-            DateTime start = DateTime.Now;
+            start = DateTime.Now;
             int count = 0;
 
             // Although we're merely incrementing a count here, the procedure to select the item will log info to the debugger,
@@ -60,7 +65,7 @@ static class Helpers
 
             Debugger.Log(0, "", $"{count} results\n\n");
 
-            Debugger.Log(0, "", $"Took about {(DateTime.Now - start).TotalMilliseconds} milliseconds\n\n");
+            Debugger.Log(0, "", $"Search took about {(DateTime.Now - start).TotalMilliseconds} milliseconds\n\n");
 #if DEBUG
             Debugger.Break();
 #endif
