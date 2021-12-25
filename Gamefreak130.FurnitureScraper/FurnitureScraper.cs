@@ -39,7 +39,7 @@ namespace Gamefreak130
             }
         }
 
-        private static void ScrapeFurniture(WindowBase sender, UIEventArgs __)
+        private static void ScrapeFurniture(WindowBase sender, UIEventArgs _)
         {
             try
             {

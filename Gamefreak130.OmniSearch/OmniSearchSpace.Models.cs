@@ -1,5 +1,9 @@
-﻿using Gamefreak130.OmniSearchSpace.Helpers;
+﻿using Gamefreak130.Common.Helpers;
+using Gamefreak130.Common.Tasks;
+using Gamefreak130.OmniSearchSpace.Helpers;
+using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
+using Sims3.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,9 +31,15 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {
-    public interface ISearchModel<T>
+    public interface ISearchModel<T> : IDisposable
     {
+        bool Yielding { get; set; }
+
+        void Preprocess();
+
         IEnumerable<T> Search(string query);
+
+        int DocumentCount { get; }
     }
 
     public abstract class SearchModel<T> : ISearchModel<T>
@@ -44,14 +54,84 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected IEnumerable<Document<T>> mDocuments;
 
+        private AwaitableTask mModelPreprocessTask;
+
+        private AwaitableTask ModelPreprocessTask
+        {
+            get => mModelPreprocessTask;
+            set
+            {
+                mModelPreprocessTask?.Cancel();
+                mModelPreprocessTask = value;
+            }
+        }
+
+        public bool Yielding { get; set; }
+
+        public virtual int DocumentCount => mDocuments.Count();
+
         public SearchModel(IEnumerable<Document<T>> documents)
             => mDocuments = documents;
 
-        public abstract IEnumerable<T> Search(string query);
+        ~SearchModel() => Dispose(true);
+
+        public void Dispose() => Dispose(false);
+
+        private void Dispose(bool finalizing)
+        {
+            ModelPreprocessTask = null;
+            if (!finalizing)
+            {
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        protected bool ShouldYield(StopWatch startTimer)
+            => Yielding && startTimer.GetElapsedTimeFloat() >= 1000f / PersistedSettings.kPreprocessingTickRate;
+
+        public void Preprocess()
+            => ModelPreprocessTask = TaskEx.Run(PreprocessTask);
+
+        protected virtual void PreprocessTask()
+        {
+        }
+
+        public IEnumerable<T> Search(string query)
+        {
+            try
+            {
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+
+                if (string.IsNullOrEmpty(query))
+                {
+                    return from document in mDocuments
+                           select LogWeight(document, float.NaN);
+                }
+
+                TaskEx.Delay((uint)(ProgressDialog.kProgressDialogDelay * 1000))
+                      .ContinueWith(_ => Yielding = false);
+
+                ModelPreprocessTask.Await();
+                return SearchTask(query);
+            }
+            finally
+            {
+                TaskEx.Run(() => ProgressDialog.Close());
+            }
+        }
+
+        protected abstract IEnumerable<T> SearchTask(string query);
 
         protected T LogWeight(Document<T> document, float weight)
         {
-            Debugger.Log(0, "", $"{document.Title}\n{document.Description}\n{weight}\n\n");
+            if (Debugger.IsAttached)
+            {
+                Debugger.Log(0, "", $"{document.Title}\n{document.Description}\n{weight}\n\n");
+            }
+            else
+            {
+                // TODO Log to scripterror
+            }
             return document.Tag;
         }
     }
@@ -62,7 +142,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
         {
         }
 
-        public override IEnumerable<T> Search(string query) 
+        protected override IEnumerable<T> SearchTask(string query) 
             => from document in mDocuments
                // Little trick I learned from StackOverflow to efficiently count substring occurrences
                // https://stackoverflow.com/questions/541954/how-would-you-count-occurrences-of-a-string-actually-a-char-within-a-string
@@ -89,9 +169,9 @@ namespace Gamefreak130.OmniSearchSpace.Models
         // ChampionLists is a set of the "top documents" in the corpus with the highest frequencies of a given word
         private readonly Dictionary<string, List<int>> mChampionLists;
 
-        public bool Yielding { get; set; }
-
         private const double IDF_THRESHOLD = 0.6;
+
+        public override int DocumentCount => mDocuments.Count;
 
         public TFIDF(IEnumerable<Document<T>> documents) : base(documents)
         {
@@ -101,95 +181,93 @@ namespace Gamefreak130.OmniSearchSpace.Models
             mChampionLists = new();
         }
 
-        private bool ShouldYield(DateTime lastTick)
-            => Simulator.CheckYieldingContext(false) && Yielding && (DateTime.Now - lastTick).Milliseconds >= 1000f / PersistedSettings.kPreprocessingTickRate;
-
-        public void Preprocess()
+        protected override void PreprocessTask()
         {
-            DateTime lastTick = DateTime.Now;
-
-            // Iterate over every word of every document to calculate term and document frequency
-            for (int i = 0; i < mDocuments.Count; i++)
+            using (StopWatch startTimer = StopWatchEx.StartNew(StopWatch.TickStyles.Milliseconds))
             {
-                Document<T> document = mDocuments[i];
-                Dictionary<string, double> embedding = new();
-                foreach (string word in Regex.Split(Regex.Replace(document.Title, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
+                // Iterate over every word of every document to calculate term and document frequency
+                for (int i = 0; i < mDocuments.Count; i++)
                 {
-                    if (!embedding.ContainsKey(word))
+                    Document<T> document = mDocuments[i];
+                    Dictionary<string, double> embedding = new();
+                    foreach (string word in Regex.Split(Regex.Replace(document.Title, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
                     {
-                        embedding[word] = 0;
-                    }
-                    embedding[word] += PersistedSettings.kTitleWeight;
+                        if (!embedding.ContainsKey(word))
+                        {
+                            embedding[word] = 0;
+                        }
+                        embedding[word] += PersistedSettings.kTitleWeight;
 
-                    if (!mWordOccurences.ContainsKey(word))
-                    {
-                        mWordOccurences[word] = new();
+                        if (!mWordOccurences.ContainsKey(word))
+                        {
+                            mWordOccurences[word] = new();
+                        }
+                        mWordOccurences[word].Add(i);
                     }
-                    mWordOccurences[word].Add(i);
-                }
-                foreach (string word in Regex.Split(Regex.Replace(document.Description, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
-                {
-                    if (!embedding.ContainsKey(word))
+                    foreach (string word in Regex.Split(Regex.Replace(document.Description, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
                     {
-                        embedding[word] = 0;
-                    }
-                    embedding[word] += PersistedSettings.kDescriptionWeight;
+                        if (!embedding.ContainsKey(word))
+                        {
+                            embedding[word] = 0;
+                        }
+                        embedding[word] += PersistedSettings.kDescriptionWeight;
 
-                    if (!mWordOccurences.ContainsKey(word))
-                    {
-                        mWordOccurences[word] = new();
+                        if (!mWordOccurences.ContainsKey(word))
+                        {
+                            mWordOccurences[word] = new();
+                        }
+                        mWordOccurences[word].Add(i);
                     }
-                    mWordOccurences[word].Add(i);
+                    mTfidfMatrix.Add(embedding);
+                    if (ShouldYield(startTimer))
+                    {
+                        TaskEx.Yield();
+                        startTimer.Restart();
+                    }
                 }
-                mTfidfMatrix.Add(embedding);
-                if (ShouldYield(lastTick))
-                {
-                    Simulator.Sleep(0);
-                    lastTick = DateTime.Now;
-                }
-            }
 
-            // Iterate over every document again to turn TF vector embeddings into TF-IDF embeddings
-            foreach (string word in new List<string>(mWordOccurences.Keys))
-            {
-                double idf = Math.Log10(mDocuments.Count / mWordOccurences[word].Count);
-                foreach (int i in mWordOccurences[word])
+                // Iterate over every document again to turn TF vector embeddings into TF-IDF embeddings
+                foreach (string word in new List<string>(mWordOccurences.Keys))
                 {
+                    double idf = Math.Log10(mDocuments.Count / mWordOccurences[word].Count);
+                    foreach (int i in mWordOccurences[word])
+                    {
+                        if (idf < IDF_THRESHOLD)
+                        {
+                            mTfidfMatrix[i].Remove(word);
+                        }
+                        else
+                        {
+                            mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
+                        }
+                    }
                     if (idf < IDF_THRESHOLD)
                     {
-                        mTfidfMatrix[i].Remove(word);
+                        mWordOccurences.Remove(word);
                     }
-                    else
+                    if (ShouldYield(startTimer))
                     {
-                        mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
+                        TaskEx.Yield();
+                        startTimer.Restart();
                     }
                 }
-                if (idf < IDF_THRESHOLD)
-                {
-                    mWordOccurences.Remove(word);
-                }
-                if (ShouldYield(lastTick))
-                {
-                    Simulator.Sleep(0);
-                    lastTick = DateTime.Now;
-                }
-            }
 
-            // Build champion lists
-            foreach (string word in mWordOccurences.Keys)
-            {
-                mChampionLists[word] = mWordOccurences[word].OrderByDescending(x => mTfidfMatrix[x][word])
-                                                            .Take(PersistedSettings.kChampionListLength)
-                                                            .ToList();
-                if (ShouldYield(lastTick))
+                // Build champion lists
+                foreach (string word in mWordOccurences.Keys)
                 {
-                    Simulator.Sleep(0);
-                    lastTick = DateTime.Now;
+                    mChampionLists[word] = mWordOccurences[word].OrderByDescending(x => mTfidfMatrix[x][word])
+                                                                .Take(PersistedSettings.kChampionListLength)
+                                                                .ToList();
+                    if (ShouldYield(startTimer))
+                    {
+                        TaskEx.Yield();
+                        startTimer.Restart();
+                    }
                 }
             }
         }
 
-        public override IEnumerable<T> Search(string query)
+        protected override IEnumerable<T> SearchTask(string query)
         {
             query = Regex.Replace(query.ToLower(), CHARS_TO_REMOVE, "");
 
@@ -211,7 +289,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
             // Thus, we return an empty set of results
             if (queryMagnitude <= 0)
             {
-                return new T[0];
+                return Enumerable.Empty<T>();
             }
 
             // Go through the champion lists for each term in the query and calculate cosine similarity (dot product divided by product of magnitudes)
@@ -243,9 +321,10 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 }
             }
 
-            return championDocs.Where(x => x.Value != 0)
-                               .OrderByDescending(x => x.Value)
-                               .Select(x => LogWeight(mDocuments[x.Key], (float)x.Value));
+            return from kvp in championDocs
+                   where kvp.Value != 0
+                   orderby kvp.Value descending
+                   select LogWeight(mDocuments[kvp.Key], (float)kvp.Value);
         }
     }
 }
