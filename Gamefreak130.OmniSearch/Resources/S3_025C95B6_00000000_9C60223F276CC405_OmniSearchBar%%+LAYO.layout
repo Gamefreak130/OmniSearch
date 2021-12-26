@@ -94,7 +94,7 @@
 		<prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x0000004b" />
 		<prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x00000002" />
 		<prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
-		<prop name="Area" propid="0xeec1b005" type="rectf" value="40.00074,9.99982,375.0008,32.99982" />
+		<prop name="Area" propid="0xeec1b005" type="rectf" value="40.00074,9.99982,374.0008,32.99982" />
 		<prop name="Caption" propid="0xeec1b00a" type="string" value="testing to see what happens when I write a really long text string" key="00000012:00000000:81a77f4aeeb89690" />
 		<prop name="ShadeColor" propid="0xeec1b004" type="uint32" value="0xffffffff" />
 		<prop name="TextFont" propid="0xeec1b00e" type="uint32" value="0x062eae06" />
@@ -167,7 +167,7 @@
 		<prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x00000013" />
 		<prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x00000006" />
 		<prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
-		<prop name="Area" propid="0xeec1b005" type="rectf" value="6.00037,8.00002,385.0004,34.00002" />
+		<prop name="Area" propid="0xeec1b005" type="rectf" value="6.00037,8.00002,384.0004,34.00002" />
 		<prop name="FillColor" propid="0xeec1b006" type="uint32" value="0x00000000" />
 		<prop name="FillDrawable" propid="0xeec1b007" type="object">
 		  <object cls="StdDrawable" clsid="0xb03c196f">

@@ -7,6 +7,13 @@ namespace Gamefreak130.OmniSearchSpace.UI
 {
     public class OmniSearchBar : IDisposable
     {
+        private enum ControlIDs : byte
+        {
+            kTextInput = 2,
+            kTextInputBackground = 6,
+            kBackgroundWindow = 8
+        }
+
         private readonly Layout mLayout;
 
         private Window mWindow;
@@ -19,8 +26,6 @@ namespace Gamefreak130.OmniSearchSpace.UI
 
         private string mPreviousQuery = "";
 
-        private const uint kTextInputId = 2;
-
         public string Query => mInput.Caption;
 
         public OmniSearchBar(WindowBase parent, Action onQueryEntered)
@@ -29,23 +34,31 @@ namespace Gamefreak130.OmniSearchSpace.UI
             Init(onQueryEntered);
         }
 
-        public OmniSearchBar(UICategory parent, Action onQueryEntered)
+        /*public OmniSearchBar(UICategory parent, Action onQueryEntered)
         {
             mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
             Init(onQueryEntered);
+        }*/
+
+        public OmniSearchBar(WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(parent, onQueryEntered)
+        {
+            Vector2 offset = new(x, y);
+            Vector2 widthVec = new(mWindow.Area.TopLeft.x + width, mWindow.Area.BottomRight.y);
+            mWindow.Area = new(mWindow.Area.TopLeft + offset, widthVec + offset);
+
+            WindowBase background = mWindow.GetChildByID((uint)ControlIDs.kTextInputBackground, true);
+            widthVec = new(background.Area.TopLeft.x + width - 10, background.Area.BottomRight.y);
+            background.Area = new(background.Area.TopLeft, widthVec);
+
+            widthVec = new(widthVec.x - 10, mInput.Area.BottomRight.y);
+            mInput.Area = new(mInput.Area.TopLeft, widthVec);
         }
 
-        public OmniSearchBar(WindowBase parent, Action onQueryEntered, float x, float y) : this(parent, onQueryEntered)
+        /*public OmniSearchBar(UICategory parent, Action onQueryEntered, float x, float y) : this(parent, onQueryEntered)
         {
             Vector2 offset = new(x, y);
             mWindow.Area = new(mWindow.Area.TopLeft + offset, mWindow.Area.BottomRight + offset);
-        }
-
-        public OmniSearchBar(UICategory parent, Action onQueryEntered, float x, float y) : this(parent, onQueryEntered)
-        {
-            Vector2 offset = new(x, y);
-            mWindow.Area = new(mWindow.Area.TopLeft + offset, mWindow.Area.BottomRight + offset);
-        }
+        }*/
 
         private void Init(Action onQueryEntered)
         {
@@ -53,12 +66,12 @@ namespace Gamefreak130.OmniSearchSpace.UI
             mWindow = mLayout.GetWindowByExportID(1) as Window;
             mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kFocus, 17);
             mWindow.TriggerDown += OnTriggerDown;
-            mInput = mWindow.GetChildByID(kTextInputId, true) as TextEdit;
+            mInput = mWindow.GetChildByID((uint)ControlIDs.kTextInput, true) as TextEdit;
         }
 
         private void OnTriggerDown(WindowBase sender, UITriggerEventArgs eventArgs)
         {
-            if (eventArgs.TriggerCode is (uint)ModalDialog.Triggers.kOKTrigger && mInput.Caption != mPreviousQuery)
+            if (eventArgs.TriggerCode is (uint)ModalDialog.Triggers.kOKTrigger or (uint)ModalDialog.Triggers.kCancelTrigger && mInput.Caption != mPreviousQuery)
             {
                 TaskEx.Run(() => mOnQueryEntered());
                 mPreviousQuery = mInput.Caption;

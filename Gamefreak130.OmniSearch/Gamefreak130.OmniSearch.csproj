@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Gamefreak130.OmniSearch.xml" />
+    <None Include="Resources\S3_025C95B6_00000000_9C60223F276CC405_OmniSearchBar%25%25+LAYO.layout" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\OmniSearchBar_Icon.png" />

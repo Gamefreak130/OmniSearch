@@ -11,7 +11,8 @@ using System.Linq;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // CONSIDER Search query history
+    // CONSIDER Search query history using up key
+    // CONSIDER Hide/show toggle using tab or something
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel<BuildBuyProduct> mSearchModel;
@@ -43,7 +44,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public BuyExtender()
         {
-            mSearchBar = new(UICategory.BuildBuy, OnQueryEntered);
+
+            mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), OnQueryEntered, 303, -52, 201);
 
             BuyController.sController.mTabContainerSortByFunction.TabSelect += OnTabSelect;
 
