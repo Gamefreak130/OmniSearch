@@ -17,7 +17,7 @@ namespace Gamefreak130.OmniSearchSpace.UI
 
         private Action mOnQueryEntered;
 
-        private string mPreviousQuery;
+        private string mPreviousQuery = "";
 
         private const uint kTextInputId = 2;
 
@@ -47,13 +47,11 @@ namespace Gamefreak130.OmniSearchSpace.UI
             mWindow.Area = new(mWindow.Area.TopLeft + offset, mWindow.Area.BottomRight + offset);
         }
 
-        // TODO Custom trigger removing Escape
-        // TODO Remove/disable triggers and/or their handling when not focused
         private void Init(Action onQueryEntered)
         {
             mOnQueryEntered = onQueryEntered;
             mWindow = mLayout.GetWindowByExportID(1) as Window;
-            mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kPermanent, 17);
+            mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kFocus, 17);
             mWindow.TriggerDown += OnTriggerDown;
             mInput = mWindow.GetChildByID(kTextInputId, true) as TextEdit;
         }

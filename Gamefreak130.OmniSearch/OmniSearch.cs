@@ -14,7 +14,6 @@ namespace Gamefreak130
 
         static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
 
-        // TODO Add simulator sleeps to make sure we catch the state change
         // TODO Public API documentation
         private static void OnWorldLoadFinished(object sender, EventArgs e)
             => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {
