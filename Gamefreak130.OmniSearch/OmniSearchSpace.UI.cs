@@ -69,6 +69,12 @@ namespace Gamefreak130.OmniSearchSpace.UI
             mWindow.Area = new(mWindow.Area.TopLeft + offset, mWindow.Area.BottomRight + offset);
         }*/
 
+        public void Clear()
+        {
+            mInput.Caption = "";
+            mPreviousQuery = "";
+        }
+
         private void Init(Action onQueryEntered)
         {
             mOnQueryEntered = onQueryEntered;

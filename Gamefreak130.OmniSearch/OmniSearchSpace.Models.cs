@@ -5,6 +5,7 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,15 +32,20 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {
-    public interface ISearchModel<T> : IDisposable
+    public interface ISearchModel : IDisposable
     {
         bool Yielding { get; set; }
 
         void Preprocess();
 
-        IEnumerable<T> Search(string query);
+        IEnumerable Search(string query);
 
         int DocumentCount { get; }
+    }
+
+    public interface ISearchModel<T> : ISearchModel
+    {
+        new IEnumerable<T> Search(string query);
     }
 
     public abstract class SearchModel<T> : ISearchModel<T>
@@ -47,10 +53,10 @@ namespace Gamefreak130.OmniSearchSpace.Models
         // TODO More robust tokenizer for languages other than English
 
         //language=regex
-        protected const string TOKEN_SPLITTER = @"[,\-_\\/\.!?;:""”“…()—\s]+";
+        public const string kTokenSplitter = @"[,\-_\\/\.!?;:""”“…()—\s]+";
 
         //language=regex
-        protected const string CHARS_TO_REMOVE = @"['’`‘#%]";
+        public const string kCharsToRemove = @"['’`‘#%™]";
 
         protected IEnumerable<Document<T>> mDocuments;
 
@@ -116,9 +122,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
             }
             finally
             {
-                TaskEx.Run(() => ProgressDialog.Close());
+                TaskEx.Run(ProgressDialog.Close);
             }
         }
+
+        IEnumerable ISearchModel.Search(string query) => Search(query);
 
         protected abstract IEnumerable<T> SearchTask(string query);
 
@@ -190,7 +198,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 {
                     Document<T> document = mDocuments[i];
                     Dictionary<string, double> embedding = new();
-                    foreach (string word in Regex.Split(Regex.Replace(document.Title, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
+                    foreach (string word in Regex.Split(Regex.Replace(document.Title, kCharsToRemove, ""), kTokenSplitter).Where(token => token.Length > 0))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -204,7 +212,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                         }
                         mWordOccurences[word].Add(i);
                     }
-                    foreach (string word in Regex.Split(Regex.Replace(document.Description, CHARS_TO_REMOVE, ""), TOKEN_SPLITTER).Where(token => token.Length > 0))
+                    foreach (string word in Regex.Split(Regex.Replace(document.Description, kCharsToRemove, ""), kTokenSplitter).Where(token => token.Length > 0))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -269,12 +277,12 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected override IEnumerable<T> SearchTask(string query)
         {
-            query = Regex.Replace(query.ToLower(), CHARS_TO_REMOVE, "");
+            query = Regex.Replace(query.ToLower(), kCharsToRemove, "");
 
             // Calculate TF-IDF vector embedding for the query, as well as its magnitude
             Dictionary<string, double> queryVector = new();
             double queryMagnitude = 0;
-            foreach (var group in Regex.Split(query, TOKEN_SPLITTER).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
+            foreach (var group in Regex.Split(query, kTokenSplitter).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
             {
                 if (mWordOccurences.ContainsKey(group.word))
                 {

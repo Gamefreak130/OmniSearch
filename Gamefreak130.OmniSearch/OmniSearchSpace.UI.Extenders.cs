@@ -3,8 +3,11 @@ using Gamefreak130.Common.Tasks;
 using Gamefreak130.OmniSearchSpace.Helpers;
 using Gamefreak130.OmniSearchSpace.Models;
 using Sims3.Gameplay.EventSystem;
+using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace.BuildBuy;
 using Sims3.UI;
+using Sims3.UI.Hud;
+using Sims3.UI.Store;
 using System;
 using System.Collections;
 using System.Linq;
@@ -13,11 +16,13 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     // CONSIDER Search query history using up key
     // CONSIDER Hide/show toggle using tab or something
+    // TODO Place search bar behind product flyout
+    // TODO Fix shop mode weirdness
     public abstract class SearchExtender : IDisposable
     {
-        private ISearchModel<BuildBuyProduct> mSearchModel;
+        private ISearchModel mSearchModel;
 
-        protected ISearchModel<BuildBuyProduct> SearchModel
+        protected ISearchModel SearchModel
         {
             get => mSearchModel;
             set
@@ -46,10 +51,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), OnQueryEntered);
             SetSearchBarLocation();
-            TaskEx.Run(SetSearchModel);
 
-            BuyController.sController.mTabContainerSortByFunction.TabSelect += OnTabSelect;
-            BuyController.sController.mTabContainerSortByRoom.TabSelect += (_,_) => TaskEx.Run(SetSearchModel);
+            BuyController.sController.mTabContainerSortByFunction.TabSelect += (_,_) => SetSearchModel();
 
             foreach (BuyController.RoomCatalogButtonInfo roomInfo in BuyController.mRoomCatalogButtonInfoDict.Values)
             {
@@ -78,7 +81,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             BuyController.sController.mButtonShopModeSortByFunction.Click += OnCatalogButtonClick;
             BuyController.sController.mButtonShopModeNotable.Click += OnCatalogButtonClick;
             BuyController.sController.mButtonShopModeEmpty.Click += OnCatalogButtonClick;
-            BuyController.sController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => SetSearchBarLocation();
+            BuyController.sController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarLocation);
+
+            BuyController.sController.mCollectionGrid.ItemClicked += (_,_) => SetSearchModel();
 
             // TODO Force by room grid to always be at least three columns
             //BuyController.sController.mGridSortByRoom.AreaChange += OnByRoomGridResize;
@@ -87,21 +92,30 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             BuyController.sController.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
         }
 
-
         public override void Dispose()
         {
             mSearchBar.Dispose();
             base.Dispose();
         }
 
-        // TODO Fix for null category
         // TODO Filter by collections if query matches
         protected override void OnQueryEntered()
         {
+            string query = mSearchBar.Query.ToLower();
+            IEnumerable results = null;
+            /*foreach (IBBCollectionData collection in BuyController.sController.mBuyModel.CollectionInfo.CollectionData)
+            {
+                // CONSIDER Check count and use tfidf search model as fallback?
+                if (Regex.Replace(query, SearchModel<object>.kCharsToRemove, "") == Regex.Replace(collection.CollectionName.ToLower(), SearchModel<object>.kCharsToRemove, ""))
+                {
+                    results = collection.Items.Where(item => (item as BuildBuyPreset).Product);
+                }
+            }*/
+            results ??= SearchModel.Search(query);
+
             BuyController.sController.StopGridPopulation();
-            IEnumerable results = SearchModel.Search(mSearchBar.Query);
             ClearCatalogGrid();
-            BuyController.sController.PopulateGrid(results, BuyController.kBuyCatalogItemKey);
+            BuyController.sController.PopulateGrid(results, BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
         }
 
         private void ClearCatalogGrid()
@@ -121,8 +135,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             BuyController.sController.mNumObjectsInGrid = 0;
             BuyController.sController.ResizeCatalogGrid(BuyController.sController.mCatalogGrid, SearchModel.DocumentCount);
         }
-
-        private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __) => SetSearchBarLocation();
 
         private void SetSearchBarLocation()
         {
@@ -159,19 +171,15 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mSearchBar.SetLocation(x, y, width);
         }
 
-        private void OnTabSelect(TabControl _, TabControl __) => SetSearchModel();
-
-        private void OnRoomSelect(WindowBase _, UIButtonClickEventArgs __) => SetSearchModel();
-
         private void SetSearchModel()
         {
             try
             {
-                if (BuyController.sController.mPopulateGridTaskHelper.Collection.OfType<object>().First() is BuildBuyProduct)
+                if (BuyController.sController.mCurrCatalogType is not BuyController.CatalogType.Inventory)
                 {
-                    SearchModel = new TFIDF<BuildBuyProduct>(BuyController.sController.mPopulateGridTaskHelper.Collection
-                                                                                                              .Cast<BuildBuyProduct>()
-                                                                                                              .Select(product => new Document<BuildBuyProduct>(product.CatalogName, product.Description, product)))
+                    SearchModel = new TFIDF<object>(BuyController.sController.mPopulateGridTaskHelper.Collection
+                                                                                                     .Cast<object>()
+                                                                                                     .Select(SelectProduct))
                     {
                         Yielding = true
                     };
@@ -185,12 +193,62 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                         TaskEx.Run(OnQueryEntered);
                     }
                 }
+                else
+                {
+                    // TODO
+                }
             }
             catch (Exception e)
             {
                 ExceptionLogger.sInstance.Log(e);
             }
         }
+
+        private Document<object> SelectProduct(object product)
+        {
+            string name, description;
+
+            switch (product)
+            {
+                case BuildBuyProduct bbp:
+                    name = bbp.CatalogName;
+                    description = bbp.Description;
+                    break;
+                case BuildBuyPreset bbp:
+                    name = bbp.Product.CatalogName;
+                    description = bbp.Product.Description;
+                    // Filter out the generic descriptions of wall or floor patterns
+                    if (description == Localization.LocalizeString(0xDD1EAD49D9F75762) || description == Localization.LocalizeString(0x2DE87A7A181E89C4))
+                    {
+                        description = "";
+                    }
+                    break;
+                case IFeaturedStoreItem fsi:
+                    name = fsi.Name;
+                    description = fsi.Description;
+                    break;
+                case IBBCollectionData bbcd:
+                    name = bbcd.CollectionName;
+                    description = bbcd.CollectionDesc;
+                    break;
+                default:
+                    throw new ArgumentException("Not a valid Build/Buy product", nameof(product));
+            }
+
+            return new Document<object>(name, description, product);
+        }
+
+        private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
+        {
+            mSearchBar.Clear();
+            SetSearchBarLocation();
+            if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections)
+            {
+                SetSearchModel();
+            }
+        }
+
+        private void OnRoomSelect(WindowBase _, UIButtonClickEventArgs __) => SetSearchModel();
 
         private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
@@ -202,7 +260,12 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        private void OnCatalogGridToggled(WindowBase _, UIVisibilityChangeEventArgs args) => mSearchBar.Visible = args.Visible;
+        private void OnCatalogGridToggled(WindowBase _, UIVisibilityChangeEventArgs args)
+        {
+            mSearchBar.Visible = args.Visible;
+            mSearchBar.Clear();
+            SetSearchModel();
+        }
     }
 
     /*public static class BuildExtender
