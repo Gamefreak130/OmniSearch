@@ -28,6 +28,12 @@ namespace Gamefreak130.OmniSearchSpace.UI
 
         public string Query => mInput.Caption;
 
+        public bool Visible
+        {
+            get => mWindow.Visible;
+            set => mWindow.Visible = value;
+        }
+
         public OmniSearchBar(WindowBase parent, Action onQueryEntered)
         {
             mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
@@ -40,11 +46,14 @@ namespace Gamefreak130.OmniSearchSpace.UI
             Init(onQueryEntered);
         }*/
 
-        public OmniSearchBar(WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(parent, onQueryEntered)
+        public OmniSearchBar(WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(parent, onQueryEntered) 
+            => SetLocation(x, y, width);
+
+        public void SetLocation(float x, float y, float width)
         {
             Vector2 offset = new(x, y);
-            Vector2 widthVec = new(mWindow.Area.TopLeft.x + width, mWindow.Area.BottomRight.y);
-            mWindow.Area = new(mWindow.Area.TopLeft + offset, widthVec + offset);
+            Vector2 widthVec = new(width, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
+            mWindow.Area = new(offset, widthVec + offset);
 
             WindowBase background = mWindow.GetChildByID((uint)ControlIDs.kTextInputBackground, true);
             widthVec = new(background.Area.TopLeft.x + width - 10, background.Area.BottomRight.y);
@@ -73,15 +82,16 @@ namespace Gamefreak130.OmniSearchSpace.UI
         {
             if (eventArgs.TriggerCode is (uint)ModalDialog.Triggers.kOKTrigger or (uint)ModalDialog.Triggers.kCancelTrigger && mInput.Caption != mPreviousQuery)
             {
-                TaskEx.Run(() => mOnQueryEntered());
+                TaskEx.Run(mOnQueryEntered);
                 mPreviousQuery = mInput.Caption;
+                UIManager.SetFocus(InputContext.kICKeyboard, null);
             }
         }
 
         public void Dispose()
         {
             mWindow.RemoveTriggerHook(mTriggerHandle);
-            mLayout.Shutdown();
+            //mLayout.Shutdown();
             mLayout.Dispose();
         }
     }
