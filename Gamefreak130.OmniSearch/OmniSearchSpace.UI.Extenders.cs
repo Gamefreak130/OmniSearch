@@ -2,14 +2,17 @@
 using Gamefreak130.Common.Tasks;
 using Gamefreak130.OmniSearchSpace.Helpers;
 using Gamefreak130.OmniSearchSpace.Models;
+using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.EventSystem;
 using Sims3.Gameplay.Utilities;
+using Sims3.SimIFace;
 using Sims3.SimIFace.BuildBuy;
 using Sims3.UI;
 using Sims3.UI.Hud;
 using Sims3.UI.Store;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
@@ -18,6 +21,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // TODO Place search bar behind product flyout
     // TODO Fix shop mode weirdness
+    // TODO SetSearchModel on filter
+    // TODO Prev focus or something
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -40,17 +45,31 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public virtual void Dispose() => SearchModel = null;
 
-        protected abstract void OnQueryEntered();
+        protected abstract void QueryEnteredTask();
     }
 
     public class BuyExtender : SearchExtender
     {
         protected readonly OmniSearchBar mSearchBar;
 
+        protected readonly IInventory mFamilyInventory;
+
+        protected const ulong kWallDescriptionHash = 0xDD1EAD49D9F75762;
+
+        protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
+
+        private bool mInventoryEventRegistered;
+
         public BuyExtender()
         {
-            mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), OnQueryEntered);
+            mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), QueryEnteredTask);
             SetSearchBarLocation();
+
+            mFamilyInventory = BuyController.sController.mFamilyInventory;
+            if (mFamilyInventory is not null)
+            {
+                mFamilyInventory.InventoryChanged += SetSearchModel;
+            }
 
             BuyController.sController.mTabContainerSortByFunction.TabSelect += (_,_) => SetSearchModel();
 
@@ -85,8 +104,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
             BuyController.sController.mCollectionGrid.ItemClicked += (_,_) => SetSearchModel();
 
-            // TODO Force by room grid to always be at least three columns
-            //BuyController.sController.mGridSortByRoom.AreaChange += OnByRoomGridResize;
+            BuyController.sController.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(SetSearchBarLocation);
             BuyController.sController.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
             BuyController.sController.mCollectionCatalogWindow.VisibilityChange += OnCatalogGridToggled;
             BuyController.sController.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
@@ -95,11 +113,15 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         public override void Dispose()
         {
             mSearchBar.Dispose();
+            if (mFamilyInventory is not null)
+            {
+                mFamilyInventory.InventoryChanged -= SetSearchModel;
+            }
             base.Dispose();
         }
 
         // TODO Filter by collections if query matches
-        protected override void OnQueryEntered()
+        protected override void QueryEnteredTask()
         {
             string query = mSearchBar.Query.ToLower();
             IEnumerable results = null;
@@ -113,27 +135,293 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }*/
             results ??= SearchModel.Search(query);
 
-            BuyController.sController.StopGridPopulation();
             ClearCatalogGrid();
-            BuyController.sController.PopulateGrid(results, BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
+            if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
+            {
+                PopulateInventory(results);
+            }
+            else
+            {
+                BuyController.sController.PopulateGrid(results, BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
+            }
+        }
+
+        private void PopulateInventory(IEnumerable results)
+        {
+            int num = BuyController.sController.mCatalogGrid.GetFirstVisibleItem();
+
+            foreach (IInventoryItemStack stack in results)
+            {
+                InventoryItemWin inventoryItemWin = InventoryItemWin.MakeEmptySlot();
+                inventoryItemWin.Thumbnail = stack.TopObject;
+                inventoryItemWin.StackItemCount = stack.Count;
+                inventoryItemWin.InUse = stack.InUse;
+                if (inventoryItemWin.StackItemCount > 1)
+                {
+                    inventoryItemWin.GrabAllHandleWin.MouseDown += BuyController.sController.OnGrabAllHandleWinMouseDown;
+                    inventoryItemWin.GrabAllHandleWin.MouseUp += BuyController.sController.OnGrabAllHandleWinMouseUp;
+                    inventoryItemWin.GrabAllHandleWin.DragEnter += BuyController.sController.OnGridDragEnter;
+                    inventoryItemWin.GrabAllHandleWin.DragLeave += BuyController.sController.OnGridDragLeave;
+                    inventoryItemWin.GrabAllHandleWin.DragDrop += OnGridDragDrop;
+                    inventoryItemWin.GrabAllHandleWin.DragOver += BuyController.sController.OnGridDragOver;
+                    inventoryItemWin.GrabAllHandleWin.FocusAcquired += BuyController.sController.OnGrabAllHandleFocusAcquired;
+                    inventoryItemWin.GrabAllHandleWin.FocusLost += BuyController.sController.OnGrabAllHandleFocusLost;
+                }
+                inventoryItemWin.Tag = stack;
+                BuyController.sController.mCatalogGrid.AddItem(new(inventoryItemWin, stack));
+            }
+
+            if (mFamilyInventory.Count > 0)
+            {
+                BuyController.sController.mFamilyInventoryInstructionText.Visible = false;
+                BuyController.sController.mFamilyInventorySellAllButton.Enabled = mFamilyInventory.Count == BuyController.sController.mCatalogGrid.Count;
+            }
+            else
+            {
+                BuyController.sController.mFamilyInventoryInstructionText.Visible = true;
+                BuyController.sController.mFamilyInventorySellAllButton.Enabled = false;
+            }
+            if (num >= 0)
+            {
+                num += BuyController.sController.mCatalogGrid.InternalGrid.ColumnCount;
+                if (num > BuyController.sController.mCatalogGrid.Count)
+                {
+                    num = BuyController.sController.mCatalogGrid.Count - 1;
+                }
+                BuyController.sController.mCatalogGrid.MakeItemVisible(num);
+            }
+            BuyController.sController.ResizeCatalogGrid(BuyController.sController.mWindowFamilyInventory, BuyController.sController.mGridInventory, BuyController.sController.mDefaultInventoryWidth, BuyController.sController.mDefaultInventoryGridColumns, 0x7FFFFFFE, false);
+        }
+
+        private void OnGridDragDrop(WindowBase sender, UIDragEventArgs eventArgs)
+        {
+            try
+            {
+                if (eventArgs.Data is LiveDragData)
+                {
+                    BuyController.sController.mbDragging = false;
+                    int num = BuyController.sController.mCatalogGrid.GetItemIndexAtPosition(BuyController.sController.mCatalogGrid.ScreenToWindow(sender.WindowToScreen(eventArgs.MousePosition)));
+                    if (num >= 0 && !string.IsNullOrEmpty(mSearchBar.Query))
+                    {
+                        num = mFamilyInventory.InventoryItems.IndexOf(BuyController.sController.mCatalogGrid.Items[num].mTag as IInventoryItemStack);
+                    }
+                    if (BuyController.sController.mInsertionType is InventoryItemWin.InsertionType.After)
+                    {
+                        num++;
+                    }
+                    bool flag = BuyController.sController.mInsertionType is not InventoryItemWin.InsertionType.None;
+                    bool result;
+                    if (BuyController.sController.mDragInfo?.mDragOriginatingInventory is IInventory originatingInventory)
+                    {
+                        BuyController.sController.mDragInfo.mDragDestinationInventory = mFamilyInventory;
+                        if (originatingInventory == BuyController.sController.mDragInfo.mDragDestinationInventory && (BuyController.sController.mDragInfo.mbDragOriginIsStack || BuyController.sController.mDragInfo.mDragOriginStack.Count == 1))
+                        {
+                            int num2 = originatingInventory.InventoryItems.IndexOf(BuyController.sController.mDragInfo.mDragOriginStack);
+                            if (num2 == num && BuyController.sController.mInsertionType is InventoryItemWin.InsertionType.Stack)
+                            {
+                                BuyController.sController.mInsertionType = InventoryItemWin.InsertionType.Before;
+                            }
+                        }
+                        BuyController.sController.mDragInfo.mDragDestinationIndex = num;
+                        BuyController.sController.mDragInfo.mbDragDestinationInsert = flag;
+                        result = true;
+                    }
+                    else
+                    {
+                        result = true;
+                        mFamilyInventory.InventoryChanged -= BuyController.sController.OnInventoryChanged;
+                        mFamilyInventory.InventoryChanged -= SetSearchModel;
+                        World.OnHandToolRotateToMoveCallback -= BuyController.sController.HandToolPickupHandler;
+                        if (flag)
+                        {
+                            result = BuyController.sController.AddDraggedObjectsToFamilyInventory(num);
+                            if (result)
+                            {
+                                BuyController.sController.mLiveDragHelper.PurgeHandToolObjects();
+                            }
+                        }
+                        else if (BuyController.sController.mLiveDragHelper.DragIsFromInventoryToInventory())
+                        {
+                            eventArgs.Result = BuyController.sController.mLiveDragHelper.TryAddHandToolObjectsToInventory(mFamilyInventory);
+                        }
+                        else
+                        {
+                            result = BuyController.sController.AddDraggedObjectsToFamilyInventory(-1);
+                            if (result)
+                            {
+                                BuyController.sController.mLiveDragHelper.PurgeHandToolObjects();
+                            }
+                        }
+                        mFamilyInventory.InventoryChanged += BuyController.sController.OnInventoryChanged;
+                        mFamilyInventory.InventoryChanged += SetSearchModel;
+                        World.OnHandToolRotateToMoveCallback += BuyController.sController.HandToolPickupHandler;
+                        SetSearchModel();
+                        if (string.IsNullOrEmpty(mSearchBar.Query))
+                        {
+                            BuyController.sController.RepopulateInventory();
+                        }
+                    }
+                    eventArgs.Result = result;
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.sInstance.Log(e);
+            }
+        }
+
+        private void OnGridDragEnd(WindowBase sender, UIDragEventArgs eventArgs)
+        {
+            try
+            {
+                if (eventArgs.Data is LiveDragData)
+                {
+                    BuyController.sController.mbDragging = false;
+                    int num = -1;
+                    InventoryItemWin originWin = BuyController.sController.mDragInfo?.mDragOriginWin;
+                    BuyController.sController.mFamilyInventorySellAllButton.Visible = true;
+                    BuyController.sController.mFamilyInventorySellButton.Visible = false;
+                    if (eventArgs.Result)
+                    {
+                        bool flag = true;
+                        mFamilyInventory.InventoryChanged -= BuyController.sController.OnInventoryChanged;
+                        mFamilyInventory.InventoryChanged -= SetSearchModel;
+                        World.OnHandToolRotateToMoveCallback -= BuyController.sController.HandToolPickupHandler;
+                        if (BuyController.sController.mDragInfo is not null)
+                        {
+                            IInventory destinationInventory = BuyController.sController.mDragInfo.mDragDestinationInventory;
+                            if (BuyController.sController.mDragInfo.mDragOriginStack is IInventoryItemStack originStack && BuyController.sController.mDragInfo.mDragOriginatingInventory is IInventory originatingInventory)
+                            {
+                                int num2 = originatingInventory.InventoryItems.IndexOf(originStack);
+                                int count = originatingInventory.InventoryItems.Count;
+                                if (BuyController.sController.mDragInfo.mbDragOriginIsStack && destinationInventory is not null)
+                                {
+                                    flag &= originatingInventory.TryRemoveStackFromInventory(originStack);
+                                }
+                                else
+                                {
+                                    flag &= originatingInventory.TryRemoveTopObjectFromStack(originStack);
+                                }
+                                if (flag && destinationInventory == originatingInventory && BuyController.sController.mDragInfo.mbDragDestinationInsert && num2 < BuyController.sController.mDragInfo.mDragDestinationIndex)
+                                {
+                                    BuyController.sController.mDragInfo.mDragDestinationIndex -= count - originatingInventory.InventoryItems.Count;
+                                }
+                            }
+                            if (destinationInventory is not null)
+                            {
+                                if (BuyController.sController.mDragInfo.mbDragDestinationInsert)
+                                {
+                                    flag &= destinationInventory.TryInsertNewStackAt(BuyController.sController.mLiveDragHelper.DraggedObjects, BuyController.sController.mDragInfo.mDragDestinationIndex, BuyController.sController.mInsertionType == InventoryItemWin.InsertionType.Stack);
+                                    BuyController.sController.mLiveDragHelper.PurgeHandToolObjects();
+                                }
+                                else
+                                {
+                                    flag &= BuyController.sController.mLiveDragHelper.TryAddHandToolObjectsToInventory(destinationInventory);
+                                }
+                            }
+                        }
+                        mFamilyInventory.InventoryChanged += BuyController.sController.OnInventoryChanged;
+                        mFamilyInventory.InventoryChanged += SetSearchModel;
+                        World.OnHandToolRotateToMoveCallback += BuyController.sController.HandToolPickupHandler;
+                        if (flag)
+                        {
+                            if (originWin is not null)
+                            {
+                                num = BuyController.sController.mCatalogGrid.Items.FindIndex(item => item.mWin == originWin);
+                            }
+                            SetSearchModel();
+                            if (string.IsNullOrEmpty(mSearchBar.Query))
+                            {
+                                BuyController.sController.RepopulateInventory();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        World.OnHandToolRotateToMoveCallback -= BuyController.sController.HandToolPickupHandler;
+                        BuyController.sController.mLiveDragHelper.PurgeHandToolObjects();
+                        if (originWin is not null)
+                        {
+                            num = BuyController.sController.mCatalogGrid.Items.FindIndex(item => item.mWin == originWin);
+                            if (num >= 0)
+                            {
+                                ZoopBack(BuyController.sController.mDragInfo.mDragOriginStack.TopObject, sender.WindowToScreen(eventArgs.MousePosition), originWin.Parent.WindowToScreen(originWin.Position));
+                            }
+                        }
+                        World.OnHandToolRotateToMoveCallback += BuyController.sController.HandToolPickupHandler;
+                    }
+                    if (BuyController.sController.mLiveDragHelper.DraggedObjectsCount == 0)
+                    {
+                        BuyController.sController.mDragInfo = null;
+                        return;
+                    }
+                    if (originWin is not null && num != -1 && BuyController.sController.mCatalogGrid.Items[num].mWin is InventoryItemWin inventoryItemWin)
+                    {
+                        BuyController.sController.mDragInfo.mDragOriginWin = inventoryItemWin;
+                        originWin.ItemDrawState = 1U;
+                        originWin.GrabAllHandleWin.DrawState = 1U;
+                        originWin.PreviewStackItemCount = BuyController.sController.mDragInfo.mDragOriginStack.Count - BuyController.sController.mLiveDragHelper.DraggedObjectsCount;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.sInstance.Log(e);
+            }
+        }
+
+        private void ZoopBack(ObjectGuid objectGuid, Vector2 startPosition, Vector2 endPosition)
+        {
+            if (BuyController.sController.mZoopWindow is null)
+            {
+                InventoryItemWin zoopWindow = UIManager.LoadLayout(ResourceKey.CreateUILayoutKey("HudInventoryItemWin", 0U)).GetWindowByExportID(1) as InventoryItemWin;
+                BuyController.sController.mZoopWindow = zoopWindow;
+                zoopWindow.BackgroundWin.Visible = false;
+                zoopWindow.Thumbnail = objectGuid;
+                zoopWindow.Position = startPosition;
+                GlideEffect glideEffect = new()
+                {
+                    TriggerType = EffectBase.TriggerTypes.Manual,
+                    Duration = 0.2f,
+                    InterpolationType = EffectBase.InterpolationTypes.EaseInOut,
+                    EaseTimes = new Vector2(0.2f, 0f),
+                    Offset = endPosition - startPosition
+                };
+                zoopWindow.EffectList.Add(glideEffect);
+                UIManager.GetUITopWindow().AddChild(zoopWindow);
+                glideEffect.TriggerEffect(false);
+                TaskEx.Delay(200).ContinueWith(delegate {
+                    if (BuyController.sController.mZoopWindow is not null)
+                    {
+                        BuyController.sController.mZoopWindow.Parent.DestroyChild(BuyController.sController.mZoopWindow);
+                        BuyController.sController.mZoopWindow = null;
+                    }
+                    SetSearchModel();
+                    if (string.IsNullOrEmpty(mSearchBar.Query))
+                    {
+                        BuyController.sController.RepopulateInventory();
+                    }
+                });
+            }
         }
 
         private void ClearCatalogGrid()
         {
+            BuyController.sController.StopGridPopulation();
             foreach (ItemGridCellItem itemGridCellItem in BuyController.sController.mCatalogGrid.Items)
             {
-                if (BuyController.sController.mCurrCatalogType is not BuyController.CatalogType.Collections)
+                switch (BuyController.sController.mCurrCatalogType)
                 {
-                    BuyController.sController.mBuyCatalogGridItemCache.Add(itemGridCellItem.mWin);
-                }
-                else
-                {
-                    BuyController.sController.mBuildCatalogPatternGridItemCache.Add(itemGridCellItem.mWin);
+                    case BuyController.CatalogType.Collections:
+                        BuyController.sController.mBuildCatalogPatternGridItemCache.Add(itemGridCellItem.mWin);
+                        break;
+                    case not BuyController.CatalogType.Inventory:
+                        BuyController.sController.mBuyCatalogGridItemCache.Add(itemGridCellItem.mWin);
+                        break;
                 }
             }
             BuyController.sController.mCatalogGrid.Clear();
             BuyController.sController.mNumObjectsInGrid = 0;
-            BuyController.sController.ResizeCatalogGrid(BuyController.sController.mCatalogGrid, SearchModel.DocumentCount);
         }
 
         private void SetSearchBarLocation()
@@ -143,8 +431,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
             if (catalogType == BuyController.CatalogType.ByRoom)
             {
-                x = 720;
-                width = 224;
+                x = 725;
+                width = MathUtils.Clamp(25 + (65 * BuyController.sController.mCatalogGrid.VisibleColumns), 165, 250);
             }
             else
             {
@@ -161,7 +449,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
                 if (catalogType is BuyController.CatalogType.Inventory)
                 {
-                    mSearchBar.Visible = true;
+                    mSearchBar.Visible = mFamilyInventory is not null;
                 }
                 if (catalogType is BuyController.CatalogType.Collections)
                 {
@@ -175,27 +463,22 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             try
             {
-                if (BuyController.sController.mCurrCatalogType is not BuyController.CatalogType.Inventory)
+                IEnumerable<Document<object>> docs = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
+                    ? mFamilyInventory.InventoryItems.Select(SelectProduct)
+                    : BuyController.sController.mPopulateGridTaskHelper.Collection
+                                                                       .Cast<object>()
+                                                                       .Select(SelectProduct);
+                SearchModel = new TFIDF<object>(docs)
                 {
-                    SearchModel = new TFIDF<object>(BuyController.sController.mPopulateGridTaskHelper.Collection
-                                                                                                     .Cast<object>()
-                                                                                                     .Select(SelectProduct))
-                    {
-                        Yielding = true
-                    };
+                    Yielding = true
+                };
 
-                    SearchModel.Preprocess();
+                SearchModel.Preprocess();
 
-                    if (!string.IsNullOrEmpty(mSearchBar.Query))
-                    {
-                        BuyController.sController.StopGridPopulation();
-                        ClearCatalogGrid();
-                        TaskEx.Run(OnQueryEntered);
-                    }
-                }
-                else
+                if (!string.IsNullOrEmpty(mSearchBar.Query))
                 {
-                    // TODO
+                    ClearCatalogGrid();
+                    TaskEx.Run(QueryEnteredTask);
                 }
             }
             catch (Exception e)
@@ -218,7 +501,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     name = bbp.Product.CatalogName;
                     description = bbp.Product.Description;
                     // Filter out the generic descriptions of wall or floor patterns
-                    if (description == Localization.LocalizeString(0xDD1EAD49D9F75762) || description == Localization.LocalizeString(0x2DE87A7A181E89C4))
+                    if (description == Localization.LocalizeString(kWallDescriptionHash) || description == Localization.LocalizeString(kFloorDescriptionHash))
                     {
                         description = "";
                     }
@@ -231,6 +514,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     name = bbcd.CollectionName;
                     description = bbcd.CollectionDesc;
                     break;
+                case IInventoryItemStack iis:
+                    name = GameObject.GetObject(iis.TopObject).ToTooltipString();
+                    description = "";
+                    break;
                 default:
                     throw new ArgumentException("Not a valid Build/Buy product", nameof(product));
             }
@@ -242,9 +529,31 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             mSearchBar.Clear();
             SetSearchBarLocation();
-            if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections)
+            Grid grid = BuyController.sController.mGridInventory.Grid.InternalGrid;
+            if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
                 SetSearchModel();
+                if (!mInventoryEventRegistered)
+                {
+                    grid.DragDrop -= BuyController.sController.OnGridDragDrop;
+                    grid.DragDrop += OnGridDragDrop;
+                    grid.DragEnd -= BuyController.sController.OnGridDragEnd;
+                    grid.DragEnd += OnGridDragEnd;
+                    mInventoryEventRegistered = true;
+                }
+            }
+            else
+            {
+                if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections)
+                {
+                    SetSearchModel();
+                }
+                if (mInventoryEventRegistered)
+                {
+                    grid.DragDrop -= OnGridDragDrop;
+                    grid.DragEnd -= OnGridDragEnd;
+                    mInventoryEventRegistered = false;
+                }
             }
         }
 
@@ -255,7 +564,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mSearchBar.Visible = BuyController.sController.mCatalogGrid.Visible;
             if (!string.IsNullOrEmpty(mSearchBar.Query))
             {
-                BuyController.sController.StopGridPopulation();
                 ClearCatalogGrid();
             }
         }
