@@ -154,8 +154,8 @@ namespace Gamefreak130.OmniSearchSpace.Models
             => from document in mDocuments
                // Little trick I learned from StackOverflow to efficiently count substring occurrences
                // https://stackoverflow.com/questions/541954/how-would-you-count-occurrences-of-a-string-actually-a-char-within-a-string
-               let titleWeight = (document.Title.Length - document.Title.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kTitleWeight
-               let descWeight = (document.Description.Length - document.Description.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kDescriptionWeight
+               let titleWeight = (float)(document.Title.Length - document.Title.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kTitleWeight
+               let descWeight = (float)(document.Description.Length - document.Description.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kDescriptionWeight
                let weight = titleWeight + descWeight
                where weight > 0
                orderby weight descending
@@ -176,8 +176,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         // ChampionLists is a set of the "top documents" in the corpus with the highest frequencies of a given word
         private readonly Dictionary<string, List<int>> mChampionLists;
-
-        private const double IDF_THRESHOLD = 0.6;
 
         public override int DocumentCount => mDocuments.Count;
 
@@ -237,21 +235,10 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 // Iterate over every document again to turn TF vector embeddings into TF-IDF embeddings
                 foreach (string word in new List<string>(mWordOccurences.Keys))
                 {
-                    double idf = Math.Log10(mDocuments.Count / mWordOccurences[word].Count);
+                    double idf = Math.Log10((double)mDocuments.Count / mWordOccurences[word].Count);
                     foreach (int i in mWordOccurences[word])
                     {
-                        if (idf < IDF_THRESHOLD)
-                        {
-                            mTfidfMatrix[i].Remove(word);
-                        }
-                        else
-                        {
-                            mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
-                        }
-                    }
-                    if (idf < IDF_THRESHOLD)
-                    {
-                        mWordOccurences.Remove(word);
+                        mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
                     }
                     if (ShouldYield(startTimer))
                     {
@@ -286,7 +273,15 @@ namespace Gamefreak130.OmniSearchSpace.Models
             {
                 if (mWordOccurences.ContainsKey(group.word))
                 {
-                    double tfidf = Math.Log10(1 + group.count) * Math.Log10(mDocuments.Count / mWordOccurences[group.word].Count);
+                    // If there is only one document, we are guaranteed to have reached a matching word at this point
+                    // Stop early and return it to avoid calculating a TF-IDF of 0 and missing it
+                    if (mDocuments.Count == 1)
+                    {
+                        return from document in mDocuments
+                               select LogWeight(document, float.NaN);
+                    }
+
+                    double tfidf = Math.Log10(1 + group.count) * Math.Log10((double)mDocuments.Count / mWordOccurences[group.word].Count);
                     queryVector[group.word] = tfidf;
                     queryMagnitude += tfidf * tfidf;
                 }
