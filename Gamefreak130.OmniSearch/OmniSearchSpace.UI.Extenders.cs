@@ -19,7 +19,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     // CONSIDER Search query history using up key
     // CONSIDER Hide/show toggle using tab or something
-    // TODO Place search bar behind product flyout
     // TODO Fix shop mode weirdness
     // TODO SetSearchModel on filter
     // TODO Prev focus or something
@@ -58,11 +57,14 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
+        protected const uint kPreviewPanelId = 0x6E23360;
+
         private bool mInventoryEventRegistered;
 
         public BuyExtender()
         {
             mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), QueryEnteredTask);
+            mSearchBar.MoveToBack();
             SetSearchBarLocation();
 
             mFamilyInventory = BuyController.sController.mFamilyInventory;

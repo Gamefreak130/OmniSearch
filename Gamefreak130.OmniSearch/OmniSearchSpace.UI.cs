@@ -63,6 +63,10 @@ namespace Gamefreak130.OmniSearchSpace.UI
             mInput.Area = new(mInput.Area.TopLeft, widthVec);
         }
 
+        public void MoveToBack() => mWindow.MoveToBack();
+
+        public void MoveToFront() => mWindow.MoveToFront();
+
         /*public OmniSearchBar(UICategory parent, Action onQueryEntered, float x, float y) : this(parent, onQueryEntered)
         {
             Vector2 offset = new(x, y);
