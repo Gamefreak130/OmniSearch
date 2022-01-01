@@ -14,6 +14,7 @@ namespace Gamefreak130
 
         static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
 
+        // CONSIDER More robust tokenizer for languages other than English
         // TODO Public API documentation
         private static void OnWorldLoadFinished(object sender, EventArgs e)
             => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {

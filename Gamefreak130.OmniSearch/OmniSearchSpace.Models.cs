@@ -9,26 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace Gamefreak130.OmniSearchSpace.Helpers
-{
-    public class Document<T>
-    {
-        public string Title { get; }
-
-        public string Description { get; }
-
-        public T Tag { get; }
-
-        public Document(string title, string description, T tag)
-        {
-            Title = title?.ToLower() ?? "";
-            Description = description?.ToLower() ?? "";
-            Tag = tag;
-        }
-    }
-}
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {
@@ -39,8 +19,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
         void Preprocess();
 
         IEnumerable Search(string query);
-
-        int DocumentCount { get; }
     }
 
     public interface ISearchModel<T> : ISearchModel
@@ -50,14 +28,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
     public abstract class SearchModel<T> : ISearchModel<T>
     {
-        // TODO More robust tokenizer for languages other than English
-
-        //language=regex
-        public const string kTokenSplitter = @"[,\-_\\/\.!?;:""”“…()—\s]+";
-
-        //language=regex
-        public const string kCharsToRemove = @"['’`‘#%™]";
-
         protected IEnumerable<Document<T>> mDocuments;
 
         private AwaitableTask mModelPreprocessTask;
@@ -73,8 +43,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
         }
 
         public bool Yielding { get; set; }
-
-        public virtual int DocumentCount => mDocuments.Count();
 
         public SearchModel(IEnumerable<Document<T>> documents)
             => mDocuments = documents;
@@ -177,7 +145,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
         // ChampionLists is a set of the "top documents" in the corpus with the highest frequencies of a given word
         private readonly Dictionary<string, List<int>> mChampionLists;
 
-        public override int DocumentCount => mDocuments.Count;
+        private readonly ITokenizer mTokenizer;
 
         public TFIDF(IEnumerable<Document<T>> documents) : base(documents)
         {
@@ -185,6 +153,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
             mTfidfMatrix = new(mDocuments.Count);
             mWordOccurences = new();
             mChampionLists = new();
+            mTokenizer = Tokenizer.Create();
         }
 
         protected override void PreprocessTask()
@@ -196,7 +165,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 {
                     Document<T> document = mDocuments[i];
                     Dictionary<string, double> embedding = new();
-                    foreach (string word in Regex.Split(Regex.Replace(document.Title, kCharsToRemove, ""), kTokenSplitter).Where(token => token.Length > 0))
+                    foreach (string word in mTokenizer.Tokenize(document.Title))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -210,7 +179,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                         }
                         mWordOccurences[word].Add(i);
                     }
-                    foreach (string word in Regex.Split(Regex.Replace(document.Description, kCharsToRemove, ""), kTokenSplitter).Where(token => token.Length > 0))
+                    foreach (string word in mTokenizer.Tokenize(document.Description))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -264,12 +233,10 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected override IEnumerable<T> SearchTask(string query)
         {
-            query = Regex.Replace(query.ToLower(), kCharsToRemove, "");
-
             // Calculate TF-IDF vector embedding for the query, as well as its magnitude
             Dictionary<string, double> queryVector = new();
             double queryMagnitude = 0;
-            foreach (var group in Regex.Split(query, kTokenSplitter).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
+            foreach (var group in mTokenizer.Tokenize(query).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
             {
                 if (mWordOccurences.ContainsKey(group.word))
                 {

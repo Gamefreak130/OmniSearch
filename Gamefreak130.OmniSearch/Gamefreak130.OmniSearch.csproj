@@ -157,6 +157,7 @@
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
       <Link>System\ExtensionAttribute.cs</Link>
     </Compile>
+    <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />
     <Compile Include="OmniSearchSpace.PersistedSettings.cs" />
