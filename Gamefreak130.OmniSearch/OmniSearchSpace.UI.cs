@@ -5,6 +5,7 @@ using System;
 
 namespace Gamefreak130.OmniSearchSpace.UI
 {
+    // TODO Cleanup
     public class OmniSearchBar : IDisposable
     {
         private enum ControlIDs : byte
@@ -16,7 +17,7 @@ namespace Gamefreak130.OmniSearchSpace.UI
 
         private readonly Layout mLayout;
 
-        private Window mWindow;
+        private WindowBase mWindow;
 
         private TextEdit mInput;
 
@@ -83,9 +84,27 @@ namespace Gamefreak130.OmniSearchSpace.UI
         {
             mOnQueryEntered = onQueryEntered;
             mWindow = mLayout.GetWindowByExportID(1) as Window;
-            mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kFocus, 17);
+            mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kManual, 17);
             mWindow.TriggerDown += OnTriggerDown;
             mInput = mWindow.GetChildByID((uint)ControlIDs.kTextInput, true) as TextEdit;
+            mInput.FocusAcquired += OnFocusAcquired;
+            mInput.FocusLost += OnFocusLost;
+        }
+
+        private void OnFocusAcquired(WindowBase _, UIFocusChangeEventArgs eventArgs)
+        {
+            if (eventArgs.InputContext is InputContext.kICKeyboard)
+            {
+                UIManager.ActivateTriggerHook(mTriggerHandle);
+            }
+        }
+
+        private void OnFocusLost(WindowBase _, UIFocusChangeEventArgs eventArgs)
+        {
+            if (eventArgs.InputContext is InputContext.kICKeyboard)
+            {
+                UIManager.DeactivateTriggerHook(mTriggerHandle);
+            }
         }
 
         private void OnTriggerDown(WindowBase sender, UITriggerEventArgs eventArgs)
@@ -94,7 +113,7 @@ namespace Gamefreak130.OmniSearchSpace.UI
             {
                 TaskEx.Run(mOnQueryEntered);
                 mPreviousQuery = mInput.Caption;
-                UIManager.SetFocus(InputContext.kICKeyboard, null);
+                UIManager.SetFocus(InputContext.kICKeyboard, UIManager.GetSceneWindow());
             }
         }
 

@@ -21,7 +21,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // TODO Fix shop mode weirdness
     // TODO SetSearchModel on filter
-    // TODO Prev focus or something
+    // TODO Fix Eyedropper build -> buy null reference exception on query task
+    // TODO Hide search bar on object move/CAS
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
