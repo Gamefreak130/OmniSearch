@@ -20,7 +20,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Search query history using up key
     // CONSIDER Hide/show toggle using tab or something
     // TODO Fix shop mode weirdness
-    // TODO SetSearchModel on filter
     // TODO Fix Eyedropper build -> buy null reference exception on query task
     // TODO Hide search bar on object move/CAS
     public abstract class SearchExtender : IDisposable
@@ -106,6 +105,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             BuyController.sController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarLocation);
 
             BuyController.sController.mCollectionGrid.ItemClicked += (_,_) => SetSearchModel();
+            BuyController.sController.mCatalogProductFilter.FiltersChanged += SetSearchModel;
 
             BuyController.sController.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(SetSearchBarLocation);
             BuyController.sController.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
