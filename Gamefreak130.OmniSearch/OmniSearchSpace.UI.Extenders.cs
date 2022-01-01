@@ -19,9 +19,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     // CONSIDER Search query history using up key
     // CONSIDER Hide/show toggle using tab or something
+    // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
     // TODO Fix Eyedropper build -> buy null reference exception on query task
     // TODO Hide search bar on object move/CAS
+    // TODO Fix search task canceled/clear catalog null reference on quit
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -60,6 +62,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected const uint kPreviewPanelId = 0x6E23360;
 
         private bool mInventoryEventRegistered;
+
+        private IEnumerable<Document<object>> mDocuments;
 
         public BuyExtender()
         {
@@ -123,29 +127,47 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             base.Dispose();
         }
 
-        // TODO Filter by collections if query matches
         protected override void QueryEnteredTask()
         {
-            string query = mSearchBar.Query.ToLower();
-            IEnumerable results = null;
-            /*foreach (IBBCollectionData collection in BuyController.sController.mBuyModel.CollectionInfo.CollectionData)
+            try
             {
-                // CONSIDER Check count and use tfidf search model as fallback?
-                if (Regex.Replace(query, SearchModel<object>.kCharsToRemove, "") == Regex.Replace(collection.CollectionName.ToLower(), SearchModel<object>.kCharsToRemove, ""))
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+                IEnumerable results = null;
+                if (BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory))
                 {
-                    results = collection.Items.Where(item => (item as BuildBuyPreset).Product);
-                }
-            }*/
-            results ??= SearchModel.Search(query);
+                    ITokenizer tokenizer = Tokenizer.Create();
+                    foreach (IBBCollectionData collection in BuyController.sController.mBuyModel.CollectionInfo.CollectionData)
+                    {
+                        if (tokenizer.Tokenize(mSearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
+                        {
+                            List<BuildBuyProduct> collectionProducts = collection.Items.ConvertAll(item => (item as BuildBuyPreset).Product);
+                            IEnumerable<BuildBuyProduct> collectionDocs = from document in mDocuments
+                                                                          select document.Tag as BuildBuyProduct into product
+                                                                          where collectionProducts.Contains(product)
+                                                                          select product;
 
-            ClearCatalogGrid();
-            if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
-            {
-                PopulateInventory(results);
+                            if (collectionDocs.FirstOrDefault() is not null)
+                            {
+                                results = collectionDocs;
+                            }
+                        }
+                    }
+                }
+                results ??= SearchModel.Search(mSearchBar.Query);
+
+                ClearCatalogGrid();
+                if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
+                {
+                    PopulateInventory(results);
+                }
+                else
+                {
+                    BuyController.sController.PopulateGrid(results, BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
+                }
             }
-            else
+            finally
             {
-                BuyController.sController.PopulateGrid(results, BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
+                TaskEx.Run(ProgressDialog.Close);
             }
         }
 
@@ -466,12 +488,12 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             try
             {
-                IEnumerable<Document<object>> docs = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
+                mDocuments = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
                     ? mFamilyInventory.InventoryItems.Select(SelectProduct)
                     : BuyController.sController.mPopulateGridTaskHelper.Collection
                                                                        .Cast<object>()
                                                                        .Select(SelectProduct);
-                SearchModel = new TFIDF<object>(docs)
+                SearchModel = new TFIDF<object>(mDocuments)
                 {
                     Yielding = true
                 };
