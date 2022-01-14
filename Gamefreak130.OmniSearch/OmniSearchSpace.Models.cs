@@ -1,14 +1,6 @@
-﻿using Gamefreak130.Common.Helpers;
-using Gamefreak130.Common.Tasks;
-using Gamefreak130.OmniSearchSpace.Helpers;
+﻿using Gamefreak130.OmniSearchSpace.Helpers;
 using Sims3.Gameplay.Utilities;
-using Sims3.SimIFace;
-using Sims3.UI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {

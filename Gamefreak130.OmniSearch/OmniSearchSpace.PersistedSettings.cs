@@ -1,6 +1,4 @@
-﻿using Sims3.SimIFace;
-
-namespace Gamefreak130.OmniSearchSpace
+﻿namespace Gamefreak130.OmniSearchSpace
 {
     public static class PersistedSettings
     {// TODO add xml

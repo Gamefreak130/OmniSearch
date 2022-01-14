@@ -1,7 +1,4 @@
-﻿using Sims3.SimIFace;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Gamefreak130.OmniSearchSpace.Helpers
 {

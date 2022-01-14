@@ -1,19 +1,10 @@
-﻿using Gamefreak130.Common.Loggers;
-using Gamefreak130.Common.Tasks;
-using Gamefreak130.OmniSearchSpace.Helpers;
+﻿using Gamefreak130.OmniSearchSpace.Helpers;
 using Gamefreak130.OmniSearchSpace.Models;
 using Sims3.Gameplay.Abstracts;
-using Sims3.Gameplay.EventSystem;
 using Sims3.Gameplay.Utilities;
-using Sims3.SimIFace;
 using Sims3.SimIFace.BuildBuy;
-using Sims3.UI;
 using Sims3.UI.Hud;
 using Sims3.UI.Store;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {

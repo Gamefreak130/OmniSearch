@@ -1,9 +1,14 @@
-﻿using Gamefreak130.Common.Tasks;
+﻿global using Gamefreak130.Common.Helpers;
+global using Gamefreak130.Common.Loggers;
+global using Gamefreak130.Common.Tasks;
+global using Sims3.Gameplay.EventSystem;
+global using Sims3.SimIFace;
+global using Sims3.UI;
+global using System;
+global using System.Collections;
+global using System.Collections.Generic;
+global using System.Linq;
 using Gamefreak130.OmniSearchSpace.UI.Extenders;
-using Sims3.Gameplay.EventSystem;
-using Sims3.SimIFace;
-using Sims3.UI;
-using System;
 
 namespace Gamefreak130
 {
@@ -15,6 +20,7 @@ namespace Gamefreak130
         static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
 
         // CONSIDER More robust tokenizer for languages other than English
+        // CONSIDER Use Sleep/Wake continuations for tasks rather than busy waiting
         // TODO Public API documentation
         private static void OnWorldLoadFinished(object sender, EventArgs e)
             => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {

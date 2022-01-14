@@ -1,9 +1,4 @@
-﻿using Gamefreak130.Common.Tasks;
-using Sims3.SimIFace;
-using Sims3.UI;
-using System;
-
-namespace Gamefreak130.OmniSearchSpace.UI
+﻿namespace Gamefreak130.OmniSearchSpace.UI
 {
     // TODO Cleanup
     public class OmniSearchBar : IDisposable
