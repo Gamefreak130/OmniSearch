@@ -124,6 +124,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
     public class TFIDF<T> : SearchModel<T>
     {
+        // CONSIDER refactor to avoid shadowing
         private new readonly List<Document<T>> mDocuments;
 
         // TFIDFMatrix is a set of document vector embeddings formed from the term frequency of words in each document weighted using TF-IDF
@@ -135,7 +136,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
         private readonly Dictionary<string, HashSet<int>> mWordOccurences;
 
         // ChampionLists is a set of the "top documents" in the corpus with the highest frequencies of a given word
-        private readonly Dictionary<string, List<int>> mChampionLists;
+        private readonly Dictionary<string, IEnumerable<int>> mChampionLists;
 
         private readonly ITokenizer mTokenizer;
 
@@ -212,8 +213,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 foreach (string word in mWordOccurences.Keys)
                 {
                     mChampionLists[word] = mWordOccurences[word].OrderByDescending(x => mTfidfMatrix[x][word])
-                                                                .Take(PersistedSettings.kChampionListLength)
-                                                                .ToList();
+                                                                .Take(PersistedSettings.kChampionListLength);
                     if (ShouldYield(startTimer))
                     {
                         TaskEx.Yield();
@@ -283,6 +283,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 }
             }
 
+            // CONSIDER Do we need to sort a second time?
             return from kvp in championDocs
                    where kvp.Value != 0
                    orderby kvp.Value descending
