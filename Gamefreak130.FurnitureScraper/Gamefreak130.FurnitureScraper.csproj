@@ -87,41 +87,14 @@
     <Compile Include="..\..\CommonUtils\GlobalSuppressions.cs">
       <Link>Common\GlobalSuppressions.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\System\Action.cs">
-      <Link>System\Action.cs</Link>
-    </Compile>
     <Compile Include="..\..\CommonUtils\System\Func.cs">
       <Link>System\Func.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
-      <Link>System\DelegatingComparer.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Select.cs">
+      <Link>System\Select.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.cs">
-      <Link>System\Enumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable.Enumeration.cs">
-      <Link>System\Enumerable.Enumeration.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\IGrouping.cs">
-      <Link>System\IGrouping.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\ILookup.cs">
-      <Link>System\ILookup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\IOrderedEnumerable.cs">
-      <Link>System\IOrderedEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Key.cs">
-      <Link>System\Key.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\KeyComparer.cs">
-      <Link>System\KeyComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Lookup.cs">
-      <Link>System\Lookup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\OrderedEnumerable.cs">
-      <Link>System\OrderedEnumerable.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\ToCollection.cs">
+      <Link>System\ToCollection.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
       <Link>System\ExtensionAttribute.cs</Link>

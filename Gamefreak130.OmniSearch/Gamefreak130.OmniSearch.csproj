@@ -76,6 +76,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
+      <Link>System\Linq\DelegatingComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Aggregate.cs">
+      <Link>System\Linq\Enumerable\Aggregate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Count.cs">
+      <Link>System\Linq\Enumerable\Count.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Enumerable.cs">
+      <Link>System\Linq\Enumerable\Enumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Grouping.cs">
+      <Link>System\Linq\Enumerable\Grouping.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Skip.cs">
+      <Link>System\Linq\Enumerable\Skip.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Take.cs">
+      <Link>System\Linq\Enumerable\Take.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\ToCollection.cs">
+      <Link>System\Linq\Enumerable\ToCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\IGrouping.cs">
+      <Link>System\Linq\IGrouping.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\ILookup.cs">
+      <Link>System\Linq\ILookup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Key.cs">
+      <Link>System\Linq\Key.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\KeyComparer.cs">
+      <Link>System\Linq\KeyComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Linq\Lookup.cs">
+      <Link>System\Linq\Lookup.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\Common\Helpers\StopWatchEx.cs">
       <Link>Common\Helpers\StopWatchEx.cs</Link>
     </Compile>
@@ -97,14 +136,23 @@
     <Compile Include="..\..\CommonUtils\Common\Tasks\CommonTask.cs">
       <Link>Common\Tasks\CommonTask.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\Delay.cs">
+      <Link>Common\Tasks\Delay.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\Common\Tasks\FunctionTask.cs">
       <Link>Common\Tasks\FunctionTask.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\NopTask.cs">
+      <Link>Common\Tasks\NopTask.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\Common\Tasks\TaskCanceledException.cs">
       <Link>Common\Tasks\TaskCanceledException.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\Common\Tasks\TaskEx.cs">
-      <Link>Common\Tasks\TaskEx.cs</Link>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\Unwrap.cs">
+      <Link>Common\Tasks\Unwrap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\Yield.cs">
+      <Link>Common\Tasks\Yield.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\GlobalSuppressions.cs">
       <Link>Common\GlobalSuppressions.cs</Link>
@@ -121,35 +169,26 @@
     <Compile Include="..\..\CommonUtils\System\HashSet.cs">
       <Link>System\HashSet.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
-      <Link>System\Linq\DelegatingComparer.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Cast.cs">
+      <Link>System\Linq\Enumerable\Cast.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\Enumerable.Aggregation.cs">
-      <Link>System\Linq\Enumerable.Aggregation.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\FirstLast.cs">
+      <Link>System\Linq\Enumerable\FirstLast.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\Enumerable.cs">
-      <Link>System\Linq\Enumerable.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\OrderBy.cs">
+      <Link>System\Linq\Enumerable\OrderBy.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\Enumerable.Enumeration.cs">
-      <Link>System\Linq\Enumerable.Enumeration.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Select.cs">
+      <Link>System\Linq\Enumerable\Select.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\IGrouping.cs">
-      <Link>System\Linq\IGrouping.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\SequenceEqual.cs">
+      <Link>System\Linq\Enumerable\SequenceEqual.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\ILookup.cs">
-      <Link>System\Linq\ILookup.cs</Link>
+    <Compile Include="..\..\CommonUtils\System\Linq\Enumerable\Where.cs">
+      <Link>System\Linq\Enumerable\Where.cs</Link>
     </Compile>
-    <Compile Include="..\..\commonutils\system\linq\IOrderedEnumerable.cs">
+    <Compile Include="..\..\CommonUtils\System\Linq\IOrderedEnumerable.cs">
       <Link>System\Linq\IOrderedEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\Key.cs">
-      <Link>System\Linq\Key.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Linq\KeyComparer.cs">
-      <Link>System\Linq\KeyComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\commonutils\system\linq\Lookup.cs">
-      <Link>System\Linq\Lookup.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Linq\OrderedEnumerable.cs">
       <Link>System\Linq\OrderedEnumerable.cs</Link>
