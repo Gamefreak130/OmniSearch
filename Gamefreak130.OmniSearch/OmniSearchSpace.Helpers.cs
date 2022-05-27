@@ -26,7 +26,7 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
     public abstract class Tokenizer : ITokenizer
     {
         //language=regex
-        protected const string kCharsToRemove = @"['’`‘#%™。・「」]";
+        protected const string kCharsToRemove = @"['’`‘#%™。・「」¡¿]";
 
         public abstract IEnumerable<string> Tokenize(string input);
 
@@ -39,12 +39,12 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
 
     public class EnglishTokenizer : Tokenizer
     {
-        //language=regex
-        private const string kTokenSplitter = @"[,\-_\\/\.!?;:""”“…()—\s]+";
+        private readonly char[] kTokenSplitter = { ' ', ',', '-', '_', '\\', '/', '.', '!', '?', ';', ':', '"', '”', '“', '…', '(', ')', '—', '\t', '\v', '\r', '\f' };
 
-        // TODO See if we can optimize
         public override IEnumerable<string> Tokenize(string input)
-            => Regex.Split(Regex.Replace(input.ToLower(), kCharsToRemove, ""), kTokenSplitter).Where(token => token.Length > 0);
+            => Regex.Replace(input.ToLower(), kCharsToRemove, "")
+                    .Split(kTokenSplitter)
+                    .Where(token => token.Length > 0);
     }
 
     public class CharacterTokenizer : Tokenizer
