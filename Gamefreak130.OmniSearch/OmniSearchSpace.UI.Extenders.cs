@@ -14,7 +14,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // TODO Fix shop mode weirdness
     // TODO Fix Eyedropper build -> buy null reference exception on query task
     // TODO Hide search bar on object move/CAS
-    // TODO Fix search task canceled/clear catalog null reference on quit
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -55,6 +54,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         private bool mInventoryEventRegistered;
 
         private IEnumerable<Document<object>> mDocuments;
+
+        private AwaitableTask mPendingQueryTask;
 
         public BuyExtender()
         {
@@ -115,6 +116,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 mFamilyInventory.InventoryChanged -= SetSearchModel;
             }
+            mPendingQueryTask.Dispose();
             base.Dispose();
         }
 
@@ -494,7 +496,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 if (!string.IsNullOrEmpty(mSearchBar.Query))
                 {
                     ClearCatalogGrid();
-                    TaskEx.Run(QueryEnteredTask);
+                    mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
                 }
             }
             catch (Exception e)
