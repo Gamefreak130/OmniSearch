@@ -116,7 +116,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 mFamilyInventory.InventoryChanged -= SetSearchModel;
             }
-            mPendingQueryTask.Dispose();
+            mPendingQueryTask?.Dispose();
             base.Dispose();
         }
 
