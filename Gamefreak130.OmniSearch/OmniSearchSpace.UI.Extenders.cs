@@ -13,8 +13,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
-    // TODO Fix Eyedropper build -> buy null reference exception on query task
-    // TODO Hide search bar on object move/CAS
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -63,6 +61,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), QueryEnteredTask);
             mSearchBar.MoveToBack();
             SetSearchBarLocation();
+            if (BuyController.sController.mPopulateGridTaskHelper is not null)
+            {
+                SetSearchModel();
+            }
 
             CASCompositorController.Instance.ExitFullEditMode += delegate {
                 if (!string.IsNullOrEmpty(mSearchBar.Query))
