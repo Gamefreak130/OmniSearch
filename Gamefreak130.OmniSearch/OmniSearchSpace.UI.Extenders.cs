@@ -3,6 +3,7 @@ using Gamefreak130.OmniSearchSpace.Models;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace.BuildBuy;
+using Sims3.UI.CAS;
 using Sims3.UI.Hud;
 using Sims3.UI.Store;
 
@@ -63,6 +64,13 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mSearchBar.MoveToBack();
             SetSearchBarLocation();
 
+            CASCompositorController.Instance.ExitFullEditMode += delegate {
+                if (!string.IsNullOrEmpty(mSearchBar.Query))
+                {
+                    mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
+                }
+            };
+
             mFamilyInventory = BuyController.sController.mFamilyInventory;
             if (mFamilyInventory is not null)
             {
@@ -107,6 +115,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             BuyController.sController.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
             BuyController.sController.mCollectionCatalogWindow.VisibilityChange += OnCatalogGridToggled;
             BuyController.sController.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
+
+            BuyController.sController.mMiddlePuckWin.VisibilityChange += (_, args) => mSearchBar.Visible = args.Visible;
         }
 
         public override void Dispose()
