@@ -13,6 +13,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
+    // TODO Fix category pagination w/ existing search
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -38,46 +39,145 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected abstract void QueryEnteredTask();
     }
 
-    public class BuyExtender : SearchExtender
+    public abstract class BuildBuyExtender : SearchExtender
     {
-        protected readonly OmniSearchBar mSearchBar;
-
-        protected readonly IInventory mFamilyInventory;
-
         protected const ulong kWallDescriptionHash = 0xDD1EAD49D9F75762;
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
-        protected const uint kPreviewPanelId = 0x6E23360;
-
-        private bool mInventoryEventRegistered;
+        protected OmniSearchBar mSearchBar;
 
         private IEnumerable<Document<object>> mDocuments;
 
         private AwaitableTask mPendingQueryTask;
 
+        public override void Dispose()
+        {
+            mPendingQueryTask?.Dispose();
+            base.Dispose();
+        }
+
+        private Document<object> SelectProduct(object product)
+        {
+            string name, description;
+
+            switch (product)
+            {
+                case BuildBuyProduct bbp:
+                    name = bbp.CatalogName;
+                    description = bbp.Description;
+                    break;
+                case BuildBuyPreset bbp:
+                    name = bbp.Product.CatalogName;
+                    description = bbp.Product.Description;
+                    // Filter out the generic descriptions of wall or floor patterns
+                    if (description == Localization.LocalizeString(kWallDescriptionHash) || description == Localization.LocalizeString(kFloorDescriptionHash))
+                    {
+                        description = "";
+                    }
+                    break;
+                case IFeaturedStoreItem fsi:
+                    name = fsi.Name;
+                    description = fsi.Description;
+                    break;
+                case IBBCollectionData bbcd:
+                    name = bbcd.CollectionName;
+                    description = bbcd.CollectionDesc;
+                    break;
+                case IInventoryItemStack iis:
+                    name = GameObject.GetObject(iis.TopObject).ToTooltipString();
+                    description = "";
+                    break;
+                default:
+                    throw new ArgumentException("Not a valid Build/Buy product", nameof(product));
+            }
+
+            return new Document<object>(name, description, product);
+        }
+
+        protected void SetSearchModel(IEnumerable<object> objects)
+        {
+            mDocuments = from obj in objects
+                         select SelectProduct(obj);
+
+            SearchModel = new TFIDF<object>(mDocuments)
+            {
+                Yielding = true
+            };
+
+            SearchModel.Preprocess();
+
+            if (!string.IsNullOrEmpty(mSearchBar.Query))
+            {
+                ProcessExistingQuery();
+            }
+        }
+
+        protected void ProcessExistingQuery()
+        {
+            ClearCatalogGrid();
+            mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
+        }
+
+        protected IEnumerable<BuildBuyProduct> SearchCollections(IEnumerable<IBBCollectionData> collections)
+        {
+            ITokenizer tokenizer = Tokenizer.Create();
+            foreach (IBBCollectionData collection in collections)
+            {
+                if (tokenizer.Tokenize(mSearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
+                {
+                    List<BuildBuyProduct> collectionProducts = collection.Items.ConvertAll(item => (item as BuildBuyPreset).Product);
+                    IEnumerable<BuildBuyProduct> collectionDocs = from document in mDocuments
+                                                                  select document.Tag as BuildBuyProduct into product
+                                                                  where collectionProducts.Contains(product)
+                                                                  select product;
+
+                    if (collectionDocs.FirstOrDefault() is not null)
+                    {
+                        return collectionDocs;
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected abstract void ClearCatalogGrid();
+    }
+
+    public class BuyExtender : BuildBuyExtender
+    {
+        private readonly IInventory mFamilyInventory;
+
+        private bool mInventoryEventRegistered;
+
         public BuyExtender()
         {
+            mFamilyInventory = BuyController.sController.mFamilyInventory;
+            if (mFamilyInventory is not null)
+            {
+                mFamilyInventory.InventoryChanged += SetSearchModel;
+            }
+
             mSearchBar = new(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0), QueryEnteredTask);
             mSearchBar.MoveToBack();
             SetSearchBarLocation();
-            if (BuyController.sController.mPopulateGridTaskHelper is not null)
+            bool defaultInventory = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory;
+            if ((defaultInventory && mFamilyInventory?.InventoryItems is not null)
+                || BuyController.sController.mPopulateGridTaskHelper is not null)
             {
+                if (defaultInventory)
+                {
+                    RegisterInventoryEvents();
+                }
                 SetSearchModel();
             }
 
             CASCompositorController.Instance.ExitFullEditMode += delegate {
                 if (!string.IsNullOrEmpty(mSearchBar.Query))
                 {
-                    mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
+                    ProcessExistingQuery();
                 }
             };
-
-            mFamilyInventory = BuyController.sController.mFamilyInventory;
-            if (mFamilyInventory is not null)
-            {
-                mFamilyInventory.InventoryChanged += SetSearchModel;
-            }
 
             BuyController.sController.mTabContainerSortByFunction.TabSelect += (_,_) => SetSearchModel();
 
@@ -128,7 +228,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 mFamilyInventory.InventoryChanged -= SetSearchModel;
             }
-            mPendingQueryTask?.Dispose();
             base.Dispose();
         }
 
@@ -140,23 +239,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 IEnumerable results = null;
                 if (BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory))
                 {
-                    ITokenizer tokenizer = Tokenizer.Create();
-                    foreach (IBBCollectionData collection in BuyController.sController.mBuyModel.CollectionInfo.CollectionData)
-                    {
-                        if (tokenizer.Tokenize(mSearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
-                        {
-                            List<BuildBuyProduct> collectionProducts = collection.Items.ConvertAll(item => (item as BuildBuyPreset).Product);
-                            IEnumerable<BuildBuyProduct> collectionDocs = from document in mDocuments
-                                                                          select document.Tag as BuildBuyProduct into product
-                                                                          where collectionProducts.Contains(product)
-                                                                          select product;
-
-                            if (collectionDocs.FirstOrDefault() is not null)
-                            {
-                                results = collectionDocs;
-                            }
-                        }
-                    }
+                    results = SearchCollections(BuyController.sController.mBuyModel.CollectionInfo.CollectionData);
                 }
 #if DEBUG
                 results ??= SearchModel.Search(mSearchBar.Query)
@@ -443,7 +526,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        private void ClearCatalogGrid()
+        protected override void ClearCatalogGrid()
         {
             BuyController.sController.StopGridPopulation();
             foreach (ItemGridCellItem itemGridCellItem in BuyController.sController.mCatalogGrid.Items)
@@ -501,23 +584,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             try
             {
-                mDocuments = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
-                    ? mFamilyInventory.InventoryItems.Select(SelectProduct)
-                    : BuyController.sController.mPopulateGridTaskHelper.Collection
-                                                                       .Cast<object>()
-                                                                       .Select(SelectProduct);
-                SearchModel = new TFIDF<object>(mDocuments)
-                {
-                    Yielding = true
-                };
-
-                SearchModel.Preprocess();
-
-                if (!string.IsNullOrEmpty(mSearchBar.Query))
-                {
-                    ClearCatalogGrid();
-                    mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
-                }
+                SetSearchModel(BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
+                    ? mFamilyInventory.InventoryItems.Cast<object>()
+                    : BuyController.sController.mPopulateGridTaskHelper.Collection.Cast<object>());
             }
             catch (Exception e)
             {
@@ -525,60 +594,38 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        private Document<object> SelectProduct(object product)
+        private void RegisterInventoryEvents()
         {
-            string name, description;
-
-            switch (product)
+            if (!mInventoryEventRegistered)
             {
-                case BuildBuyProduct bbp:
-                    name = bbp.CatalogName;
-                    description = bbp.Description;
-                    break;
-                case BuildBuyPreset bbp:
-                    name = bbp.Product.CatalogName;
-                    description = bbp.Product.Description;
-                    // Filter out the generic descriptions of wall or floor patterns
-                    if (description == Localization.LocalizeString(kWallDescriptionHash) || description == Localization.LocalizeString(kFloorDescriptionHash))
-                    {
-                        description = "";
-                    }
-                    break;
-                case IFeaturedStoreItem fsi:
-                    name = fsi.Name;
-                    description = fsi.Description;
-                    break;
-                case IBBCollectionData bbcd:
-                    name = bbcd.CollectionName;
-                    description = bbcd.CollectionDesc;
-                    break;
-                case IInventoryItemStack iis:
-                    name = GameObject.GetObject(iis.TopObject).ToTooltipString();
-                    description = "";
-                    break;
-                default:
-                    throw new ArgumentException("Not a valid Build/Buy product", nameof(product));
+                Grid grid = BuyController.sController.mGridInventory.Grid.InternalGrid;
+                grid.DragDrop -= BuyController.sController.OnGridDragDrop;
+                grid.DragDrop += OnGridDragDrop;
+                grid.DragEnd -= BuyController.sController.OnGridDragEnd;
+                grid.DragEnd += OnGridDragEnd;
+                mInventoryEventRegistered = true;
             }
+        }
 
-            return new Document<object>(name, description, product);
+        private void UnregisterInventoryEvents()
+        {
+            if (mInventoryEventRegistered)
+            {
+                Grid grid = BuyController.sController.mGridInventory.Grid.InternalGrid;
+                grid.DragDrop -= OnGridDragDrop;
+                grid.DragEnd -= OnGridDragEnd;
+                mInventoryEventRegistered = false;
+            }
         }
 
         private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
             mSearchBar.Clear();
             SetSearchBarLocation();
-            Grid grid = BuyController.sController.mGridInventory.Grid.InternalGrid;
             if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
                 SetSearchModel();
-                if (!mInventoryEventRegistered)
-                {
-                    grid.DragDrop -= BuyController.sController.OnGridDragDrop;
-                    grid.DragDrop += OnGridDragDrop;
-                    grid.DragEnd -= BuyController.sController.OnGridDragEnd;
-                    grid.DragEnd += OnGridDragEnd;
-                    mInventoryEventRegistered = true;
-                }
+                RegisterInventoryEvents();
             }
             else
             {
@@ -586,12 +633,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 {
                     SetSearchModel();
                 }
-                if (mInventoryEventRegistered)
-                {
-                    grid.DragDrop -= OnGridDragDrop;
-                    grid.DragEnd -= OnGridDragEnd;
-                    mInventoryEventRegistered = false;
-                }
+                UnregisterInventoryEvents();
             }
         }
 
@@ -614,7 +656,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
     }
 
-    /*public static class BuildExtender
+    /*public class BuildExtender : BuildBuyExtender
     {
         private static bool sDone;
 
