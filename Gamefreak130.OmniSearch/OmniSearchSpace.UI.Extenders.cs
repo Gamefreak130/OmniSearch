@@ -158,7 +158,15 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                         }
                     }
                 }
+#if DEBUG
+                results ??= SearchModel.Search(mSearchBar.Query)
+                                       .Cast<object>()
+                                       .ToList();
+
+                //DocumentLogger.sInstance.WriteLog();
+#else
                 results ??= SearchModel.Search(mSearchBar.Query);
+#endif
 
                 ClearCatalogGrid();
                 if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)

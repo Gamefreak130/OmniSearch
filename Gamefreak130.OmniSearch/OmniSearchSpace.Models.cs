@@ -1,6 +1,5 @@
 ﻿using Gamefreak130.OmniSearchSpace.Helpers;
 using Sims3.Gameplay.Utilities;
-using System.Diagnostics;
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {
@@ -71,7 +70,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 if (string.IsNullOrEmpty(query))
                 {
                     return from document in mDocuments
-                           select LogWeight(document, float.NaN);
+                           select document.Tag;
                 }
 
                 TaskEx.Delay((uint)(ProgressDialog.kProgressDialogDelay * 1000))
@@ -90,18 +89,20 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected abstract IEnumerable<T> SearchTask(string query);
 
+#if DEBUG
         protected T LogWeight(Document<T> document, float weight)
         {
-            if (Debugger.IsAttached)
+            if (System.Diagnostics.Debugger.IsAttached)
             {
-                Debugger.Log(0, "", $"{document.Title}\n{document.Description}\n{weight}\n\n");
+                System.Diagnostics.Debugger.Log(0, "", $"{document.Title}\n{document.Description}\n{weight}\n\n");
             }
             else
             {
-                // TODO Log to scripterror
+                DocumentLogger.sInstance.Log(new(document, weight));
             }
             return document.Tag;
         }
+#endif
     }
 
     public class ExactMatch<T> : SearchModel<T>
@@ -119,7 +120,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
                let weight = titleWeight + descWeight
                where weight > 0
                orderby weight descending
+#if DEBUG
                select LogWeight(document, weight);
+#else
+               select document.Tag;
+#endif
     }
 
     public class TFIDF<T> : SearchModel<T>
@@ -237,7 +242,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
                     if (mDocuments.Count == 1)
                     {
                         return from document in mDocuments
+#if DEBUG
                                select LogWeight(document, float.NaN);
+#else
+                               select document.Tag;
+#endif
                     }
 
                     double tfidf = Math.Log10(1 + group.count) * Math.Log10((double)mDocuments.Count / mWordOccurences[group.word].Count);
@@ -287,7 +296,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
             return from kvp in championDocs
                    where kvp.Value != 0
                    orderby kvp.Value descending
+#if DEBUG
                    select LogWeight(mDocuments[kvp.Key], (float)kvp.Value);
+#else
+                   select mDocuments[kvp.Key].Tag;
+#endif
         }
     }
 }

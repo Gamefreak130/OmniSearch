@@ -53,4 +53,35 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
             => from character in Regex.Replace(input.ToLower(), kCharsToRemove, "")
                select character.ToString();
     }
+
+#if DEBUG
+    public class DocumentLogger : Logger<Tuple>
+    {
+        public static readonly DocumentLogger sInstance = new();
+
+        private readonly System.Text.StringBuilder mLog = new();
+
+        private int mCount;
+
+        public override void Log(Tuple input)
+        {
+            mCount++;
+            Document<object> document = input.mParam1 as Document<object>;
+            float weight = (float)input.mParam2;
+            mLog.AppendLine($"{document.Title}\n{document.Description}\n{weight}\n");
+        }
+
+        public void WriteLog()
+        {
+            if (mLog.Length > 0)
+            {
+                base.WriteLog(mLog);
+                mLog.Remove(0, mLog.Length);
+                mCount = 0;
+            }
+        }
+
+        protected override string WriteNotification() => $"Search results logged: {mCount} documents found";
+    }
+#endif
 }
