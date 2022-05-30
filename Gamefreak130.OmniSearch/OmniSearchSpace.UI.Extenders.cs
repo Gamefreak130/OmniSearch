@@ -13,7 +13,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
-    // TODO Fix category pagination w/ existing search
     public abstract class SearchExtender : IDisposable
     {
         private ISearchModel mSearchModel;
@@ -189,7 +188,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 }
             }
 
-            uint num = 0;
+            uint num = 2;
             WindowBase childByIndex = BuyController.sController.mCategorySelectionPanel.GetChildByIndex(num);
             while (childByIndex is not null)
             {
