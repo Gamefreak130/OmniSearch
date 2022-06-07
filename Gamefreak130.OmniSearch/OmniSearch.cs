@@ -35,7 +35,7 @@ namespace Gamefreak130
             }
             if (BuildController.sController is not null)
             {
-                //BuildExtender.Init();
+                new BuildExtender();
             }
         }
     }

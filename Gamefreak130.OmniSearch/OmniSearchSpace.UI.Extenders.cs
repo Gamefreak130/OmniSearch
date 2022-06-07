@@ -673,30 +673,191 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SetSearchModel();
         }
     }
-
-    /*public class BuildExtender : BuildBuyExtender
+    // CONSIDER BuildCatalogItem vs. BuildPatternItem in search results
+    // TODO Clear and SetSearchModel when eyedropper from one catalog grid to another (or different tabs of a single middle puck) (or collections -> build objects)
+    public class BuildExtender : BuildBuyExtender
     {
-        private static bool sDone;
+        protected override IEnumerable<Document<object>> Corpus => (BuildController.sController.mProductList ?? BuildController.sController.mPresetList).Select(SelectDocument);
 
-        public static void Init()
+        public BuildExtender() : base(BuildController.sLayout.GetWindowByExportID(1).GetChildByIndex(2))
         {
-            BuildController.sController.Tick += TriggerSearch;
+            SetSearchBarVisibility();
+            SearchBar.MoveToBack();
+
+            BuildController controller = BuildController.sController;
+
+            controller.mPoolSelectObjectsButton.Click += OnCategoryButtonClick;
+            controller.mPoolObjectsSelectPoolButton.Click += OnCategoryButtonClick;
+
+            controller.mFountainSelectObjects.Click += OnCategoryButtonClick;
+            controller.mFountainObjectsSelectFountainButton.Click += OnCategoryButtonClick;
+
+            controller.mWallPaintSelectWallButton.Click += OnCategoryButtonClick;
+            controller.mWallCreateSelectPaintButton.Click += OnCategoryButtonClick;
+            controller.mWallCreateHalfWallButton.Click += OnCategoryButtonClick;
+            controller.mHalfWallCreateSelectPaintButton.Click += OnCategoryButtonClick;
+            controller.mHalfWallCreateWallButton.Click += OnCategoryButtonClick;
+            controller.mHalfWallCreateRoomButton.Click += OnCategoryButtonClick;
+            controller.mHalfWallCreateDiagonalRoomButton.Click += OnCategoryButtonClick;
+
+            controller.mFenceCreateGateButton.Click += OnCategoryButtonClick;
+            controller.mGatesCreateFenceButton.Click += OnCategoryButtonClick;
+
+            controller.mStairsCatalogRailingsButton.Click += OnCategoryButtonClick;
+            controller.mStairsCatalogElevatorsButton.Click += OnCategoryButtonClick;
+            controller.mRailingsCatalogStairsButton.Click += OnCategoryButtonClick;
+            controller.mRailingsCatalogElevatorsButton.Click += OnCategoryButtonClick;
+            controller.mElevatorsCatalogStairsButton.Click += OnCategoryButtonClick;
+            controller.mElevatorsCatalogRailingsButton.Click += OnCategoryButtonClick;
+
+            controller.mFoundationCatalogSquareButton.Click += OnCategoryButtonClick;
+            controller.mFoundationCatalogDiagonalButton.Click += OnCategoryButtonClick;
+
+            (controller.GetChildByID((uint)BuildController.ControlID.TerrainPaintButton, true) as Button).Click += OnCategoryButtonClick;
+            (controller.GetChildByID((uint)BuildController.ControlID.TerrainEraseButton, true) as Button).Click += OnCategoryButtonClick;
+
+            BuildController.sController.mCollectionGrid.ItemClicked += (_, _) => SetSearchModel();
+            BuildController.sController.mCatalogProductFilter.FiltersChanged += SetSearchModel;
+
+            controller.mConstructionCatalogTabContainer.TabSelect += OnTabSelect;
+            controller.mFloorPaintTabContainer.TabSelect += OnTabSelect;
+            controller.mGardeningCatalogTabContainer.TabSelect += OnTabSelect;
+            controller.mGenericCatalogTabContainer.TabSelect += OnTabSelect;
+            controller.mRoofCatalogTabContainer.TabSelect += OnTabSelect;
+            controller.mStairsTabContainer.TabSelect += OnTabSelect;
+            controller.mTerrainPaintTabContainer.TabSelect += OnTabSelect;
+            controller.mWallPaintTabContainer.TabSelect += OnTabSelect;
+
+            controller.mMiddlePuckWin.VisibilityChange += OnMiddlePuckVisibilityChange;
+            controller.mCollectionCatalogWindow.VisibilityChange += OnMiddlePuckVisibilityChange;
         }
 
-        private static void TriggerSearch(WindowBase _, UIEventArgs __)
+        /*public override void Dispose()
+        {
+            World.OnEyedropperPickCallback
+            base.Dispose();
+        }*/
+
+        protected override void ClearCatalogGrid()
+        {
+            BuildController.sController.mCurrentCatalogGrid.AbortPopulating();
+            BuildController.sController.mCurrentCatalogGrid.Clear();
+        }
+
+        private void SetSearchBarVisibility()
+        {
+            BuildController controller = BuildController.sController;
+            SearchBar.Visible = controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible);
+
+            if (SearchBar.Visible)
+            {
+                SetSearchBarLocation();
+                SetSearchModel();
+            }
+            else
+            {
+                SearchBar.Clear();
+            }
+        }
+
+        private void SetSearchBarLocation()
+        {
+            BuildController controller = BuildController.sController;
+            float x,
+                  y = controller.mCollectionWindow.Visible ? -36 : -37,
+                  width;
+            // TODO Refactor
+            if (controller.mPoolObjectsCatalogWindow.Visible || controller.mGatesCatalogWindow.Visible || controller.mRailingsCatalogWindow.Visible || controller.mElevatorsCatalogWindow.Visible)
+            {
+                x = 75;
+                width = 250;
+            }
+            else if (controller.mFoundationCatalogWindow.Visible)
+            {
+                x = 93;
+                width = 260;
+            }
+            else if (controller.mTerrainPaintTypesWindow.Visible)
+            {
+                x = 85;
+                width = 268;
+            }
+            else if (controller.mFenceCatalogWindow.Visible)
+            {
+                x = 140;
+                width = 250;
+            }
+            else if (controller.mHalfWallCatalogWindow.Visible)
+            {
+                x = 190;
+                width = 250;
+            }
+            else if (controller.mWallCreateAndPaintWindow.Visible) // TODO dynamic width adjust
+            {
+                x = 535;
+                width = 150;
+            }
+            else if (controller.mFloorPaintTypesWindow.Visible) // TODO dynamic width adjust
+            {
+                x = 518;
+                width = 120;
+            }
+            else if (controller.mConstructionCatalogWindow.Visible || controller.mGardeningCatalogWindow.Visible || controller.mGenericCatalogWindow.Visible) // TODO Split up; too much width between generic tabs and search bar
+            {
+                x = 280;
+                width = 300;
+            }
+            else
+    {
+                x = 350;
+                width = 260;
+            }
+
+            SearchBar.SetLocation(x, y, width);
+        }
+
+        private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
+        {
+            SearchBar.Clear();
+            SetSearchBarVisibility();
+        }
+
+        private void OnTabSelect(TabControl _, TabControl __) => SetSearchModel();
+
+        private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => SetSearchBarVisibility();
+
+        protected override void QueryEnteredTask()
         {
             try
             {
-                if (!(BuyController.sController.mCatalogGrid.Tag as Button).Enabled)
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+                BuildController controller = BuildController.sController;
+                List<object> results = null;
+                if (!controller.mCollectionWindow.Visible)
                 {
-                    sDone = false;
-                    return;
+                    results = SearchCollections()?.Cast<object>()
+                                                  .ToList();
                 }
+
+                results ??= SearchModel.Search(SearchBar.Query)
+                                       .ToList();
+
+#if DEBUG
+                //DocumentLogger.sInstance.WriteLog();
+#endif
+
+                ClearCatalogGrid();
+                
+
+                List<object> productList = controller.mProductList is not null ? results : null,
+                             presetList = controller.mPresetList is not null ? results : null;
+
+                controller.PopulateCatalogGrid(controller.mCurrentCatalogGrid, "BuildCatalogItem", productList, presetList, controller.mCatalogProduct, controller.mCatalogFilter);
             }
-            catch (Exception e)
+            finally
             {
-                ExceptionLogger.sInstance.Log(e);
+                TaskEx.Run(ProgressDialog.Close);
+            }
             }
         }
-    }*/
 }
