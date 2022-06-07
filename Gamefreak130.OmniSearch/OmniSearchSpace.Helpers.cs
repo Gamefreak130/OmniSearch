@@ -2,7 +2,7 @@
 
 namespace Gamefreak130.OmniSearchSpace.Helpers
 {
-    public class Document<T>
+    public class Document<T> : IEquatable<Document<T>>
     {
         public string Title { get; }
 
@@ -16,6 +16,16 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
             Description = description ?? "";
             Tag = tag;
         }
+
+        public bool Equals(Document<T> otherDoc) => otherDoc.Title == Title && otherDoc.Description == Description;
+
+        public override bool Equals(object o) => o is Document<T> otherDoc && Equals(otherDoc);
+
+        public override int GetHashCode() => Title.GetHashCode() ^ Description.GetHashCode();
+
+        public static bool operator ==(Document<T> doc1, Document<T> doc2) => doc1.Equals(doc2);
+
+        public static bool operator !=(Document<T> doc1, Document<T> doc2) => !doc1.Equals(doc2);
     }
 
     public interface ITokenizer
