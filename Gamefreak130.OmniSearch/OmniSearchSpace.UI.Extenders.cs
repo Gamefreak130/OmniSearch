@@ -13,6 +13,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
+    // TEST featured store items
+    // TEST resort build/buy
+    // TEST interior design
     public abstract class SearchExtender<TDocument, TResult> : IDisposable
     {
         private ISearchModel<TResult> mSearchModel;
@@ -29,7 +32,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
 
         protected OmniSearchBar SearchBar { get; private set; }
-
+        // TODO cache for collection search?
         protected abstract IEnumerable<TDocument> Corpus { get; }
 
         protected SearchExtender(WindowBase parentWindow)
@@ -107,7 +110,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     description = "";
                     break;
                 default:
-                    throw new ArgumentException("Not a valid Build/Buy product", nameof(product));
+                    throw new ArgumentException($"{product.GetType()} is not a valid Build/Buy product", nameof(product));
             }
 
             return new Document<object>(name, description, product);
@@ -189,8 +192,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SearchBar.MoveToBack();
             SetSearchBarLocation();
             bool defaultInventory = BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory;
-            if ((defaultInventory && mFamilyInventory?.InventoryItems is not null)
-                || BuyController.sController.mPopulateGridTaskHelper is not null)
+            if (defaultInventory || BuyController.sController.mPopulateGridTaskHelper is not null)
             {
                 if (defaultInventory)
                 {
@@ -206,7 +208,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 }
             };
 
-            BuyController.sController.mTabContainerSortByFunction.TabSelect += (_,_) => SetSearchModel();
+            BuyController.sController.mTabContainerSortByFunction.TabSelect += OnTabSelect;
 
             foreach (BuyController.RoomCatalogButtonInfo roomInfo in BuyController.mRoomCatalogButtonInfoDict.Values)
             {
@@ -269,7 +271,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 }
 #if DEBUG
                 results ??= SearchModel.Search(SearchBar.Query)
-                                       .Cast<object>()
                                        .ToList();
 
                 //DocumentLogger.sInstance.WriteLog();
@@ -593,7 +594,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 {
                     x = 317;
                 }
-
+                // TODO refactor to match buildextender
                 if (catalogType is BuyController.CatalogType.Inventory)
                 {
                     SearchBar.Visible = mFamilyInventory is not null;
@@ -628,6 +629,12 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 grid.DragEnd -= OnGridDragEnd;
                 mInventoryEventRegistered = false;
             }
+        }
+
+        private void OnTabSelect(TabControl _, TabControl __)
+        {
+            SetSearchBarLocation();
+            SetSearchModel();
         }
 
         private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
