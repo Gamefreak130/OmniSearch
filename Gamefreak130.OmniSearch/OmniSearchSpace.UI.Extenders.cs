@@ -142,22 +142,21 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
         }
 
-        protected IEnumerable<BuildBuyProduct> SearchCollections(IEnumerable<IBBCollectionData> collections)
+        protected IEnumerable<object> SearchCollections()
         {
             ITokenizer tokenizer = Tokenizer.Create();
-            foreach (IBBCollectionData collection in collections)
+            foreach (IBBCollectionData collection in Responder.Instance.BuildModel.CollectionInfo.CollectionData)
             {
                 if (tokenizer.Tokenize(SearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
                 {
-                    List<BuildBuyProduct> collectionProducts = collection.Items.ConvertAll(item => (item as BuildBuyPreset).Product);
-                    IEnumerable<BuildBuyProduct> collectionDocs = from document in Corpus
-                                                                  select document.Tag as BuildBuyProduct into product
-                                                                  where collectionProducts.Contains(product)
-                                                                  select product;
+                    List<Document<object>> collectionDocs = collection.Items.ConvertAll(SelectDocument);
+                    IEnumerable<object> collectionProducts = from document in Corpus
+                                                             where collectionDocs.Contains(document)
+                                                             select document.Tag;
 
-                    if (collectionDocs.FirstOrDefault() is not null)
+                    if (collectionProducts.FirstOrDefault() is not null)
                     {
-                        return collectionDocs;
+                        return collectionProducts;
                     }
                 }
             }
@@ -267,7 +266,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 IEnumerable results = null;
                 if (BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory))
                 {
-                    results = SearchCollections(BuyController.sController.mBuyModel.CollectionInfo.CollectionData);
+                    results = SearchCollections();
                 }
 #if DEBUG
                 results ??= SearchModel.Search(SearchBar.Query)
