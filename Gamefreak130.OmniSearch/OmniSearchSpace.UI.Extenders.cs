@@ -174,7 +174,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override IEnumerable<Document<object>> Corpus => BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
                                                                 ? mFamilyInventory.InventoryItems
-                                                                                  .Cast<object>()
                                                                                   .Select(SelectDocument)
                                                                 : BuyController.sController.mPopulateGridTaskHelper.Collection
                                                                                                                    .Cast<object>()
@@ -182,6 +181,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
         {
+            // TODO shorthand controller
             mFamilyInventory = BuyController.sController.mFamilyInventory;
             if (mFamilyInventory is not null)
             {
@@ -674,7 +674,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
     }
     // CONSIDER BuildCatalogItem vs. BuildPatternItem in search results
-    // TODO Stop clearing search bar on eyedropper or pickup
+    // TODO Stop clearing search bar on pickup
     public class BuildExtender : BuildBuyExtender
     {
         protected override IEnumerable<Document<object>> Corpus => (BuildController.sController.mProductList ?? BuildController.sController.mPresetList).Select(SelectDocument);
@@ -843,8 +843,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 List<object> results = null;
                 if (!controller.mCollectionWindow.Visible)
                 {
-                    results = SearchCollections()?.Cast<object>()
-                                                  .ToList();
+                    results = SearchCollections()?.ToList();
                 }
 
                 results ??= SearchModel.Search(SearchBar.Query)
