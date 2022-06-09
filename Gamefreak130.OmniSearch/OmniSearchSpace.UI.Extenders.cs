@@ -576,37 +576,37 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             if (BuyController.sController is BuyController controller)
             {
                 BuyController.CatalogType catalogType = controller.mCurrCatalogType;
-            float x, y = -35, width;
+                float x, y = -35, width;
 
-            if (catalogType == BuyController.CatalogType.ByRoom)
-            {
-                x = 725;
-                    width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
-            }
-            else
-            {
-                width = catalogType == BuyController.CatalogType.ByCategory && BuyController.sBuyDebug ? 201 : 251;
-                    if (controller.mBuyModel.IsInShopMode())
+                if (catalogType == BuyController.CatalogType.ByRoom)
                 {
-                    x = 362;
-                    width -= 45;
+                    x = 725;
+                    width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
                 }
                 else
                 {
-                    x = 317;
-                }
-                // TODO refactor to match buildextender
-                if (catalogType is BuyController.CatalogType.Inventory)
-                {
-                    SearchBar.Visible = mFamilyInventory is not null;
-                }
-                if (catalogType is BuyController.CatalogType.Collections)
-                {
+                    width = catalogType == BuyController.CatalogType.ByCategory && BuyController.sBuyDebug ? 201 : 251;
+                    if (controller.mBuyModel.IsInShopMode())
+                    {
+                        x = 362;
+                        width -= 45;
+                    }
+                    else
+                    {
+                        x = 317;
+                    }
+                    // TODO refactor to match buildextender
+                    if (catalogType is BuyController.CatalogType.Inventory)
+                    {
+                        SearchBar.Visible = mFamilyInventory is not null;
+                    }
+                    if (catalogType is BuyController.CatalogType.Collections)
+                    {
                         SearchBar.Visible = controller.mCollectionCatalogWindow.Visible;
+                    }
                 }
+                SearchBar.SetLocation(x, y, width);
             }
-            SearchBar.SetLocation(x, y, width);
-        }
         }
 
         private void RegisterInventoryEvents()
@@ -677,9 +677,12 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
     }
     // CONSIDER BuildCatalogItem vs. BuildPatternItem in search results
-    // TODO Stop clearing search bar on pickup
     public class BuildExtender : BuildBuyExtender
     {
+        private bool mCompositorActive;
+
+        private bool mSellPanelActive;
+
         protected override IEnumerable<Document<object>> Corpus => (BuildController.sController.mProductList ?? BuildController.sController.mPresetList).Select(SelectDocument);
 
         public BuildExtender() : base(BuildController.sLayout.GetWindowByExportID(1).GetChildByIndex(2))
@@ -757,7 +760,29 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             if (SearchBar.Visible)
             {
                 SetSearchBarLocation();
-                SetSearchModel();
+                if (mCompositorActive || mSellPanelActive)
+                {
+                    if (mCompositorActive && !string.IsNullOrEmpty(SearchBar.Query))
+                    {
+                        ProcessExistingQuery();
+                    }
+                    mCompositorActive = false;
+                    mSellPanelActive = false;
+                }
+                else
+                {
+                    SetSearchModel();
+                }
+            }
+            // These are set to false before the middle puck reappears
+            // So we need to keep track of them ourselves to avoid needlessly resetting the search model
+            else if (controller.mbCompositorActive)
+            {
+                mCompositorActive = true;
+            }
+            else if (controller.mSellPanelController.Visible)
+            {
+                mSellPanelActive = true;
             }
             else
             {
@@ -813,7 +838,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 width = 300;
             }
             else
-    {
+            {
                 x = 350;
                 width = 260;
             }
@@ -868,6 +893,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 TaskEx.Run(ProgressDialog.Close);
             }
-            }
         }
+    }
 }
