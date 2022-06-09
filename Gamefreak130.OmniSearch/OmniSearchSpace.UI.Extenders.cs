@@ -573,18 +573,20 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void SetSearchBarLocation()
         {
-            BuyController.CatalogType catalogType = BuyController.sController.mCurrCatalogType;
+            if (BuyController.sController is BuyController controller)
+            {
+                BuyController.CatalogType catalogType = controller.mCurrCatalogType;
             float x, y = -35, width;
 
             if (catalogType == BuyController.CatalogType.ByRoom)
             {
                 x = 725;
-                width = MathUtils.Clamp(25 + (65 * BuyController.sController.mCatalogGrid.VisibleColumns), 165, 250);
+                    width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
             }
             else
             {
                 width = catalogType == BuyController.CatalogType.ByCategory && BuyController.sBuyDebug ? 201 : 251;
-                if (BuyController.sController.mBuyModel.IsInShopMode())
+                    if (controller.mBuyModel.IsInShopMode())
                 {
                     x = 362;
                     width -= 45;
@@ -600,10 +602,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 }
                 if (catalogType is BuyController.CatalogType.Collections)
                 {
-                    SearchBar.Visible = BuyController.sController.mCollectionCatalogWindow.Visible;
+                        SearchBar.Visible = controller.mCollectionCatalogWindow.Visible;
                 }
             }
             SearchBar.SetLocation(x, y, width);
+        }
         }
 
         private void RegisterInventoryEvents()
