@@ -796,51 +796,53 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             float x,
                   y = controller.mCollectionWindow.Visible ? -36 : -37,
                   width;
-            // TODO Refactor
-            if (controller.mPoolObjectsCatalogWindow.Visible || controller.mGatesCatalogWindow.Visible || controller.mRailingsCatalogWindow.Visible || controller.mElevatorsCatalogWindow.Visible)
+
+            switch (controller)
             {
-                x = 75;
-                width = 250;
-            }
-            else if (controller.mFoundationCatalogWindow.Visible)
-            {
-                x = 93;
-                width = 260;
-            }
-            else if (controller.mTerrainPaintTypesWindow.Visible)
-            {
-                x = 85;
-                width = 268;
-            }
-            else if (controller.mFenceCatalogWindow.Visible)
-            {
-                x = 140;
-                width = 250;
-            }
-            else if (controller.mHalfWallCatalogWindow.Visible)
-            {
-                x = 190;
-                width = 250;
-            }
-            else if (controller.mWallCreateAndPaintWindow.Visible) // TODO dynamic width adjust
-            {
-                x = 535;
-                width = 150;
-            }
-            else if (controller.mFloorPaintTypesWindow.Visible) // TODO dynamic width adjust
-            {
-                x = 518;
-                width = 120;
-            }
-            else if (controller.mConstructionCatalogWindow.Visible || controller.mGardeningCatalogWindow.Visible || controller.mGenericCatalogWindow.Visible) // TODO Split up; too much width between generic tabs and search bar
-            {
-                x = 280;
-                width = 300;
-            }
-            else
-            {
-                x = 350;
-                width = 260;
+                case { mPoolObjectsCatalogWindow.Visible: true } or { mGatesCatalogWindow.Visible: true } or { mRailingsCatalogWindow.Visible: true } or { mElevatorsCatalogWindow.Visible: true }:
+                    x = 75;
+                    width = 250;
+                    break;
+                case { mFoundationCatalogWindow.Visible: true }:
+                    x = 93;
+                    width = 260;
+                    break;
+                case { mTerrainPaintTypesWindow.Visible: true }:
+                    x = 85;
+                    width = 268;
+                    break;
+                case { mFenceCatalogWindow.Visible: true }:
+                    x = 140;
+                    width = 250;
+                    break;
+                case { mHalfWallCatalogWindow.Visible: true }:
+                    x = 190;
+                    width = 250;
+                    break;
+                case { mWallCreateAndPaintWindow.Visible: true }:
+                    x = 535;
+                    width = MathUtils.Clamp((65 * controller.mCurrentCatalogGrid.VisibleColumns) - 435, 150, 250);
+                    break;
+                case { mFloorPaintTypesWindow.Visible: true }:
+                    x = 518;
+                    width = MathUtils.Clamp((65 * controller.mCurrentCatalogGrid.VisibleColumns) - 465, 120, 250);
+                    break;
+                case { mConstructionCatalogWindow.Visible: true }:
+                    x = 270;
+                    width = 300;
+                    break;
+                case { mGenericCatalogWindow.Visible: true }:
+                    x = 180;
+                    width = 300;
+                    break;
+                case { mGardeningCatalogWindow.Visible: true }:
+                    x = 220;
+                    width = 300;
+                    break;
+                default:
+                    x = 350;
+                    width = 260;
+                    break;
             }
 
             SearchBar.SetLocation(x, y, width);
