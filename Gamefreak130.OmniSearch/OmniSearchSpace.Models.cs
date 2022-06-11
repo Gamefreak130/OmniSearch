@@ -129,9 +129,6 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
     public class TFIDF<T> : SearchModel<T>
     {
-        // CONSIDER refactor to avoid shadowing
-        private new readonly List<Document<T>> mDocuments;
-
         // TFIDFMatrix is a set of document vector embeddings formed from the term frequency of words in each document weighted using TF-IDF
         // The embedding itself is represented as a word dictionary, since the full vector of all words in the corpus would be extremely sparse
         private readonly List<Dictionary<string, double>> mTfidfMatrix;
@@ -145,10 +142,9 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         private readonly ITokenizer mTokenizer;
 
-        public TFIDF(IEnumerable<Document<T>> documents) : base(documents)
+        public TFIDF(IEnumerable<Document<T>> documents) : base(documents is List<Document<T>> ? documents : documents.ToList())
         {
-            mDocuments = base.mDocuments is List<Document<T>> list ? list : base.mDocuments.ToList();
-            mTfidfMatrix = new(mDocuments.Count);
+            mTfidfMatrix = new(mDocuments.Count());
             mWordOccurences = new();
             mChampionLists = new();
             mTokenizer = Tokenizer.Create();
@@ -159,11 +155,10 @@ namespace Gamefreak130.OmniSearchSpace.Models
             using (StopWatch startTimer = StopWatchEx.StartNew(StopWatch.TickStyles.Milliseconds))
             {
                 // Iterate over every word of every document to calculate term and document frequency
-                for (int i = 0; i < mDocuments.Count; i++)
+                foreach (var current in mDocuments.Select((doc, i) => new { doc, i }))
                 {
-                    Document<T> document = mDocuments[i];
                     Dictionary<string, double> embedding = new();
-                    foreach (string word in mTokenizer.Tokenize(document.Title))
+                    foreach (string word in mTokenizer.Tokenize(current.doc.Title))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -175,9 +170,9 @@ namespace Gamefreak130.OmniSearchSpace.Models
                         {
                             mWordOccurences[word] = new();
                         }
-                        mWordOccurences[word].Add(i);
+                        mWordOccurences[word].Add(current.i);
                     }
-                    foreach (string word in mTokenizer.Tokenize(document.Description))
+                    foreach (string word in mTokenizer.Tokenize(current.doc.Description))
                     {
                         if (!embedding.ContainsKey(word))
                         {
@@ -189,7 +184,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                         {
                             mWordOccurences[word] = new();
                         }
-                        mWordOccurences[word].Add(i);
+                        mWordOccurences[word].Add(current.i);
                     }
                     mTfidfMatrix.Add(embedding);
                     if (ShouldYield(startTimer))
@@ -202,7 +197,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 // Iterate over every document again to turn TF vector embeddings into TF-IDF embeddings
                 foreach (string word in new List<string>(mWordOccurences.Keys))
                 {
-                    double idf = Math.Log10((double)mDocuments.Count / mWordOccurences[word].Count);
+                    double idf = Math.Log10((double)mDocuments.Count() / mWordOccurences[word].Count);
                     foreach (int i in mWordOccurences[word])
                     {
                         mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
@@ -239,7 +234,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                 {
                     // If there is only one document, we are guaranteed to have reached a matching word at this point
                     // Stop early and return it to avoid calculating a TF-IDF of 0 and missing it
-                    if (mDocuments.Count == 1)
+                    if (mDocuments.Count() == 1)
                     {
                         return from document in mDocuments
 #if DEBUG
@@ -249,7 +244,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
 #endif
                     }
 
-                    double tfidf = Math.Log10(1 + group.count) * Math.Log10((double)mDocuments.Count / mWordOccurences[group.word].Count);
+                    double tfidf = Math.Log10(1 + group.count) * Math.Log10((double)mDocuments.Count() / mWordOccurences[group.word].Count);
                     queryVector[group.word] = tfidf;
                     queryMagnitude += tfidf * tfidf;
                 }
@@ -265,7 +260,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
             // Go through the champion lists for each term in the query and calculate cosine similarity (dot product divided by product of magnitudes)
             // Between the query vector and each champion document vector
-            Dictionary<int, double> championDocs = new(mDocuments.Count);
+            Dictionary<int, double> championDocs = new(mDocuments.Count());
             foreach (string queryWord in queryVector.Keys)
             {
                 foreach (int i in mChampionLists[queryWord])
@@ -297,7 +292,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                    where kvp.Value != 0
                    orderby kvp.Value descending
 #if DEBUG
-                   select LogWeight(mDocuments[kvp.Key], (float)kvp.Value);
+                   select LogWeight(mDocuments.Skip(kvp.Key).First(), (float)kvp.Value);
 #else
                    select mDocuments[kvp.Key].Tag;
 #endif
