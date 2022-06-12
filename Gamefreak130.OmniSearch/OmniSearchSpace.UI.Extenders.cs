@@ -32,7 +32,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
 
         protected OmniSearchBar SearchBar { get; private set; }
-        // TODO cache for collection search?
+
         protected abstract IEnumerable<TDocument> Corpus { get; }
 
         protected SearchExtender(WindowBase parentWindow)
@@ -65,6 +65,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
         private AwaitableTask mPendingQueryTask;
+
+        private IEnumerable<Document<object>> mDocuments;
 
         protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow)
             => EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
@@ -120,7 +122,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             try
             {
-                SearchModel = new TFIDF<object>(Corpus)
+                mDocuments = Corpus;
+                SearchModel = new TFIDF<object>(mDocuments)
                 {
                     Yielding = true
                 };
@@ -150,7 +153,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 if (tokenizer.Tokenize(SearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
                 {
                     List<Document<object>> collectionDocs = collection.Items.ConvertAll(SelectDocument);
-                    IEnumerable<object> collectionProducts = from document in Corpus
+                    IEnumerable<object> collectionProducts = from document in mDocuments
                                                              where collectionDocs.Contains(document)
                                                              select document.Tag;
 
