@@ -199,12 +199,15 @@
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
       <Link>System\ExtensionAttribute.cs</Link>
     </Compile>
+    <Compile Include="Extenders\BuyExtender.cs" />
+    <Compile Include="Extenders\BuildExtender.cs" />
+    <Compile Include="Extenders\BuildBuyExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />
     <Compile Include="OmniSearchSpace.PersistedSettings.cs" />
     <Compile Include="OmniSearchSpace.UI.cs" />
-    <Compile Include="OmniSearchSpace.UI.Extenders.cs" />
+    <Compile Include="Extenders\SearchExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,5 +218,6 @@
   <ItemGroup>
     <Content Include="Resources\OmniSearchBar_Icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,7 +1,10 @@
 ﻿global using Gamefreak130.Common.Helpers;
 global using Gamefreak130.Common.Loggers;
 global using Gamefreak130.Common.Tasks;
+global using Gamefreak130.OmniSearchSpace.Helpers;
+global using Gamefreak130.OmniSearchSpace.Models;
 global using Sims3.Gameplay.EventSystem;
+global using Sims3.Gameplay.Utilities;
 global using Sims3.SimIFace;
 global using Sims3.UI;
 global using System;

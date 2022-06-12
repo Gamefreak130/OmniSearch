@@ -59,7 +59,7 @@
             mGroup = group;
             if (!sGroupQueryHistory.ContainsKey(mGroup))
             {
-                sGroupQueryHistory.Add(mGroup, new());
+                sGroupQueryHistory[mGroup] = new();
             }
             mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
             Init(onQueryEntered);

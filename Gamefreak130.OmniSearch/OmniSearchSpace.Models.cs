@@ -1,7 +1,4 @@
-﻿using Gamefreak130.OmniSearchSpace.Helpers;
-using Sims3.Gameplay.Utilities;
-
-namespace Gamefreak130.OmniSearchSpace.Models
+﻿namespace Gamefreak130.OmniSearchSpace.Models
 {
     public interface ISearchModel : IDisposable
     {
