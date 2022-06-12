@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonUtils\System\Index.cs">
+      <Link>System\Index.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
       <Link>System\Linq\DelegatingComparer.cs</Link>
     </Compile>
@@ -207,6 +210,7 @@
   <ItemGroup>
     <None Include="Resources\Gamefreak130.OmniSearch.xml" />
     <None Include="Resources\S3_025C95B6_00000000_9C60223F276CC405_OmniSearchBar%25%25+LAYO.layout" />
+    <None Include="Resources\S3_F0FF5598_00000000_9C60223F276CC405_OmniSearchBar%25%25+TRIG.triggers" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\OmniSearchBar_Icon.png" />

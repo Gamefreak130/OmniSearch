@@ -9,7 +9,6 @@ using Sims3.UI.Store;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // CONSIDER Search query history using up key
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Fix shop mode weirdness
@@ -35,10 +34,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected abstract IEnumerable<TDocument> Corpus { get; }
 
-        protected SearchExtender(WindowBase parentWindow)
-        {
-            SearchBar = new(parentWindow, QueryEnteredTask);
-        }
+        protected SearchExtender(WindowBase parentWindow, string searchBarGroup) 
+            => SearchBar = new(searchBarGroup, parentWindow, QueryEnteredTask);
 
         public virtual void Dispose()
         {
@@ -51,7 +48,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
     public abstract class TitleDescriptionSearchExtender<T> : SearchExtender<Document<T>, T>
     {
-        protected TitleDescriptionSearchExtender(WindowBase parentWindow) : base(parentWindow)
+        protected TitleDescriptionSearchExtender(WindowBase parentWindow, string searchBarGroup) : base(parentWindow, searchBarGroup)
         {
         }
 
@@ -64,11 +61,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
-        private AwaitableTask mPendingQueryTask;
-
         private IEnumerable<Document<object>> mDocuments;
 
-        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow)
+        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy")
             => EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
                     Dispose();
                     return ListenerAction.Remove;
@@ -76,7 +71,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public override void Dispose()
         {
-            mPendingQueryTask?.Dispose();
+            // TODO Cleanup if not needed
             base.Dispose();
         }
 
@@ -128,10 +123,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     Yielding = true
                 };
 
-                if (!string.IsNullOrEmpty(SearchBar.Query))
-                {
-                    ProcessExistingQuery();
-                }
+                ProcessExistingQuery();
             }
             catch (Exception e)
             {
@@ -141,8 +133,15 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected void ProcessExistingQuery()
         {
-            ClearCatalogGrid();
-            mPendingQueryTask = TaskEx.Run(QueryEnteredTask);
+            if (!string.IsNullOrEmpty(SearchBar.Query))
+            {
+                ClearCatalogGrid();
+                SearchBar.TriggerSearch();
+            }
+            else
+            {
+                SearchBar.Clear();
+            }
         }
 
         protected IEnumerable<object> SearchCollections()
@@ -204,12 +203,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 SetSearchModel();
             }
 
-            CASCompositorController.Instance.ExitFullEditMode += delegate {
-                if (!string.IsNullOrEmpty(SearchBar.Query))
-                {
-                    ProcessExistingQuery();
-                }
-            };
+            CASCompositorController.Instance.ExitFullEditMode += ProcessExistingQuery;
 
             controller.mTabContainerSortByFunction.TabSelect += OnTabSelect;
 
@@ -777,7 +771,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 SetSearchBarLocation();
                 if (mCompositorActive || mSellPanelActive)
                 {
-                    if (mCompositorActive && !string.IsNullOrEmpty(SearchBar.Query))
+                    if (mCompositorActive)
                     {
                         ProcessExistingQuery();
                     }
@@ -876,7 +870,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         private void OnEyedropperPick(object _, EventArgs __)
         {
             OnCategorySelected(_, __);
-            ProcessExistingQuery();
+            ClearCatalogGrid();
+            SearchBar.TriggerSearch();
         }
 
         protected override void QueryEnteredTask()

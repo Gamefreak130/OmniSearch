@@ -1,0 +1,9 @@
+#define OK				0x042b0000
+#define Cancel			0x042b0001
+#define Forward			0x042b0002
+#define Backward		0x042b0003
+
+Enter  = OK
+Escape = Cancel
+up = Backward
+down = Forward

@@ -1,6 +1,5 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI
 {
-    // TODO Cleanup
     public class OmniSearchBar : IDisposable
     {
         private enum ControlIDs : byte
@@ -9,6 +8,8 @@
             kTextInputBackground = 6,
             kBackgroundWindow = 8
         }
+
+        private static readonly Dictionary<string, List<string>> sGroupQueryHistory = new();
 
         private readonly Layout mLayout;
 
@@ -20,7 +21,30 @@
 
         private Action mOnQueryEntered;
 
-        private string mPreviousQuery = "";
+        private readonly string mGroup;
+
+        private bool mQueryEntered;
+
+        private int mHistoryIndex;
+
+        private AwaitableTask mPendingQueryTask;
+
+        private string IndexedHistoryQuery 
+            => sGroupQueryHistory[mGroup].Count == 0 || mHistoryIndex == 0 ? "" : sGroupQueryHistory[mGroup][^mHistoryIndex];
+
+        private string PreviousQuery
+        {
+            get => mQueryEntered ? sGroupQueryHistory[mGroup].LastOrDefault(string.Empty) : "";
+            set
+            {
+                mQueryEntered = !string.IsNullOrEmpty(value);
+                if (PreviousQuery != value)
+                {
+                    sGroupQueryHistory[mGroup].Add(value);
+                }
+                mHistoryIndex = 1;
+            }
+        }
 
         public string Query => mInput.Caption;
 
@@ -30,19 +54,18 @@
             set => mWindow.Visible = value;
         }
 
-        public OmniSearchBar(WindowBase parent, Action onQueryEntered)
+        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered)
         {
+            mGroup = group;
+            if (!sGroupQueryHistory.ContainsKey(mGroup))
+            {
+                sGroupQueryHistory.Add(mGroup, new());
+            }
             mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
             Init(onQueryEntered);
         }
 
-        /*public OmniSearchBar(UICategory parent, Action onQueryEntered)
-        {
-            mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
-            Init(onQueryEntered);
-        }*/
-
-        public OmniSearchBar(WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(parent, onQueryEntered) 
+        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(group, parent, onQueryEntered) 
             => SetLocation(x, y, width);
 
         public void SetLocation(float x, float y, float width)
@@ -63,23 +86,24 @@
 
         public void MoveToFront() => mWindow.MoveToFront();
 
-        /*public OmniSearchBar(UICategory parent, Action onQueryEntered, float x, float y) : this(parent, onQueryEntered)
-        {
-            Vector2 offset = new(x, y);
-            mWindow.Area = new(mWindow.Area.TopLeft + offset, mWindow.Area.BottomRight + offset);
-        }*/
-
         public void Clear()
         {
             mInput.Caption = "";
-            mPreviousQuery = "";
+            mQueryEntered = false;
+            mHistoryIndex = 0;
+        }
+
+        public void TriggerSearch()
+        {
+            mPendingQueryTask = TaskEx.Run(mOnQueryEntered);
+            PreviousQuery = mInput.Caption;
         }
 
         private void Init(Action onQueryEntered)
         {
             mOnQueryEntered = onQueryEntered;
             mWindow = mLayout.GetWindowByExportID(1) as Window;
-            mTriggerHandle = mWindow.AddTriggerHook("OKCancelDialog", TriggerActivationMode.kManual, 17);
+            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, 17);
             mWindow.TriggerDown += OnTriggerDown;
             mInput = mWindow.GetChildByID((uint)ControlIDs.kTextInput, true) as TextEdit;
             mInput.FocusAcquired += OnFocusAcquired;
@@ -104,18 +128,30 @@
 
         private void OnTriggerDown(WindowBase sender, UITriggerEventArgs eventArgs)
         {
-            if (eventArgs.TriggerCode is (uint)ModalDialog.Triggers.kOKTrigger or (uint)ModalDialog.Triggers.kCancelTrigger && mInput.Caption != mPreviousQuery)
+            switch (eventArgs.TriggerCode)
             {
-                TaskEx.Run(mOnQueryEntered);
-                mPreviousQuery = mInput.Caption;
-                UIManager.SetFocus(InputContext.kICKeyboard, UIManager.GetSceneWindow());
+                case (uint)ModalDialog.Triggers.kOKTrigger or (uint)ModalDialog.Triggers.kCancelTrigger when mInput.Caption != PreviousQuery:
+                    TriggerSearch();
+                    goto case (uint)ModalDialog.Triggers.kOKTrigger;
+                case (uint)ModalDialog.Triggers.kOKTrigger:
+                case (uint)ModalDialog.Triggers.kCancelTrigger:
+                    UIManager.SetFocus(InputContext.kICKeyboard, UIManager.GetSceneWindow());
+                    break;
+                case (uint)ModalDialog.Triggers.kBackwardTrigger:
+                    mHistoryIndex = Math.Min(mHistoryIndex + 1, sGroupQueryHistory[mGroup].Count);
+                    mInput.Caption = IndexedHistoryQuery;
+                    break;
+                case (uint)ModalDialog.Triggers.kForwardTrigger:
+                    mHistoryIndex = Math.Max(mHistoryIndex - 1, 0);
+                    mInput.Caption = IndexedHistoryQuery;
+                    break;
             }
         }
 
         public void Dispose()
         {
+            mPendingQueryTask?.Dispose();
             mWindow.RemoveTriggerHook(mTriggerHandle);
-            //mLayout.Shutdown();
             mLayout.Dispose();
         }
     }
