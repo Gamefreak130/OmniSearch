@@ -2,6 +2,7 @@
 {
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
+    // TODO Blueprint, shopping, playflow, inventory (relationships?) (saves?) (CAS traits/LTWs? Clothes/hair???) extenders
     // TODO Fix shop mode weirdness
     // TEST featured store items
     // TEST resort build/buy
@@ -26,7 +27,14 @@
         protected abstract IEnumerable<TDocument> Corpus { get; }
 
         protected SearchExtender(WindowBase parentWindow, string searchBarGroup) 
-            => SearchBar = new(searchBarGroup, parentWindow, QueryEnteredTask);
+        {
+            EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
+                Dispose();
+                return ListenerAction.Remove;
+            });
+
+            SearchBar = new(searchBarGroup, parentWindow, QueryEnteredTask);
+        }
 
         public virtual void Dispose()
         {

@@ -14,15 +14,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         private IEnumerable<Document<object>> mDocuments;
 
         protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy")
-            => EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
-                Dispose();
-                return ListenerAction.Remove;
-            });
-
-        public override void Dispose()
         {
-            // TODO Cleanup if not needed
-            base.Dispose();
         }
 
         protected override Document<object> SelectDocument(object product)
@@ -62,7 +54,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
             return new Document<object>(name, description, product);
         }
-
+        // TODO Refactor
         protected void SetSearchModel()
         {
             try

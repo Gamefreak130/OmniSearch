@@ -12,6 +12,7 @@ global using System.Collections;
 global using System.Collections.Generic;
 global using System.Linq;
 using Gamefreak130.OmniSearchSpace.UI.Extenders;
+using Sims3.UI.GameEntry;
 
 namespace Gamefreak130
 {
@@ -22,6 +23,7 @@ namespace Gamefreak130
 
         static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
 
+        // CONSIDER Resurrect sort by in edit town library panel?
         // CONSIDER More robust tokenizer for languages other than English
         // TODO Public API documentation
         private static void OnWorldLoadFinished(object sender, EventArgs e)
@@ -39,6 +41,10 @@ namespace Gamefreak130
             if (BuildController.sController is not null)
             {
                 new BuildExtender();
+            }
+            if (EditTownController.Instance is not null)
+            {
+                new EditTownExtender();
             }
         }
     }
