@@ -5,8 +5,48 @@ using Sims3.UI.Store;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public abstract class BuildBuyExtender : TitleDescriptionSearchExtender<object>
+    public abstract class BuildBuyExtender : DocumentSearchExtender<object>
     {
+        protected class BuildBuySearchModel : TFIDF<object>
+        {
+            private readonly BuildBuyExtender mExtender;
+
+            private readonly bool mSearchCollections;
+
+            public BuildBuySearchModel(IEnumerable<Document<object>> documents, BuildBuyExtender extender, bool searchCollections) : base(documents)
+            {
+                mExtender = extender;
+                mSearchCollections = searchCollections;
+            }
+
+            protected override IEnumerable<object> SearchTask(string query)
+            {
+                IEnumerable<object> results = mSearchCollections ? SearchCollections(query) : null;
+                return results ?? base.SearchTask(query);
+            }
+
+            protected IEnumerable<object> SearchCollections(string query)
+            {
+                ITokenizer tokenizer = Tokenizer.Create();
+                foreach (IBBCollectionData collection in Responder.Instance.BuildModel.CollectionInfo.CollectionData)
+                {
+                    if (tokenizer.Tokenize(query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
+                    {
+                        List<Document<object>> collectionDocs = collection.Items.ConvertAll(mExtender.SelectDocument);
+                        IEnumerable<object> collectionProducts = from document in mDocuments
+                                                                 where collectionDocs.Contains(document)
+                                                                 select document.Tag;
+
+                        if (collectionProducts.FirstOrDefault() is not null)
+                        {
+                            return collectionProducts;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
         protected const ulong kWallDescriptionHash = 0xDD1EAD49D9F75762;
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
@@ -49,64 +89,20 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     description = "";
                     break;
                 default:
-                    throw new ArgumentException($"{product.GetType()} is not a valid Build/Buy product", nameof(product));
+                    throw new ArgumentException($"{product.GetType().Name} is not a valid Build/Buy product", nameof(product));
             }
 
             return new Document<object>(name, description, product);
         }
-        // TODO Refactor
-        protected void SetSearchModel()
+
+        protected override void SetSearchModel()
         {
-            try
-            {
-                mDocuments = Corpus;
-                SearchModel = new TFIDF<object>(mDocuments)
-                {
-                    Yielding = true
-                };
+            mDocuments = Corpus;
+            bool searchCollections = BuyController.sController is not null
+                                   ? BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory)
+                                   : BuildController.sController.mCollectionWindow.Visible;
 
-                ProcessExistingQuery();
-            }
-            catch (Exception e)
-            {
-                ExceptionLogger.sInstance.Log(e);
-            }
+            SetSearchModel(new BuildBuySearchModel(mDocuments, this, searchCollections));
         }
-
-        protected void ProcessExistingQuery()
-        {
-            if (!string.IsNullOrEmpty(SearchBar.Query))
-            {
-                ClearCatalogGrid();
-                SearchBar.TriggerSearch();
-            }
-            else
-            {
-                SearchBar.Clear();
-            }
-        }
-
-        protected IEnumerable<object> SearchCollections()
-        {
-            ITokenizer tokenizer = Tokenizer.Create();
-            foreach (IBBCollectionData collection in Responder.Instance.BuildModel.CollectionInfo.CollectionData)
-            {
-                if (tokenizer.Tokenize(SearchBar.Query).SequenceEqual(tokenizer.Tokenize(collection.CollectionName)))
-                {
-                    List<Document<object>> collectionDocs = collection.Items.ConvertAll(SelectDocument);
-                    IEnumerable<object> collectionProducts = from document in mDocuments
-                                                             where collectionDocs.Contains(document)
-                                                             select document.Tag;
-
-                    if (collectionProducts.FirstOrDefault() is not null)
-                    {
-                        return collectionProducts;
-                    }
-                }
-            }
-            return null;
-        }
-
-        protected abstract void ClearCatalogGrid();
     }
 }

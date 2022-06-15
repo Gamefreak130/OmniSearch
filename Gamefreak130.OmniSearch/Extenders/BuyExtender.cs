@@ -27,7 +27,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
 
             SearchBar.MoveToBack();
-            SetSearchBarVisibility();
             bool defaultInventory = controller.mCurrCatalogType is BuyController.CatalogType.Inventory;
             if (defaultInventory || controller.mPopulateGridTaskHelper is not null)
             {
@@ -69,17 +68,17 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             controller.mButtonShopModeSortByFunction.Click += OnCatalogButtonClick;
             controller.mButtonShopModeNotable.Click += OnCatalogButtonClick;
             controller.mButtonShopModeEmpty.Click += OnCatalogButtonClick;
-            controller.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_, _) => TaskEx.Run(SetSearchBarVisibility);
+            controller.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
 
-            controller.mCollectionGrid.ItemClicked += (_, _) => SetSearchModel();
+            controller.mCollectionGrid.ItemClicked += (_,_) => SetSearchModel();
             controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
 
-            controller.mGridSortByRoom.AreaChange += (_, _) => TaskEx.Run(SetSearchBarVisibility);
+            controller.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
             controller.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
             controller.mCollectionCatalogWindow.VisibilityChange += OnCatalogGridToggled;
             controller.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
 
-            controller.mMiddlePuckWin.VisibilityChange += (_, args) => SearchBar.Visible = args.Visible;
+            controller.mMiddlePuckWin.VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
         }
 
         public override void Dispose()
@@ -91,40 +90,16 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             base.Dispose();
         }
 
-        protected override void QueryEnteredTask()
+        protected override void ProcessResultsTask(IEnumerable<object> results)
         {
-            try
+            BuyController controller = BuyController.sController;
+            if (controller.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
-                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
-                IEnumerable results = null;
-                BuyController controller = BuyController.sController;
-
-                if (controller.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory))
-                {
-                    results = SearchCollections();
-                }
-#if DEBUG
-                results ??= SearchModel.Search(SearchBar.Query)
-                                       .ToList();
-
-                //DocumentLogger.sInstance.WriteLog();
-#else
-                results ??= SearchModel.Search(SearchBar.Query);
-#endif
-
-                ClearCatalogGrid();
-                if (controller.mCurrCatalogType is BuyController.CatalogType.Inventory)
-                {
-                    PopulateInventory(results);
-                }
-                else
-                {
-                    controller.PopulateGrid(results, controller.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
-                }
+                PopulateInventory(results);
             }
-            finally
+            else
             {
-                TaskEx.Run(ProgressDialog.Close);
+                controller.PopulateGrid(results, controller.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
             }
         }
 
@@ -394,7 +369,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        protected override void ClearCatalogGrid()
+        protected override void ClearItems()
         {
             BuyController controller = BuyController.sController;
 
@@ -415,40 +390,42 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             controller.mNumObjectsInGrid = 0;
         }
 
-        private void SetSearchBarVisibility()
+        protected override void SetSearchBarVisibility()
         {
             if (BuyController.sController is BuyController controller)
             {
-                BuyController.CatalogType catalogType = controller.mCurrCatalogType;
                 float x, y = -35, width;
 
-                if (catalogType == BuyController.CatalogType.ByRoom)
+                switch (controller.mCurrCatalogType)
                 {
-                    x = 725;
-                    width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
-                }
-                else
-                {
-                    width = catalogType == BuyController.CatalogType.ByCategory && BuyController.sBuyDebug ? 201 : 251;
-                    if (controller.mBuyModel.IsInShopMode())
-                    {
-                        x = 362;
-                        width -= 45;
-                    }
-                    else
-                    {
+                    case BuyController.CatalogType.ByRoom:
+                        x = 725;
+                        width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
+                        SearchBar.Visible = controller.mCatalogGrid.Visible && controller.mMiddlePuckWin.Visible;
+                        break;
+                    case BuyController.CatalogType.ByCategory:
                         x = 317;
-                    }
-
-                    if (catalogType is BuyController.CatalogType.Inventory)
-                    {
-                        SearchBar.Visible = mFamilyInventory is not null;
-                    }
-                    if (catalogType is BuyController.CatalogType.Collections)
-                    {
+                        width = BuyController.sBuyDebug ? 201 : 251;
+                        SearchBar.Visible = controller.mCatalogGrid.Visible && controller.mMiddlePuckWin.Visible;
+                        break;
+                    case BuyController.CatalogType.Collections:
+                        x = 317;
+                        width = 251;
                         SearchBar.Visible = controller.mCollectionCatalogWindow.Visible;
-                    }
+                        break;
+                    default:
+                        x = 317;
+                        width = 251;
+                        SearchBar.Visible = true;
+                        break;
                 }
+
+                if (controller.mCurrCatalogType is not BuyController.CatalogType.ByRoom && controller.mBuyModel.IsInShopMode())
+                {
+                    x = 362;
+                    width -= 45;
+                }
+
                 SearchBar.SetLocation(x, y, width);
             }
         }
@@ -506,16 +483,16 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
-            SearchBar.Visible = BuyController.sController.mCatalogGrid.Visible;
+            SetSearchBarVisibility();
             if (!string.IsNullOrEmpty(SearchBar.Query))
             {
-                ClearCatalogGrid();
+                ClearItems();
             }
         }
 
         private void OnCatalogGridToggled(WindowBase _, UIVisibilityChangeEventArgs args)
         {
-            SearchBar.Visible = args.Visible;
+            SetSearchBarVisibility();
             SearchBar.Clear();
             SetSearchModel();
         }

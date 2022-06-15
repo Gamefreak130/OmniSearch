@@ -11,7 +11,6 @@
 
         public BuildExtender() : base(BuildController.sLayout.GetWindowByExportID(1).GetChildByIndex(2))
         {
-            SetSearchBarVisibility();
             SearchBar.MoveToBack();
 
             World.OnEyedropperPickCallback += OnEyedropperPick;
@@ -70,13 +69,13 @@
             base.Dispose();
         }
 
-        protected override void ClearCatalogGrid()
+        protected override void ClearItems()
         {
             BuildController.sController.mCurrentCatalogGrid.AbortPopulating();
             BuildController.sController.mCurrentCatalogGrid.Clear();
         }
 
-        private void SetSearchBarVisibility()
+        protected override void SetSearchBarVisibility()
         {
             BuildController controller = BuildController.sController;
             SearchBar.Visible = controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible);
@@ -185,41 +184,18 @@
         private void OnEyedropperPick(object _, EventArgs __)
         {
             OnCategorySelected(_, __);
-            ClearCatalogGrid();
+            ClearItems();
             SearchBar.TriggerSearch();
         }
 
-        protected override void QueryEnteredTask()
+        protected override void ProcessResultsTask(IEnumerable<object> results)
         {
-            try
-            {
-                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
-                BuildController controller = BuildController.sController;
-                List<object> results = null;
-                if (!controller.mCollectionWindow.Visible)
-                {
-                    results = SearchCollections()?.ToList();
-                }
+            BuildController controller = BuildController.sController;
 
-                results ??= SearchModel.Search(SearchBar.Query)
-                                       .ToList();
+            List<object> productList = controller.mProductList is not null ? results.ToList() : null,
+                         presetList = controller.mPresetList is not null ? results.ToList() : null;
 
-#if DEBUG
-                //DocumentLogger.sInstance.WriteLog();
-#endif
-
-                ClearCatalogGrid();
-
-
-                List<object> productList = controller.mProductList is not null ? results : null,
-                             presetList = controller.mPresetList is not null ? results : null;
-
-                controller.PopulateCatalogGrid(controller.mCurrentCatalogGrid, "BuildCatalogItem", productList, presetList, controller.mCatalogProduct, controller.mCatalogFilter);
-            }
-            finally
-            {
-                TaskEx.Run(ProgressDialog.Close);
-            }
+            controller.PopulateCatalogGrid(controller.mCurrentCatalogGrid, "BuildCatalogItem", productList, presetList, controller.mCatalogProduct, controller.mCatalogFilter);
         }
     }
 }

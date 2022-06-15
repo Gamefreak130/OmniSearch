@@ -2,8 +2,6 @@
 {
     public interface ISearchModel : IDisposable
     {
-        bool Yielding { get; set; }
-
         void Preprocess();
 
         IEnumerable Search(string query);
@@ -18,6 +16,8 @@
     {
         protected IEnumerable<Document<T>> mDocuments;
 
+        private bool mYieldPreprocessing;
+
         private AwaitableTask mModelPreprocessTask;
 
         private AwaitableTask ModelPreprocessTask
@@ -30,10 +30,11 @@
             }
         }
 
-        public bool Yielding { get; set; }
-
-        public SearchModel(IEnumerable<Document<T>> documents)
-            => mDocuments = documents;
+        public SearchModel(IEnumerable<Document<T>> documents, bool yielding = true)
+        {
+            mDocuments = documents;
+            mYieldPreprocessing = yielding;
+        }
 
         ~SearchModel() => Dispose(true);
 
@@ -48,8 +49,8 @@
             }
         }
 
-        protected bool ShouldYield(StopWatch startTimer)
-            => Yielding && startTimer.GetElapsedTimeFloat() >= 1000f / PersistedSettings.kPreprocessingTickRate;
+        protected bool ShouldYieldPreprocessing(StopWatch startTimer)
+            => mYieldPreprocessing && startTimer.GetElapsedTimeFloat() >= 1000f / PersistedSettings.kPreprocessingTickRate;
 
         public void Preprocess()
             => ModelPreprocessTask = TaskEx.Run(PreprocessTask);
@@ -70,10 +71,13 @@
                            select document.Tag;
                 }
 
-                TaskEx.Delay((uint)(ProgressDialog.kProgressDialogDelay * 1000))
-                      .ContinueWith(_ => Yielding = false);
+                if (ModelPreprocessTask is not null && !ModelPreprocessTask.IsCompleted)
+                {
+                    TaskEx.Delay((uint)(ProgressDialog.kProgressDialogDelay * 1000))
+                          .ContinueWith(_ => mYieldPreprocessing = false);
 
-                ModelPreprocessTask.Await();
+                    ModelPreprocessTask.Await();
+                }
                 return SearchTask(query);
             }
             finally
@@ -104,7 +108,7 @@
 
     public class ExactMatch<T> : SearchModel<T>
     {
-        public ExactMatch(IEnumerable<Document<T>> documents) : base(documents)
+        public ExactMatch(IEnumerable<Document<T>> documents, bool yielding = true) : base(documents, yielding)
         {
         }
 
@@ -139,7 +143,7 @@
 
         private readonly ITokenizer mTokenizer;
 
-        public TFIDF(IEnumerable<Document<T>> documents) : base(documents is List<Document<T>> ? documents : documents.ToList())
+        public TFIDF(IEnumerable<Document<T>> documents, bool yielding = true) : base(documents is List<Document<T>> ? documents : documents.ToList(), yielding)
         {
             mTfidfMatrix = new(mDocuments.Count());
             mWordOccurences = new();
@@ -184,7 +188,7 @@
                         mWordOccurences[word].Add(current.i);
                     }
                     mTfidfMatrix.Add(embedding);
-                    if (ShouldYield(startTimer))
+                    if (ShouldYieldPreprocessing(startTimer))
                     {
                         TaskEx.Yield();
                         startTimer.Restart();
@@ -199,7 +203,7 @@
                     {
                         mTfidfMatrix[i][word] = Math.Log10(1 + mTfidfMatrix[i][word]) * idf;
                     }
-                    if (ShouldYield(startTimer))
+                    if (ShouldYieldPreprocessing(startTimer))
                     {
                         TaskEx.Yield();
                         startTimer.Restart();
@@ -211,7 +215,7 @@
                 {
                     mChampionLists[word] = mWordOccurences[word].OrderByDescending(x => mTfidfMatrix[x][word])
                                                                 .Take(PersistedSettings.kChampionListLength);
-                    if (ShouldYield(startTimer))
+                    if (ShouldYieldPreprocessing(startTimer))
                     {
                         TaskEx.Yield();
                         startTimer.Restart();

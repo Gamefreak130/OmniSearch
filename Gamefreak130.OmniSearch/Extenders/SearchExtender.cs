@@ -9,45 +9,103 @@
     // TEST interior design
     public abstract class SearchExtender<TDocument, TResult> : IDisposable
     {
-        private ISearchModel<TResult> mSearchModel;
-
-        protected virtual ISearchModel<TResult> SearchModel
-        {
-            get => mSearchModel;
-            set
-            {
-                mSearchModel?.Dispose();
-                mSearchModel = value;
-                SearchModel?.Preprocess();
-            }
-        }
+        protected ISearchModel<TResult> SearchModel { get; private set; }
 
         protected OmniSearchBar SearchBar { get; private set; }
 
         protected abstract IEnumerable<TDocument> Corpus { get; }
 
-        protected SearchExtender(WindowBase parentWindow, string searchBarGroup) 
+        protected SearchExtender(WindowBase parentWindow, string searchBarGroup)
         {
             EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
                 Dispose();
                 return ListenerAction.Remove;
             });
 
-            SearchBar = new(searchBarGroup, parentWindow, QueryEnteredTask);
+            SearchBar = new(searchBarGroup, parentWindow, OnQueryEntered);
+            SetSearchBarVisibility();
         }
 
         public virtual void Dispose()
         {
             SearchBar.Dispose();
-            SearchModel = null;
+            SetSearchModel(null);
         }
 
-        protected abstract void QueryEnteredTask();
+        protected void SetSearchModel(ISearchModel<TResult> value)
+        {
+            try
+            {
+                SearchModel?.Dispose();
+                SearchModel = value;
+                SearchModel?.Preprocess();
+
+                if (SearchModel is not null)
+                {
+                    ProcessExistingQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.sInstance.Log(e);
+            }
+        }
+
+        protected virtual void SetSearchModel() 
+            => throw new NotSupportedException($"No SetSearchModel() override in {GetType().Name}. Provide an override to the parameterless method or pass an ISearchModel as an argument.");
+
+        protected virtual void SetSearchBarVisibility()
+        {
+        }
+
+        protected void ProcessExistingQuery()
+        {
+            if (!string.IsNullOrEmpty(SearchBar.Query))
+            {
+                ClearItems();
+                SearchBar.TriggerSearch();
+            }
+            else
+            {
+                SearchBar.Clear();
+            }
+        }
+
+        private void OnQueryEntered()
+        {
+            try
+            {
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+#if DEBUG
+                IEnumerable<TResult> results = SearchModel.Search(SearchBar.Query)
+                                                          .ToList();
+
+                //DocumentLogger.sInstance.WriteLog();
+#else
+                IEnumerable<TResult> results = SearchModel.Search(SearchBar.Query);
+#endif
+
+                ClearItems();
+                ProcessResultsTask(results);
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.sInstance.Log(e);
+            }
+            finally
+            {
+                TaskEx.Run(ProgressDialog.Close);
+            }
+        }
+
+        protected abstract void ClearItems();
+
+        protected abstract void ProcessResultsTask(IEnumerable<TResult> results);
     }
 
-    public abstract class TitleDescriptionSearchExtender<T> : SearchExtender<Document<T>, T>
+    public abstract class DocumentSearchExtender<T> : SearchExtender<Document<T>, T>
     {
-        protected TitleDescriptionSearchExtender(WindowBase parentWindow, string searchBarGroup) : base(parentWindow, searchBarGroup)
+        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup) : base(parentWindow, searchBarGroup)
         {
         }
 

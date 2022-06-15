@@ -3,7 +3,7 @@ using Sims3.UI.GameEntry;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public class EditTownExtender : TitleDescriptionSearchExtender<object>
+    public class EditTownExtender : DocumentSearchExtender<object>
     {
         protected override IEnumerable<Document<object>> Corpus
         {
@@ -35,7 +35,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public EditTownExtender() : base(EditTownPuck.Instance.GetChildByIndex(3), "EditTown")
         {
-            SetSearchBarVisibility();
             SearchBar.MoveToBack();
 
             Responder.Instance.BinModel.OnUpdateExportBin += OnExportBinChanged;
@@ -56,58 +55,35 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             base.Dispose();
         }
 
-        protected override void QueryEnteredTask()
+        protected override void ProcessResultsTask(IEnumerable<object> results)
         {
-            try
+            ItemGrid itemGrid = null;
+            ItemGridPopulateCallback populateCallback = null;
+            ResourceKey layoutKey = default;
+
+            if (EditTownLibraryPanel.Instance.Visible)
             {
-                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
-
-#if DEBUG
-                IEnumerable results = SearchModel.Search(SearchBar.Query)
-                                                 .ToList();
-
-
-                //DocumentLogger.sInstance.WriteLog();
-#else
-                IEnumerable results = SearchModel.Search(SearchBar.Query);
-#endif
-                ItemGrid itemGrid = null;
-                ItemGridPopulateCallback populateCallback = null;
-                ResourceKey layoutKey = default;
-
-                if (EditTownLibraryPanel.Instance.Visible)
-                {
-                    itemGrid = EditTownLibraryPanel.Instance.mGrid;
-                    bool _ = false;
-                    populateCallback = (_, current, _, _) => {
-                        if (current is null)
-                        {
-                            return false;
-                        }
-                        EditTownLibraryPanel.Instance.AddGridItem(current as UIBinInfo, ref _);
-                        return true;
-                    };
-                }
-                else if (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab)
-                {
-                    itemGrid = EditTownNeighborhoodPloppablesPanel.Instance.mItemGrid;
-                    populateCallback = EditTownNeighborhoodPloppablesPanel.Instance.PopulateObjectCallback;
-                    layoutKey = ResourceKey.CreateUILayoutKey("BuildCatalogItem", 0);
-                }
-
-                ClearItemGrid();
-                // TODO items per tick?
-                // CONSIDER Filter by lot size?
-                itemGrid.BeginPopulating(populateCallback, results, 10, layoutKey, null);
+                itemGrid = EditTownLibraryPanel.Instance.mGrid;
+                bool _ = false;
+                populateCallback = (_, current, _, _) => {
+                    if (current is null)
+                    {
+                        return false;
+                    }
+                    EditTownLibraryPanel.Instance.AddGridItem(current as UIBinInfo, ref _);
+                    return true;
+                };
             }
-            catch (Exception e)
+            else if (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab)
             {
-                ExceptionLogger.sInstance.Log(e);
+                itemGrid = EditTownNeighborhoodPloppablesPanel.Instance.mItemGrid;
+                populateCallback = EditTownNeighborhoodPloppablesPanel.Instance.PopulateObjectCallback;
+                layoutKey = ResourceKey.CreateUILayoutKey("BuildCatalogItem", 0);
             }
-            finally
-            {
-                TaskEx.Run(ProgressDialog.Close);
-            }
+
+            // TODO items per tick?
+            // CONSIDER Filter by lot size?
+            itemGrid.BeginPopulating(populateCallback, results, 10, layoutKey, null);
         }
 
         protected override Document<object> SelectDocument(object obj)
@@ -122,16 +98,16 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     break;
                 case BuildBuyProduct bbp:
                     name = bbp.CatalogName;
-                    description = null;
+                    description = "";
                     break;
                 default:
-                    throw new ArgumentException($"{obj.GetType()} is not a valid Edit Town object", nameof(obj));
+                    throw new ArgumentException($"{obj.GetType().Name} is not a valid Edit Town object", nameof(obj));
             }
 
             return new Document<object>(name, description, obj);
         }
 
-        private void SetSearchBarVisibility()
+        protected override void SetSearchBarVisibility()
         {
             SearchBar.Visible = EditTownLibraryPanel.Instance.Visible 
                 || (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab);
@@ -147,37 +123,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        protected void SetSearchModel()
-        {
-            try
-            {
-                SearchModel = new TFIDF<object>(Corpus)
-                {
-                    Yielding = true
-                };
+        protected override void SetSearchModel() 
+            => SetSearchModel(new TFIDF<object>(Corpus));
 
-                ProcessExistingQuery();
-            }
-            catch (Exception e)
-            {
-                ExceptionLogger.sInstance.Log(e);
-            }
-        }
-
-        protected void ProcessExistingQuery()
-        {
-            if (!string.IsNullOrEmpty(SearchBar.Query))
-            {
-                ClearItemGrid();
-                SearchBar.TriggerSearch();
-            }
-            else
-            {
-                SearchBar.Clear();
-            }
-        }
-
-        protected void ClearItemGrid()
+        protected override void ClearItems()
         {
             if (EditTownNeighborhoodPloppablesPanel.Instance.Visible)
             {
