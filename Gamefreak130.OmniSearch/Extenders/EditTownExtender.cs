@@ -4,7 +4,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     public class EditTownExtender : DocumentSearchExtender<object>
     {
-        protected override IEnumerable<Document<object>> Corpus
+        protected override IEnumerable<object> Materials
         {
             get
             {
@@ -19,15 +19,14 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     };
 
                     return UserToolUtils.GetObjectProductListFiltered(uint.MaxValue, buildCategoryFlag, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, 0UL, uint.MaxValue, 0U, 0U)
-                                        .Where(obj => (obj as BuildBuyProduct).IsVisibleInWorldBuilder)
-                                        .Select(SelectDocument);
+                                        .Where(obj => (obj as BuildBuyProduct).IsVisibleInWorldBuilder);
                 }
                 else
                 {
                     return Responder.Instance.EditTownModel.GetExportBinInfoList()
                                                            .Where(EditTownLibraryPanel.Instance.ItemFilter)
                                                            .OrderBy(binInfo => binInfo, new EditTownLibraryPanel.GridComparer())
-                                                           .Select(SelectDocument);
+                                                           .Cast<object>();
                 }
             }
         }
@@ -85,11 +84,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             itemGrid.BeginPopulating(populateCallback, results, 10, layoutKey, null);
         }
 
-        protected override Document<object> SelectDocument(object obj)
+        protected override Document<object> SelectDocument(object material)
         {
             string name, description;
 
-            switch (obj)
+            switch (material)
             {
                 case UIBinInfo binInfo:
                     name = $"{binInfo.HouseholdName};{binInfo.LotName} {Responder.Instance.EditTownModel.CommercialSubTypeLocalizedName(binInfo.CommercialLotSubType)}";
@@ -100,27 +99,17 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     description = "";
                     break;
                 default:
-                    throw new ArgumentException($"{obj.GetType().Name} is not a valid Edit Town object", nameof(obj));
+                    throw new ArgumentException($"{material.GetType().Name} is not a valid Edit Town object", nameof(material));
             }
 
-            return new(name, description, obj);
+            return new(name, description, material);
         }
 
-        protected override void SetSearchBarVisibility()
-        {
-            SearchBar.Visible = EditTownLibraryPanel.Instance.Visible 
-                || (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab);
+        protected override void SetSearchBarVisibility() 
+            => SetSearchBarVisibility(EditTownLibraryPanel.Instance.Visible || (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab));
 
-            if (SearchBar.Visible)
-            {
-                SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
-                SetSearchModel();
-            }
-            else
-            {
-                SearchBar.Clear();
-            }
-        }
+        protected override void SetSearchBarLocation() 
+            => SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
 
         protected override void SetSearchModel() 
             => SetSearchModel(new TFIDF<object>(Corpus));

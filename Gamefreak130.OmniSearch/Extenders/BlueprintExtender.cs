@@ -13,7 +13,7 @@
             controller.mCatalogGrid.AreaChange += (_, _) => TaskEx.Run(SetSearchBarLocation);
         }
 
-        protected override IEnumerable<Document<object>> Corpus
+        protected override IEnumerable<object> Materials
         {
             get
             {
@@ -21,8 +21,7 @@
 
                 List<object> list = UserToolUtils.GetObjectProductListFiltered(0xBFFFFFFF, 0x10000000, ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, 0, controller.mCurrRoomFilter, controller.mRoomCategoryFlagsToExclude, 0);
                 controller.mCatalogProductFilter.FilterObjects(list, out _);
-
-                return list.ConvertAll(SelectDocument);
+                return list;
             }
         }
 
@@ -36,23 +35,9 @@
             BlueprintController.sController.mCatalogGrid.Clear();
         }
 
-        protected override void SetSearchBarVisibility()
-        {
-            BlueprintController controller = BlueprintController.sController;
-            SearchBar.Visible = controller.mMiddlePuckWin.Visible;
-            // TODO refactor
-            if (SearchBar.Visible)
-            {
-                SetSearchBarLocation();
-                SetSearchModel();
-            }
-            else
-            {
-                SearchBar.Clear();
-            }
-        }
+        protected override void SetSearchBarVisibility() => SetSearchBarVisibility(BlueprintController.sController.mMiddlePuckWin.Visible);
 
-        private void SetSearchBarLocation()
+        protected override void SetSearchBarLocation()
         {
             BlueprintController controller = BlueprintController.sController;
             controller.ResizeCatalogGrid(controller.mWindowSortByRoom, controller.mGridSortByRoom, controller.mDefaultSortByRoomWidth, controller.mDefaultSortByRoomGridColumns, Math.Max(controller.mGridSortByRoom.Count, 5), true);

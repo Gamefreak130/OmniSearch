@@ -7,13 +7,15 @@
     // TEST featured store items
     // TEST resort build/buy
     // TEST interior design
-    public abstract class SearchExtender<TDocument, TResult> : IDisposable
+    public abstract class SearchExtender<TDocument, TMaterial> : IDisposable
     {
-        protected ISearchModel<TResult> SearchModel { get; private set; }
+        protected ISearchModel<TMaterial> SearchModel { get; private set; }
 
         protected OmniSearchBar SearchBar { get; private set; }
 
-        protected abstract IEnumerable<TDocument> Corpus { get; }
+        protected abstract IEnumerable<TMaterial> Materials { get; }
+
+        protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
 
         protected SearchExtender(WindowBase parentWindow, string searchBarGroup)
         {
@@ -32,31 +34,22 @@
             SetSearchModel(null);
         }
 
-        protected void SetSearchModel(ISearchModel<TResult> value)
+        protected virtual void SetSearchBarVisibility(bool visible)
         {
-            try
+            SearchBar.Visible = visible;
+            if (SearchBar.Visible)
             {
-                SearchModel?.Dispose();
-                SearchModel = value;
-                SearchModel?.Preprocess();
-
-                if (SearchModel is not null)
-                {
-                    ProcessExistingQuery();
-                }
+                SetSearchBarLocation();
+                SetSearchModel();
             }
-            catch (Exception e)
+            else
             {
-                ExceptionLogger.sInstance.Log(e);
+                SearchBar.Clear();
             }
         }
-
-        protected virtual void SetSearchModel() 
-            => throw new NotSupportedException($"No SetSearchModel() override in {GetType().Name}. Provide an override to the parameterless method or pass an ISearchModel as an argument.");
 
         protected virtual void SetSearchBarVisibility()
-        {
-        }
+            => SetSearchBarVisibility(!SearchBar.Visible);
 
         protected void ProcessExistingQuery()
         {
@@ -77,7 +70,7 @@
             {
                 ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
 #if DEBUG
-                IEnumerable<TResult> results = SearchModel.Search(SearchBar.Query)
+                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query)
                                                           .ToList();
 
                 //DocumentLogger.sInstance.WriteLog();
@@ -98,9 +91,34 @@
             }
         }
 
+        protected void SetSearchModel(ISearchModel<TMaterial> value)
+        {
+            try
+            {
+                SearchModel?.Dispose();
+                SearchModel = value;
+                SearchModel?.Preprocess();
+
+                if (SearchModel is not null)
+                {
+                    ProcessExistingQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.sInstance.Log(e);
+            }
+        }
+
+        protected abstract void SetSearchModel();
+
+        protected abstract void SetSearchBarLocation();
+
         protected abstract void ClearItems();
 
-        protected abstract void ProcessResultsTask(IEnumerable<TResult> results);
+        protected abstract TDocument SelectDocument(TMaterial material);
+
+        protected abstract void ProcessResultsTask(IEnumerable<TMaterial> results);
     }
 
     public abstract class DocumentSearchExtender<T> : SearchExtender<Document<T>, T>
@@ -108,7 +126,5 @@
         protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup) : base(parentWindow, searchBarGroup)
         {
         }
-
-        protected abstract Document<T> SelectDocument(T obj);
     }
 }

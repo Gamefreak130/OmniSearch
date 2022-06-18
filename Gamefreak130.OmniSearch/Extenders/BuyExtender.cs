@@ -9,12 +9,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private bool mInventoryEventRegistered;
 
-        protected override IEnumerable<Document<object>> Corpus => BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
+        protected override IEnumerable<object> Materials => BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
                                                                 ? mFamilyInventory.InventoryItems
-                                                                                  .Select(SelectDocument)
+                                                                                  .Cast<object>()
                                                                 : BuyController.sController.mPopulateGridTaskHelper.Collection
-                                                                                                                   .Cast<object>()
-                                                                                                                   .Select(SelectDocument);
+                                                                                                                   .Cast<object>();
 
         public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
         {
@@ -390,44 +389,55 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             controller.mNumObjectsInGrid = 0;
         }
 
+        protected override void SetSearchBarVisibility(bool visible)
+        {
+            SearchBar.Visible = visible;
+            if (SearchBar.Visible)
+            {
+                SetSearchBarLocation();
+            }
+        }
+
         protected override void SetSearchBarVisibility()
         {
             if (BuyController.sController is BuyController controller)
             {
-                float x, y = -35, width;
-
-                switch (controller.mCurrCatalogType)
+                bool visible = controller.mCurrCatalogType switch
                 {
-                    case BuyController.CatalogType.ByRoom:
-                        x = 725;
-                        width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
-                        SearchBar.Visible = controller.mCatalogGrid.Visible && controller.mMiddlePuckWin.Visible;
-                        break;
-                    case BuyController.CatalogType.ByCategory:
-                        x = 317;
-                        width = BuyController.sBuyDebug ? 201 : 251;
-                        SearchBar.Visible = controller.mCatalogGrid.Visible && controller.mMiddlePuckWin.Visible;
-                        break;
-                    case BuyController.CatalogType.Collections:
-                        x = 317;
-                        width = 251;
-                        SearchBar.Visible = controller.mCollectionCatalogWindow.Visible;
-                        break;
-                    default:
-                        x = 317;
-                        width = 251;
-                        SearchBar.Visible = true;
-                        break;
-                }
+                    BuyController.CatalogType.ByRoom or BuyController.CatalogType.ByCategory  => controller.mCatalogGrid.Visible && controller.mMiddlePuckWin.Visible,
+                    BuyController.CatalogType.Collections                                     => controller.mCollectionCatalogWindow.Visible,
+                    _                                                                         => true
+                };
 
-                if (controller.mCurrCatalogType is not BuyController.CatalogType.ByRoom && controller.mBuyModel.IsInShopMode())
+                SetSearchBarVisibility(visible);
+            }
+        }
+
+        protected override void SetSearchBarLocation()
+        {
+            BuyController controller = BuyController.sController;
+            float x, y = -35, width;
+
+            if (controller.mCurrCatalogType == BuyController.CatalogType.ByRoom)
+            {
+                x = 725;
+                width = MathUtils.Clamp(25 + (65 * controller.mCatalogGrid.VisibleColumns), 165, 250);
+            }
+            else
+            {
+                width = controller.mCurrCatalogType == BuyController.CatalogType.ByCategory && BuyController.sBuyDebug ? 201 : 251;
+                if (controller.mBuyModel.IsInShopMode())
                 {
                     x = 362;
                     width -= 45;
                 }
-
-                SearchBar.SetLocation(x, y, width);
+                else
+                {
+                    x = 317;
+                }
             }
+
+            SearchBar.SetLocation(x, y, width);
         }
 
         private void RegisterInventoryEvents()

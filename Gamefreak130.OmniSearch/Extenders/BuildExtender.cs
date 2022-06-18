@@ -7,7 +7,7 @@
 
         private bool mSellPanelActive;
 
-        protected override IEnumerable<Document<object>> Corpus => (BuildController.sController.mProductList ?? BuildController.sController.mPresetList).Select(SelectDocument);
+        protected override IEnumerable<object> Materials => BuildController.sController.mProductList ?? BuildController.sController.mPresetList;
 
         public BuildExtender() : base(BuildController.sLayout.GetWindowByExportID(1).GetChildByIndex(2))
         {
@@ -75,10 +75,9 @@
             BuildController.sController.mCurrentCatalogGrid.Clear();
         }
 
-        protected override void SetSearchBarVisibility()
+        protected override void SetSearchBarVisibility(bool visible)
         {
-            BuildController controller = BuildController.sController;
-            SearchBar.Visible = controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible);
+            SearchBar.Visible = visible;
 
             if (SearchBar.Visible)
             {
@@ -99,11 +98,11 @@
             }
             // These are set to false before the middle puck reappears
             // So we need to keep track of them ourselves to avoid needlessly resetting the search model
-            else if (controller.mbCompositorActive)
+            else if (BuildController.sController.mbCompositorActive)
             {
                 mCompositorActive = true;
             }
-            else if (controller.mSellPanelController.Visible)
+            else if (BuildController.sController.mSellPanelController.Visible)
             {
                 mSellPanelActive = true;
             }
@@ -113,7 +112,13 @@
             }
         }
 
-        private void SetSearchBarLocation()
+        protected override void SetSearchBarVisibility()
+        {
+            BuildController controller = BuildController.sController;
+            SetSearchBarVisibility(controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible));
+        }
+
+        protected override void SetSearchBarLocation()
         {
             BuildController controller = BuildController.sController;
             float x,
