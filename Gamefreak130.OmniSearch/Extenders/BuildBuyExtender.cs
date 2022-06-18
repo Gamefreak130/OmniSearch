@@ -1,5 +1,4 @@
 ﻿using Sims3.Gameplay.Abstracts;
-using Sims3.SimIFace.BuildBuy;
 using Sims3.UI.Hud;
 using Sims3.UI.Store;
 
@@ -64,11 +63,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             switch (product)
             {
                 case BuildBuyProduct bbp:
-                    name = bbp.CatalogName;
+                    name = Localization.FillInTokens(LocGenderType.Male, null, bbp.CatalogName);
                     description = bbp.Description;
                     break;
                 case BuildBuyPreset bbp:
-                    name = bbp.Product.CatalogName;
+                    name = Localization.FillInTokens(LocGenderType.Male, null, bbp.Product.CatalogName);
                     description = bbp.Product.Description;
                     // Filter out the generic descriptions of wall or floor patterns
                     if (description == Localization.LocalizeString(kWallDescriptionHash) || description == Localization.LocalizeString(kFloorDescriptionHash))
@@ -92,7 +91,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     throw new ArgumentException($"{product.GetType().Name} is not a valid Build/Buy product", nameof(product));
             }
 
-            return new Document<object>(name, description, product);
+            return new(name, description, product);
         }
 
         protected override void SetSearchModel()
@@ -100,7 +99,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             mDocuments = Corpus;
             bool searchCollections = BuyController.sController is not null
                                    ? BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory)
-                                   : BuildController.sController.mCollectionWindow.Visible;
+                                   : BuildController.sController is not null && BuildController.sController.mCollectionWindow.Visible;
 
             SetSearchModel(new BuildBuySearchModel(mDocuments, this, searchCollections));
         }

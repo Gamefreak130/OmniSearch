@@ -6,6 +6,7 @@ global using Gamefreak130.OmniSearchSpace.Models;
 global using Sims3.Gameplay.EventSystem;
 global using Sims3.Gameplay.Utilities;
 global using Sims3.SimIFace;
+global using Sims3.SimIFace.BuildBuy;
 global using Sims3.UI;
 global using System;
 global using System.Collections;
@@ -45,6 +46,10 @@ namespace Gamefreak130
             if (EditTownController.Instance is not null)
             {
                 new EditTownExtender();
+            }
+            if (BlueprintController.Active)
+            {
+                new BlueprintExtender();
             }
         }
     }

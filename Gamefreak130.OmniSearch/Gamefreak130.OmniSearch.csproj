@@ -199,6 +199,7 @@
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
       <Link>System\ExtensionAttribute.cs</Link>
     </Compile>
+    <Compile Include="Extenders\BlueprintExtender.cs" />
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />

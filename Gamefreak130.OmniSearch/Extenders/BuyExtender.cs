@@ -348,7 +348,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     TriggerType = EffectBase.TriggerTypes.Manual,
                     Duration = 0.2f,
                     InterpolationType = EffectBase.InterpolationTypes.EaseInOut,
-                    EaseTimes = new Vector2(0.2f, 0f),
+                    EaseTimes = new(0.2f, 0f),
                     Offset = endPosition - startPosition
                 };
                 zoopWindow.EffectList.Add(glideEffect);

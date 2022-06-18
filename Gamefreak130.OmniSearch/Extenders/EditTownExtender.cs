@@ -1,5 +1,4 @@
-﻿using Sims3.SimIFace.BuildBuy;
-using Sims3.UI.GameEntry;
+﻿using Sims3.UI.GameEntry;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
@@ -104,7 +103,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     throw new ArgumentException($"{obj.GetType().Name} is not a valid Edit Town object", nameof(obj));
             }
 
-            return new Document<object>(name, description, obj);
+            return new(name, description, obj);
         }
 
         protected override void SetSearchBarVisibility()

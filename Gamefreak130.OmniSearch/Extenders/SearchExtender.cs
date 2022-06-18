@@ -2,7 +2,7 @@
 {
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
-    // TODO Blueprint, shopping, playflow, inventory (relationships?) (saves?) (CAS traits/LTWs? Clothes/hair???) extenders
+    // TODO Shopping, playflow, inventory (relationships?) (saves?) (CAS traits/LTWs? Clothes/hair???) extenders
     // TODO Fix shop mode weirdness
     // TEST featured store items
     // TEST resort build/buy
