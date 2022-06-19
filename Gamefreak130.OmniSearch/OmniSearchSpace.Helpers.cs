@@ -73,10 +73,12 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
 
         private int mCount;
 
-        public override void Log(Tuple input)
+        public override void Log(Tuple input) => throw new NotSupportedException();
+
+        public void Log<T>(Tuple input)
         {
             mCount++;
-            Document<object> document = input.mParam1 as Document<object>;
+            Document<T> document = input.mParam1 as Document<T>;
             float weight = (float)input.mParam2;
             mLog.AppendLine($"{document.Title}\n{document.Description}\n{weight}\n");
         }

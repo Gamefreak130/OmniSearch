@@ -99,7 +99,7 @@
             }
             else
             {
-                DocumentLogger.sInstance.Log(new(document, weight));
+                DocumentLogger.sInstance.Log<T>(new(document, weight));
             }
             return document.Tag;
         }

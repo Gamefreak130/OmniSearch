@@ -2,17 +2,6 @@
 {
     public class BlueprintExtender : BuildBuyExtender
     {// TEST resort blueprint mode
-        public BlueprintExtender() : base(BlueprintController.sController.GetChildByIndex(1))
-        {
-            SearchBar.MoveToBack();
-
-            BlueprintController controller = BlueprintController.sController;
-            controller.mMiddlePuckWin.VisibilityChange += (_,_) => SetSearchBarVisibility();
-            controller.mTabContainer.TabSelect += (_,_) => SetSearchModel();
-            controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
-            controller.mCatalogGrid.AreaChange += (_, _) => TaskEx.Run(SetSearchBarLocation);
-        }
-
         protected override IEnumerable<object> Materials
         {
             get
@@ -23,6 +12,17 @@
                 controller.mCatalogProductFilter.FilterObjects(list, out _);
                 return list;
             }
+        }
+
+        public BlueprintExtender() : base(BlueprintController.sController.GetChildByIndex(1))
+        {
+            SearchBar.MoveToBack();
+
+            BlueprintController controller = BlueprintController.sController;
+            controller.mMiddlePuckWin.VisibilityChange += (_,_) => SetSearchBarVisibility();
+            controller.mTabContainer.TabSelect += (_,_) => SetSearchModel();
+            controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
+            controller.mCatalogGrid.AreaChange += (_, _) => TaskEx.Run(SetSearchBarLocation);
         }
 
         protected override void ProcessResultsTask(IEnumerable<object> results)
