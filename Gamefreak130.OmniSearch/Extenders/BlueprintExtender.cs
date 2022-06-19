@@ -35,7 +35,13 @@
             BlueprintController.sController.mCatalogGrid.Clear();
         }
 
-        protected override void SetSearchBarVisibility() => SetSearchBarVisibility(BlueprintController.sController.mMiddlePuckWin.Visible);
+        protected override void SetSearchBarVisibility()
+        {
+            if (BlueprintController.sController is not null)
+            {
+                SetSearchBarVisibility(BlueprintController.sController.mMiddlePuckWin.Visible);
+            }
+        }
 
         protected override void SetSearchBarLocation()
         {

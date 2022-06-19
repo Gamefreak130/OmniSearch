@@ -77,6 +77,7 @@
 
         protected override void SetSearchBarVisibility(bool visible)
         {
+            BuildController controller = BuildController.sController;
             SearchBar.Visible = visible;
 
             if (SearchBar.Visible)
@@ -94,15 +95,23 @@
                 else
                 {
                     SetSearchModel();
+                    // In certain cases the catalog grid doesn't actually repopulate if you search, go back, then select the same tool again
+                    // Even though the search bar itself is cleared
+                    // This ensures that the previous filtered results don't get "stuck" when this happens
+                    if (string.IsNullOrEmpty(SearchBar.Query))
+                    {
+                        controller.mCatalogNeedsARefresh = true;
+                        controller.RebuildCatalog();
+                    }
                 }
             }
             // These are set to false before the middle puck reappears
             // So we need to keep track of them ourselves to avoid needlessly resetting the search model
-            else if (BuildController.sController.mbCompositorActive)
+            else if (controller.mbCompositorActive)
             {
                 mCompositorActive = true;
             }
-            else if (BuildController.sController.mSellPanelController.Visible)
+            else if (controller.mSellPanelController.Visible)
             {
                 mSellPanelActive = true;
             }
