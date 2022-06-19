@@ -8,12 +8,12 @@ global using Sims3.Gameplay.Utilities;
 global using Sims3.SimIFace;
 global using Sims3.SimIFace.BuildBuy;
 global using Sims3.UI;
+global using Sims3.UI.GameEntry;
 global using System;
 global using System.Collections;
 global using System.Collections.Generic;
 global using System.Linq;
 using Gamefreak130.OmniSearchSpace.UI.Extenders;
-using Sims3.UI.GameEntry;
 
 namespace Gamefreak130
 {
@@ -24,7 +24,7 @@ namespace Gamefreak130
 
         static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
 
-        // CONSIDER Resurrect sort by in edit town library panel?
+        // CONSIDER Play flow sort by in edit town library panel?
         // CONSIDER More robust tokenizer for languages other than English
         // TODO Public API documentation
         private static void OnWorldLoadFinished(object sender, EventArgs e)
@@ -50,6 +50,10 @@ namespace Gamefreak130
             if (BlueprintController.Active)
             {
                 new BlueprintExtender();
+            }
+            if (PlayFlowController.Singleton is not null)
+            {
+                new PlayFlowExtender();
             }
         }
     }

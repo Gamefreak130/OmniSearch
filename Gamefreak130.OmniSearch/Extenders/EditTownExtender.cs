@@ -1,6 +1,4 @@
-﻿using Sims3.UI.GameEntry;
-
-namespace Gamefreak130.OmniSearchSpace.UI.Extenders
+﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     public class EditTownExtender : DocumentSearchExtender<object>
     {
@@ -62,15 +60,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             if (EditTownLibraryPanel.Instance.Visible)
             {
                 itemGrid = EditTownLibraryPanel.Instance.mGrid;
-                bool _ = false;
-                populateCallback = (_, current, _, _) => {
-                    if (current is null)
-                    {
-                        return false;
-                    }
-                    EditTownLibraryPanel.Instance.AddGridItem(current as UIBinInfo, ref _);
-                    return true;
-                };
+                populateCallback = AddGridItem;
             }
             else if (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab)
             {
@@ -79,9 +69,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 layoutKey = ResourceKey.CreateUILayoutKey("BuildCatalogItem", 0);
             }
 
-            // TODO items per tick?
+            // TODO performance improvement
             // CONSIDER Filter by lot size?
-            itemGrid.BeginPopulating(populateCallback, results, 10, layoutKey, null);
+            itemGrid.BeginPopulating(populateCallback, results, 5, layoutKey, null);
         }
 
         protected override Document<object> SelectDocument(object material)
@@ -145,5 +135,16 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         private void OnExportBinChanged(List<UIBinInfo> _) => SetSearchModel();
 
         private void OnTabSelect(object _, object __) => SetSearchBarVisibility();
+
+        private static bool AddGridItem(ItemGrid _, object current, ResourceKey __, object ___)
+        {
+            if (current is null)
+            {
+                return false;
+            }
+            bool flag = false;
+            EditTownLibraryPanel.Instance.AddGridItem(current as UIBinInfo, ref flag);
+            return true;
+        }
     }
 }

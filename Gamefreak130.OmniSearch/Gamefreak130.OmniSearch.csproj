@@ -199,11 +199,15 @@
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
       <Link>System\ExtensionAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\IsReadOnlyAttribute.cs">
+      <Link>System\IsReadOnlyAttribute.cs</Link>
+    </Compile>
     <Compile Include="Extenders\BlueprintExtender.cs" />
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
+    <Compile Include="Extenders\PlayFlowExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />
