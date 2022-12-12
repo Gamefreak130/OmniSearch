@@ -62,6 +62,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             controller.mCatalogCategoryModeButton.Click += OnCatalogButtonClick;
             controller.mCatalogRoomModeButton.Click += OnCatalogButtonClick;
             controller.mCatalogInventoryModeButton.Click += OnCatalogButtonClick;
+            controller.mCatalogStoreNotableModeButton.Click += OnCatalogButtonClick;
             controller.mCollectionButton.Click += OnCatalogButtonClick;
             controller.mButtonShopModeSortByRoom.Click += OnCatalogButtonClick;
             controller.mButtonShopModeSortByFunction.Click += OnCatalogButtonClick;
@@ -481,7 +482,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
             else
             {
-                if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections)
+                if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Collections or BuyController.CatalogType.StoreNotable)
                 {
                     SetSearchModel();
                 }
