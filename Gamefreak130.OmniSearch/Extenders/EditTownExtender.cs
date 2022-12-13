@@ -70,7 +70,6 @@
             }
 
             // TODO performance improvement
-            // CONSIDER Filter by lot size?
             itemGrid.BeginPopulating(populateCallback, results, 5, layoutKey, null);
         }
 
@@ -102,7 +101,7 @@
             => SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
 
         protected override void SetSearchModel() 
-            => SetSearchModel(new TFIDF<object>(Corpus));
+            => SetSearchModel(new ExportBinSearchModel<object>(Corpus, !EditTownPuck.Instance.IsInPloppablesMode));
 
         protected override void ClearItems()
         {

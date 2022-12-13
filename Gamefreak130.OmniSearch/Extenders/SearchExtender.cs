@@ -3,7 +3,6 @@
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO Shopping, food stand (simplePurchaseDialog), inventory (relationships?) (saves?) (CAS traits/LTWs? Clothes/hair???) extenders
-    // TEST featured store items
     // TEST resort build/buy
     // TEST interior design
     public abstract class SearchExtender<TDocument, TMaterial> : IDisposable

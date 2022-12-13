@@ -1,4 +1,7 @@
-﻿namespace Gamefreak130.OmniSearchSpace.Models
+﻿using Sims3.Gameplay;
+using System.Text.RegularExpressions;
+
+namespace Gamefreak130.OmniSearchSpace.Models
 {
     public interface ISearchModel : IDisposable
     {
@@ -288,7 +291,6 @@
                 }
             }
 
-            // CONSIDER Do we need to sort a second time?
             return from kvp in championDocs
                    where kvp.Value != 0
                    orderby kvp.Value descending
@@ -298,5 +300,50 @@
                    select mDocuments[kvp.Key].Tag;
 #endif
         }
+    }
+
+    internal class ExportBinSearchModel<T> : TFIDF<T>
+    {
+        private readonly bool mLotSearch;
+
+        public ExportBinSearchModel(IEnumerable<Document<T>> documents, bool lotSearch) : base(documents)
+            => mLotSearch = lotSearch;
+
+        protected override IEnumerable<T> SearchTask(string query)
+        {
+            if (mLotSearch)
+            {
+                Match lotSizeMatch = Regex.Match(query, @"(?:^|(?<=[^\d-]))(\d\d?)\s*[xX]\s*(\d\d?)(?!\d)");
+                if (lotSizeMatch.Success && uint.TryParse(lotSizeMatch.Groups[1].Value, out uint width) && uint.TryParse(lotSizeMatch.Groups[2].Value, out uint height)
+                    && width <= 64 && width > 0 && height <= 64 && height > 0)
+                {
+                    query = query.Remove(lotSizeMatch.Index, lotSizeMatch.Length)
+                                 .Insert(lotSizeMatch.Index, " ");
+
+                    IEnumerable<Document<T>> filteredDocs = from document in mDocuments
+                                                            where LotSizeMatches(document, width, height)
+                                                            select document;
+                    if (!Regex.IsMatch(query, @"\S"))
+                    {
+                        return filteredDocs.Select(doc => doc.Tag);
+                    }
+
+                    using (TFIDF<T> filteredSearchModel = new(filteredDocs))
+                    {
+                        filteredSearchModel.Preprocess();
+                        return filteredSearchModel.Search(query);
+                    }
+                }
+            }
+            return base.SearchTask(query);
+        }
+
+        private static bool LotSizeMatches(Document<T> document, uint width, uint height)
+            => document.Tag switch
+            {
+                UIBinInfo info              => info.LotSizeX == width && info.LotSizeY == height,
+                ExportBinContents contents  => contents.LotContentsSizeX == width && contents.LotContentsSizeY == height,
+                _                           => throw new NotSupportedException()
+            };
     }
 }
