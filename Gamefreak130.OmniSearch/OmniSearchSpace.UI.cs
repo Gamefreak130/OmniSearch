@@ -6,7 +6,8 @@
         {
             kTextInput = 2,
             kTextInputBackground = 6,
-            kBackgroundWindow = 8
+            kBackgroundWindow = 8,
+            kShowHideButton = 13
         }
 
         private static readonly Dictionary<string, List<string>> sGroupQueryHistory = new();
@@ -75,7 +76,7 @@
             mWindow.Area = new(offset, widthVec + offset);
 
             WindowBase background = mWindow.GetChildByID((uint)ControlIDs.kTextInputBackground, true);
-            widthVec = new(background.Area.TopLeft.x + width - 10, background.Area.BottomRight.y);
+            widthVec = new(background.Area.TopLeft.x + width - 25, background.Area.BottomRight.y);
             background.Area = new(background.Area.TopLeft, widthVec);
 
             widthVec = new(widthVec.x - 10, mInput.Area.BottomRight.y);

@@ -222,6 +222,10 @@
     <None Include="Resources\S3_F0FF5598_00000000_9C60223F276CC405_OmniSearchBar%25%25+TRIG.triggers" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\OmniSearchBar_Expand.png" />
+    <Content Include="Resources\OmniSearchBar_Expand_ac.png" />
+    <Content Include="Resources\OmniSearchBar_Expand_ac_hl.png" />
+    <Content Include="Resources\OmniSearchBar_Expand_hl.png" />
     <Content Include="Resources\OmniSearchBar_Icon.png" />
   </ItemGroup>
   <ItemGroup />
