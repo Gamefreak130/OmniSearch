@@ -6,11 +6,11 @@
         {
             kTextInput = 2,
             kTextInputBackground = 6,
-            kBackgroundWindow = 8,
-            kShowHideButton = 13
+            kSearchIcon = 8,
+            kCollapseButton = 13
         }
 
-        private static readonly Dictionary<string, List<string>> sGroupQueryHistory = new();
+        private static readonly Dictionary<string, SearchGroup> sSearchGroups = new();
 
         private readonly Layout mLayout;
 
@@ -18,7 +18,15 @@
 
         private TextEdit mInput;
 
+        private WindowBase mInputBackground;
+
+        private WindowBase mSearchIcon;
+
+        private Button mCollapseButton;
+
         private uint mTriggerHandle;
+
+        private float mExpandedWidth;
 
         private Action mOnQueryEntered;
 
@@ -31,17 +39,17 @@
         private AwaitableTask mPendingQueryTask;
 
         private string IndexedHistoryQuery 
-            => sGroupQueryHistory[mGroup].Count == 0 || mHistoryIndex == 0 ? "" : sGroupQueryHistory[mGroup][^mHistoryIndex];
+            => sSearchGroups[mGroup].QueryHistory.Count == 0 || mHistoryIndex == 0 ? "" : sSearchGroups[mGroup].QueryHistory[^mHistoryIndex];
 
         private string PreviousQuery
         {
-            get => mQueryEntered ? sGroupQueryHistory[mGroup].LastOrDefault(string.Empty) : "";
+            get => mQueryEntered ? sSearchGroups[mGroup].QueryHistory.LastOrDefault(string.Empty) : "";
             set
             {
                 mQueryEntered = !string.IsNullOrEmpty(value);
                 if (PreviousQuery != value)
                 {
-                    sGroupQueryHistory[mGroup].Add(value);
+                    sSearchGroups[mGroup].QueryHistory.Add(value);
                 }
                 mHistoryIndex = 1;
             }
@@ -58,9 +66,9 @@
         public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered)
         {
             mGroup = group;
-            if (!sGroupQueryHistory.ContainsKey(mGroup))
+            if (!sSearchGroups.ContainsKey(mGroup))
             {
-                sGroupQueryHistory[mGroup] = new();
+                sSearchGroups[mGroup] = new();
             }
             mLayout = UIManager.LoadLayoutAndAddToWindow(ResourceKey.CreateUILayoutKey("OmniSearchBar", 0U), parent);
             Init(onQueryEntered);
@@ -72,15 +80,28 @@
         public void SetLocation(float x, float y, float width)
         {
             Vector2 offset = new(x, y);
-            Vector2 widthVec = new(width, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
-            mWindow.Area = new(offset, widthVec + offset);
+            Vector2 widthVec;
+            mExpandedWidth = width;
+            mCollapseButton.Selected = mInput.Visible 
+                                     = mInputBackground.Visible
+                                     = mSearchIcon.Visible
+                                     = !sSearchGroups[mGroup].Collapsed;
+            if (sSearchGroups.ContainsKey(mGroup) && sSearchGroups[mGroup].Collapsed)
+            {
+                widthVec = new(26, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
+                mWindow.Area = new(offset, widthVec + offset);
+            }
+            else
+            {
+                widthVec = new(width, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
+                mWindow.Area = new(offset, widthVec + offset);
 
-            WindowBase background = mWindow.GetChildByID((uint)ControlIDs.kTextInputBackground, true);
-            widthVec = new(background.Area.TopLeft.x + width - 25, background.Area.BottomRight.y);
-            background.Area = new(background.Area.TopLeft, widthVec);
+                widthVec = new(mInputBackground.Area.TopLeft.x + width - 25, mInputBackground.Area.BottomRight.y);
+                mInputBackground.Area = new(mInputBackground.Area.TopLeft, widthVec);
 
-            widthVec = new(widthVec.x - 10, mInput.Area.BottomRight.y);
-            mInput.Area = new(mInput.Area.TopLeft, widthVec);
+                widthVec = new(widthVec.x - 10, mInput.Area.BottomRight.y);
+                mInput.Area = new(mInput.Area.TopLeft, widthVec);
+            }
         }
 
         public void MoveToBack() => mWindow.MoveToBack();
@@ -109,6 +130,17 @@
             mInput = mWindow.GetChildByID((uint)ControlIDs.kTextInput, true) as TextEdit;
             mInput.FocusAcquired += OnFocusAcquired;
             mInput.FocusLost += OnFocusLost;
+            mInputBackground = mWindow.GetChildByID((uint)ControlIDs.kTextInputBackground, true);
+            mSearchIcon = mWindow.GetChildByID((uint)ControlIDs.kSearchIcon, true);
+            mCollapseButton = mWindow.GetChildByID((uint)ControlIDs.kCollapseButton, true) as Button;
+            mCollapseButton.Click += OnToggleCollapsed;
+        }
+
+        private void OnToggleCollapsed(WindowBase _, UIButtonClickEventArgs __)
+        {
+            Audio.StartSound("ui_wall_view_panel_open");
+            sSearchGroups[mGroup].Collapsed = !sSearchGroups[mGroup].Collapsed;
+            SetLocation(mWindow.Position.x, mWindow.Position.y, mExpandedWidth);
         }
 
         private void OnFocusAcquired(WindowBase _, UIFocusChangeEventArgs eventArgs)
@@ -139,7 +171,7 @@
                     UIManager.SetFocus(InputContext.kICKeyboard, UIManager.GetSceneWindow());
                     break;
                 case (uint)ModalDialog.Triggers.kBackwardTrigger:
-                    mHistoryIndex = Math.Min(mHistoryIndex + 1, sGroupQueryHistory[mGroup].Count);
+                    mHistoryIndex = Math.Min(mHistoryIndex + 1, sSearchGroups[mGroup].QueryHistory.Count);
                     mInput.Caption = IndexedHistoryQuery;
                     break;
                 case (uint)ModalDialog.Triggers.kForwardTrigger:
