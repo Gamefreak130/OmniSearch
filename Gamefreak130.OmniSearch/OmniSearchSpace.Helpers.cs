@@ -6,7 +6,7 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
     {
         public List<string> QueryHistory { get; } = new();
 
-        public bool Collapsed { get; set; }
+        public bool Collapsed { get; set; } = PersistedSettings.kCollapseSearchBarByDefault;
     }
 
     public class Document<T> : IEquatable<Document<T>>

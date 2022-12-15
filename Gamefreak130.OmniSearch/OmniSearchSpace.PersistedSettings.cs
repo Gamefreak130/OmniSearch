@@ -16,5 +16,8 @@
 
         [Tunable, TunableComment("Tick rate of the model preprocessing function. Set to your monitor's refresh rate for best results.")]
         public static int kPreprocessingTickRate = 60;
+
+        [Tunable, TunableComment("True/False: Whether or not search bars will be collapsed by default when first loading the game.")]
+        public static bool kCollapseSearchBarByDefault = false;
     }
 }
