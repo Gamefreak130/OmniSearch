@@ -15,14 +15,14 @@
 
         protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
 
-        protected SearchExtender(WindowBase parentWindow, string searchBarGroup)
+        protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true)
         {
             EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
                 Dispose();
                 return ListenerAction.Remove;
             });
 
-            SearchBar = new(searchBarGroup, parentWindow, OnQueryEntered);
+            SearchBar = new(searchBarGroup, parentWindow, OnQueryEntered, showFullPanel);
             SetSearchBarVisibility();
         }
 
@@ -121,7 +121,7 @@
 
     public abstract class DocumentSearchExtender<T> : SearchExtender<Document<T>, T>
     {
-        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup) : base(parentWindow, searchBarGroup)
+        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true) : base(parentWindow, searchBarGroup, showFullPanel)
         {
         }
     }

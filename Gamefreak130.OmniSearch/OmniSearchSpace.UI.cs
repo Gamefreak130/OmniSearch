@@ -14,7 +14,9 @@
 
         private readonly Layout mLayout;
 
-        private WindowBase mWindow;
+        private readonly bool mShowFullPanel;
+
+        private Window mWindow;
 
         private TextEdit mInput;
 
@@ -63,8 +65,9 @@
             set => mWindow.Visible = value;
         }
 
-        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered)
+        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered, bool showFullPanel = true)
         {
+            mShowFullPanel = showFullPanel;
             mGroup = group;
             if (!sSearchGroups.ContainsKey(mGroup))
             {
@@ -74,7 +77,7 @@
             Init(onQueryEntered);
         }
 
-        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered, float x, float y, float width) : this(group, parent, onQueryEntered) 
+        public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered, float x, float y, float width, bool showFullPanel = true) : this(group, parent, onQueryEntered, showFullPanel) 
             => SetLocation(x, y, width);
 
         public void SetLocation(float x, float y, float width)
@@ -86,7 +89,7 @@
                                      = mInputBackground.Visible
                                      = mSearchIcon.Visible
                                      = !sSearchGroups[mGroup].Collapsed;
-            if (sSearchGroups.ContainsKey(mGroup) && sSearchGroups[mGroup].Collapsed)
+            if (mShowFullPanel && sSearchGroups.ContainsKey(mGroup) && sSearchGroups[mGroup].Collapsed)
             {
                 widthVec = new(26, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
                 mWindow.Area = new(offset, widthVec + offset);
@@ -134,6 +137,11 @@
             mSearchIcon = mWindow.GetChildByID((uint)ControlIDs.kSearchIcon, true);
             mCollapseButton = mWindow.GetChildByID((uint)ControlIDs.kCollapseButton, true) as Button;
             mCollapseButton.Click += OnToggleCollapsed;
+            if (!mShowFullPanel)
+            {
+                mCollapseButton.Visible = false;
+                (mWindow.Drawable as StdDrawable)[DrawableBase.ControlStates.kNormal] = null;
+            }
         }
 
         private void OnToggleCollapsed(WindowBase _, UIButtonClickEventArgs __)
