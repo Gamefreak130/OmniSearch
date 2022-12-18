@@ -3,11 +3,12 @@ using Sims3.SimIFace.CustomContent;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
+    // TODO add tab change listener to reset search model
     public class PlayFlowExtender : DocumentSearchExtender<IExportBinContents>
     {
         protected override IEnumerable<IExportBinContents> Materials => Responder.Instance.BinModel.ExportBinContents
                                                                                                    .Where(ItemFilter)
-                                                                                                   .OrderBy(item => item, PlayFlowBinPanel.Singleton.mComparer);
+                                                                                                   .Order(PlayFlowBinPanel.Singleton.mComparer);
 
         public PlayFlowExtender() : base(PlayFlowPuck.gSingleton.GetChildByIndex(0), "EditTown", false)
         {
