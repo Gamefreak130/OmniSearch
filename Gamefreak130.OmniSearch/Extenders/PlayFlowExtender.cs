@@ -9,7 +9,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                                                                                                    .Where(ItemFilter)
                                                                                                    .OrderBy(item => item, PlayFlowBinPanel.Singleton.mComparer);
 
-        public PlayFlowExtender() : base(PlayFlowPuck.gSingleton.GetChildByIndex(0), "EditTown")
+        public PlayFlowExtender() : base(PlayFlowPuck.gSingleton.GetChildByIndex(0), "EditTown", false)
         {
             SetSearchBarLocation();
             SearchBar.MoveToBack();

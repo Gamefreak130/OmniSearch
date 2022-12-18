@@ -52,7 +52,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private IEnumerable<Document<object>> mDocuments;
 
-        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy")
+        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy", false)
         {
         }
 

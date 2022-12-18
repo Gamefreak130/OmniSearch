@@ -68,17 +68,17 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             controller.mButtonShopModeSortByFunction.Click += OnCatalogButtonClick;
             controller.mButtonShopModeNotable.Click += OnCatalogButtonClick;
             controller.mButtonShopModeEmpty.Click += OnCatalogButtonClick;
-            controller.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
+            controller.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
 
             controller.mCollectionGrid.ItemClicked += (_,_) => SetSearchModel();
             controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
 
-            controller.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
+            controller.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
             controller.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
             controller.mCollectionCatalogWindow.VisibilityChange += OnCatalogGridToggled;
             controller.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
 
-            controller.mMiddlePuckWin.VisibilityChange += (_,_) => TaskEx.Run(SetSearchBarVisibility);
+            controller.mMiddlePuckWin.VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
         }
 
         public override void Dispose()
@@ -399,7 +399,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        protected override void SetSearchBarVisibility()
+        protected override void RefreshSearchBarVisibility()
         {
             if (BuyController.sController is BuyController controller)
             {
@@ -467,14 +467,14 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void OnTabSelect(TabControl _, TabControl __)
         {
-            SetSearchBarVisibility();
+            RefreshSearchBarVisibility();
             SetSearchModel();
         }
 
         private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
             SearchBar.Clear();
-            SetSearchBarVisibility();
+            RefreshSearchBarVisibility();
             if (BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
                 SetSearchModel();
@@ -494,7 +494,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
-            SetSearchBarVisibility();
+            RefreshSearchBarVisibility();
             if (!string.IsNullOrEmpty(SearchBar.Query))
             {
                 ClearItems();
@@ -503,7 +503,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void OnCatalogGridToggled(WindowBase _, UIVisibilityChangeEventArgs args)
         {
-            SetSearchBarVisibility();
+            RefreshSearchBarVisibility();
             SearchBar.Clear();
             SetSearchModel();
         }

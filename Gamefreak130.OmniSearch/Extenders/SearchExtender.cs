@@ -2,7 +2,8 @@
 {
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
-    // TODO Shopping, food stand (simplePurchaseDialog), inventory (relationships?) (saves?) (CAS traits/LTWs? Clothes/hair???) extenders
+    // CONSIDER RefreshSearchBarVisibility is only used for BuildBuyExtender; can we make it an abstract method there instead?
+    // TODO Shopping, food stand (simplePurchaseDialog), inventory (relationships?) (CAS traits/LTWs? Clothes/hair???) extenders
     // TEST resort build/buy
     // TEST interior design
     public abstract class SearchExtender<TDocument, TMaterial> : IDisposable
@@ -15,7 +16,7 @@
 
         protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
 
-        protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true)
+        protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true)
         {
             EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
                 Dispose();
@@ -23,7 +24,7 @@
             });
 
             SearchBar = new(searchBarGroup, parentWindow, OnQueryEntered, showFullPanel);
-            SetSearchBarVisibility();
+            SetSearchBarVisibility(visible);
         }
 
         public virtual void Dispose()
@@ -46,8 +47,9 @@
             }
         }
 
-        protected virtual void SetSearchBarVisibility()
-            => SetSearchBarVisibility(!SearchBar.Visible);
+        protected virtual void RefreshSearchBarVisibility()
+        {
+        }
 
         protected void ProcessExistingQuery()
         {
@@ -121,7 +123,7 @@
 
     public abstract class DocumentSearchExtender<T> : SearchExtender<Document<T>, T>
     {
-        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true) : base(parentWindow, searchBarGroup, showFullPanel)
+        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true) : base(parentWindow, searchBarGroup, visible, showFullPanel)
         {
         }
     }

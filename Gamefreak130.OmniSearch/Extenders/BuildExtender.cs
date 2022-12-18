@@ -121,7 +121,7 @@
             }
         }
 
-        protected override void SetSearchBarVisibility()
+        protected override void RefreshSearchBarVisibility()
         {
             BuildController controller = BuildController.sController;
             SetSearchBarVisibility(controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible));
@@ -188,12 +188,12 @@
         private void OnCategorySelected(object _, EventArgs __)
         {
             SearchBar.Clear();
-            SetSearchBarVisibility();
+            RefreshSearchBarVisibility();
         }
 
         private void OnTabSelect(TabControl _, TabControl __) => SetSearchModel();
 
-        private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => SetSearchBarVisibility();
+        private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => RefreshSearchBarVisibility();
 
         private void OnEyedropperPick(object _, EventArgs __)
         {
