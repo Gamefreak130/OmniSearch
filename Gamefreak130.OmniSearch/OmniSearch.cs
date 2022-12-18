@@ -22,11 +22,38 @@ namespace Gamefreak130
         [Tunable]
         private static readonly bool kCJackB;
 
-        static OmniSearch() => World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
+        static OmniSearch()
+        {
+            World.OnStartupAppEventHandler += OnStartupApp;
+            World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
+            World.OnEnterNotInWorldEventHandler += (_,_) => TransitionToMainMenu();
+        }
+
+        private static void OnStartupApp(object sender, EventArgs e)
+        {
+            if (CommandLine.FindSwitch("ccinstall") is null && CommandLine.FindSwitch("ccuninstall") is null)
+            {
+                // GetWorldFileDetails takes an absurdly long time, presumably due to disk access
+                // This function does the work and caches it while the initial loading screen is still up
+                // To prevent freezing when setting the search model and selecting the documents
+                MainMenuExtender.CacheWorldNames();
+                TransitionToMainMenu();
+            }
+        }
 
         // CONSIDER Play flow sort by in edit town library panel?
         // CONSIDER More robust tokenizer for languages other than English
         // TODO Public API documentation
+        // TODO Add tunable toggles for individual search extenders
+        private static void TransitionToMainMenu()
+        {
+            // Inject search bar only if there is at least one save game
+            if (new WorldFileSearch(1).Renumerable<object>().Skip(1).FirstOrDefault() is not null)
+            {
+                TaskEx.Run(MainMenuExtender.Inject);
+            }
+        }
+
         private static void OnWorldLoadFinished(object sender, EventArgs e)
             => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {
                 TaskEx.Run(OnEnterSubState);

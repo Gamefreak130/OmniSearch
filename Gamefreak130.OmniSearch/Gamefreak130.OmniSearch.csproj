@@ -206,6 +206,7 @@
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />
+    <Compile Include="Extenders\MainMenuExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
     <Compile Include="Extenders\PlayFlowExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
