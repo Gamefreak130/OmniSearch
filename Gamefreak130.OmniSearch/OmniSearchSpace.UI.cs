@@ -193,6 +193,7 @@
         {
             mPendingQueryTask?.Dispose();
             mWindow.RemoveTriggerHook(mTriggerHandle);
+            mLayout.Shutdown();
             mLayout.Dispose();
         }
     }

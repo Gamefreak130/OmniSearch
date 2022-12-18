@@ -12,23 +12,26 @@
 
         protected OmniSearchBar SearchBar { get; private set; }
 
+        protected WindowBase ParentWindow { get; private set; }
+
         protected abstract IEnumerable<TMaterial> Materials { get; }
 
         protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
 
         protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true)
         {
-            EventTracker.AddListener(EventTypeId.kExitInWorldSubState, delegate {
-                Dispose();
-                return ListenerAction.Remove;
-            });
+            ParentWindow = parentWindow;
+            ParentWindow.Detach += OnDetach;
 
-            SearchBar = new(searchBarGroup, parentWindow, OnQueryEntered, showFullPanel);
+            SearchBar = new(searchBarGroup, ParentWindow, OnQueryEntered, showFullPanel);
             SetSearchBarVisibility(visible);
         }
 
+        private void OnDetach(WindowBase _, UIEventArgs __) => Dispose();
+
         public virtual void Dispose()
         {
+            ParentWindow.Detach -= OnDetach;
             SearchBar.Dispose();
             SetSearchModel(null);
         }
