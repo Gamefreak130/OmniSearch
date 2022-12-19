@@ -1,20 +1,22 @@
-namespace Gamefreak130.OmniSearchSpace.UI.Extenders
+﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     public class MainMenuExtender : DocumentSearchExtender<SaveGameMetadata>
     {
         protected override IEnumerable<SaveGameMetadata> Materials => MainMenu.mSaveGameList;
 
-        private MainMenu MainMenu => ParentWindow as MainMenu;
+        private MainMenu MainMenu => mMainMenu ??= ParentWindow.Parent.Parent as MainMenu;
 
-        public MainMenuExtender() : base(UIManager.mCustomControlInstanceDict.Where(kvp => UIManager.gUIMgr.GetCustomControlID(kvp.Value.WinHandle) == 0xD6DA8D5B)
-                                                                             .First()
-                                                                             .Value, 
+        public MainMenuExtender() : base((UIManager.mCustomControlInstanceDict.First(kvp => UIManager.gUIMgr.GetCustomControlID(kvp.Value.WinHandle) == 0xD6DA8D5B)
+                                                                              .Value as MainMenu).mSavedGamesSavedGameInfoWin, 
                                          "MainMenu", showFullPanel: false)
         {
             mDocumentCount = MainMenu.mSaveGameList.Count;
             MainMenu.mFsiWorldWindow.VisibilityChange += OnVisibilityChange;
+            MainMenu.mSavedGamesSavedGameInfoWin.VisibilityChange += OnVisibilityChange;
             MainMenu.Tick += OnTick;
         }
+
+        private MainMenu mMainMenu;
 
         private int mDocumentCount;
 
@@ -105,6 +107,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         public override void Dispose()
         {
             MainMenu.mFsiWorldWindow.VisibilityChange -= OnVisibilityChange;
+            MainMenu.mSavedGamesSavedGameInfoWin.VisibilityChange -= OnVisibilityChange;
             MainMenu.Tick -= OnTick;
             base.Dispose();
         }
@@ -144,19 +147,25 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void SetSearchBarLocation()
         {
-            float x, width, y = 730;
+            if (!ParentWindow.Visible)
+            {
+                ParentWindow = MainMenu.mbSavedGameMode ? MainMenu.mSavedGamesSavedGameInfoWin : MainMenu.mSavedGamesNewGameInfoWin;
+            }
+
+            float x, width, y = MainMenu.mbSavedGameMode ? 465 : 375;
             if (MainMenu.mFsiWorldWindow.Visible)
             {
-                x = 460;
+                x = MainMenu.mbSavedGameMode ? 90 : 94;
                 width = 175;
             }
             else
             {
-                x = 750;
+                x = MainMenu.mbSavedGameMode ? 380 : 384;
                 width = 165;
             }
 
             SearchBar.SetLocation(x, y, width);
+            SearchBar.MoveToBack();
         }
 
         protected override void SetSearchModel() => SetSearchModel(new TFIDF<SaveGameMetadata>(Corpus));
