@@ -3,6 +3,7 @@ global using Gamefreak130.Common.Loggers;
 global using Gamefreak130.Common.Tasks;
 global using Gamefreak130.OmniSearchSpace.Helpers;
 global using Gamefreak130.OmniSearchSpace.Models;
+global using Sims3.Gameplay;
 global using Sims3.Gameplay.EventSystem;
 global using Sims3.Gameplay.Utilities;
 global using Sims3.SimIFace;
@@ -48,7 +49,7 @@ namespace Gamefreak130
         private static void TransitionToMainMenu()
         {
             // Inject search bar only if there is at least one save game
-            if (new WorldFileSearch(1).Renumerable<object>().Skip(1).FirstOrDefault() is not null)
+            if (GameStates.sSingleton.mStateMachine.CurState is not ToMainMenuState && new WorldFileSearch(1).Renumerable<object>().Skip(1).FirstOrDefault() is not null)
             {
                 TaskEx.Run(MainMenuExtender.Inject);
             }

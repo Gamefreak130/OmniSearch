@@ -1,5 +1,4 @@
-﻿using Sims3.Gameplay;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Gamefreak130.OmniSearchSpace.Models
 {

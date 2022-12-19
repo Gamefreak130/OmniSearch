@@ -1,5 +1,3 @@
-﻿using Sims3.Gameplay;
-
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     public class MainMenuExtender : DocumentSearchExtender<SaveGameMetadata>
