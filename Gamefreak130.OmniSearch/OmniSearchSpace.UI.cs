@@ -111,6 +111,13 @@
 
         public void MoveToFront() => mWindow.MoveToFront();
 
+        public void Reparent(WindowBase newParent)
+        {
+            mWindow.RemoveTriggerHook(mTriggerHandle);
+            UIManager.Reparent(mWindow, newParent, true);
+            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, 17);
+        }
+
         public void Clear()
         {
             mInput.Caption = "";

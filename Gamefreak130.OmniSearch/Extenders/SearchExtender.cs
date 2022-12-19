@@ -12,7 +12,20 @@
 
         protected OmniSearchBar SearchBar { get; private set; }
 
-        protected WindowBase ParentWindow { get; private set; }
+        protected WindowBase ParentWindow
+        {
+            get => mParentWindow;
+            set
+            {
+                if (mParentWindow is not null)
+                {
+                    mParentWindow.Detach -= OnDetach;
+                    SearchBar.Reparent(value);
+                }
+                mParentWindow = value;
+                mParentWindow.Detach += OnDetach;
+            }
+        }
 
         protected abstract IEnumerable<TMaterial> Materials { get; }
 
@@ -21,11 +34,12 @@
         protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true)
         {
             ParentWindow = parentWindow;
-            ParentWindow.Detach += OnDetach;
 
             SearchBar = new(searchBarGroup, ParentWindow, OnQueryEntered, showFullPanel);
             SetSearchBarVisibility(visible);
         }
+
+        private WindowBase mParentWindow;
 
         private void OnDetach(WindowBase _, UIEventArgs __) => Dispose();
 
