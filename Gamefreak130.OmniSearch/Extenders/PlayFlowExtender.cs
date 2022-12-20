@@ -3,7 +3,6 @@ using Sims3.SimIFace.CustomContent;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // TODO add tab change listener to reset search model
     public class PlayFlowExtender : DocumentSearchExtender<IExportBinContents>
     {
         protected override IEnumerable<IExportBinContents> Materials => Responder.Instance.BinModel.ExportBinContents
@@ -17,7 +16,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SetSearchModel();
             Responder.Instance.BinModel.OnUpdateExportBin += OnExportBinChanged;
             PlayFlowBinPanel.Singleton.VisibilityChange += (_, eventArgs) => SetSearchBarVisibility(eventArgs.Visible);
-            PlayFlowBinPanel.Singleton.mCustomContent.Click += (_,_) => SetSearchModel();
+            PlayFlowBinPanel.Singleton.mCustomContent.Click += OnItemReshuffle;
+            PlayFlowBinPanel.Singleton.mSortDifficulty.Click += OnItemReshuffle;
+            PlayFlowBinPanel.Singleton.mSortFunds.Click += OnItemReshuffle;
+            PlayFlowBinPanel.Singleton.mSortName.Click += OnItemReshuffle;
+            PlayFlowBinPanel.Singleton.mSortTime.Click += OnItemReshuffle;
         }
 
         public override void Dispose()
@@ -53,6 +56,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected override void SetSearchModel() => SetSearchModel(new ExportBinSearchModel<IExportBinContents>(Corpus, true));
 
         private void OnExportBinChanged(List<UIBinInfo> _) => SetSearchModel();
+
+        private void OnItemReshuffle(WindowBase _, UIButtonClickEventArgs __) => SetSearchModel();
 
         private bool ItemFilter(IExportBinContents item) 
             => !UIUtils.IsContentTypeDisabled((ResourceKeyContentCategory)item.DownloadType) && ((int)item.Type & 0b11) != 0
