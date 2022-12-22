@@ -67,21 +67,25 @@ namespace Gamefreak130
             {
                 new BuyExtender();
             }
-            if (BuildController.sController is not null)
+            else if (BuildController.sController is not null)
             {
                 new BuildExtender();
             }
-            if (EditTownController.Instance is not null)
+            else if (EditTownController.Instance is not null)
             {
                 new EditTownExtender();
             }
-            if (BlueprintController.Active)
+            else if (BlueprintController.Active)
             {
                 new BlueprintExtender();
             }
-            if (PlayFlowController.Singleton is not null)
+            else if (PlayFlowController.Singleton is not null)
             {
                 new PlayFlowExtender();
+            }
+            else if (ShoppingController.Instance is not null)
+            {
+                new ShoppingExtender();
             }
         }
     }

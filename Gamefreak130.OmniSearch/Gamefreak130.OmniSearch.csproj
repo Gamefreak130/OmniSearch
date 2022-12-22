@@ -209,6 +209,7 @@
     <Compile Include="Extenders\MainMenuExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
     <Compile Include="Extenders\PlayFlowExtender.cs" />
+    <Compile Include="Extenders\ShoppingExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />
