@@ -85,7 +85,7 @@
         {
             try
             {
-                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"), UIManager.sDarkenBackground is null || !UIManager.sDarkenBackground.Visible);
 #if DEBUG
                 IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query)
                                                             .ToList();

@@ -115,7 +115,7 @@
         {
             mWindow.RemoveTriggerHook(mTriggerHandle);
             UIManager.Reparent(mWindow, newParent, true);
-            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, 17);
+            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, int.MaxValue);
         }
 
         public void Clear()
@@ -135,7 +135,7 @@
         {
             mOnQueryEntered = onQueryEntered;
             mWindow = mLayout.GetWindowByExportID(1) as Window;
-            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, 17);
+            mTriggerHandle = mWindow.AddTriggerHook("OmniSearchBar", TriggerActivationMode.kManual, int.MaxValue);
             mWindow.TriggerDown += OnTriggerDown;
             mInput = mWindow.GetChildByID((uint)ControlIDs.kTextInput, true) as TextEdit;
             mInput.FocusAcquired += OnFocusAcquired;

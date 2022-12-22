@@ -65,7 +65,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
         {
             try
             {
-                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"));
+                ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"), UIManager.sDarkenBackground is null || !UIManager.sDarkenBackground.Visible);
 
                 if (string.IsNullOrEmpty(query))
                 {
