@@ -63,30 +63,58 @@ namespace Gamefreak130
 
         private static void OnEnterSubState()
         {
-            if (BuyController.sController is not null)
+            if (GameStates.IsLiveState)
             {
-                new BuyExtender();
+                UIManager.sDarkenBackground.VisibilityChange += LiveModeModalInject;
             }
-            else if (BuildController.sController is not null)
+            else
             {
-                new BuildExtender();
-            }
-            else if (EditTownController.Instance is not null)
-            {
-                new EditTownExtender();
-            }
-            else if (BlueprintController.Active)
-            {
-                new BlueprintExtender();
-            }
-            else if (PlayFlowController.Singleton is not null)
-            {
-                new PlayFlowExtender();
-            }
-            else if (ShoppingController.Instance is not null)
-            {
-                new ShoppingExtender();
+                UIManager.sDarkenBackground.VisibilityChange -= LiveModeModalInject;
+                if (BuyController.sController is not null)
+                {
+                    new BuyExtender();
+                }
+                else if (BuildController.sController is not null)
+                {
+                    new BuildExtender();
+                }
+                else if (EditTownController.Instance is not null)
+                {
+                    new EditTownExtender();
+                }
+                else if (BlueprintController.Active)
+                {
+                    new BlueprintExtender();
+                }
+                else if (PlayFlowController.Singleton is not null)
+                {
+                    new PlayFlowExtender();
+                }
+                else if (ShoppingController.Instance is not null)
+                {
+                    new ShoppingExtender();
+                }
             }
         }
+
+        private static void LiveModeModalInject(WindowBase _, UIVisibilityChangeEventArgs __)
+        {
+            if (UIManager.sDarkenBackground.Visible)
+            {
+                TaskEx.Run(() => {
+                    if (UIManager.GetModalWindow() is Dialog dialog)
+                    {
+                        if (IsLinkedToModalDialog(dialog.GetChildByID(SimplePurchaseDialog.OKAY_BUTTON, true), (uint)Button.ButtonEvents.kEventButtonClick, typeof(SimplePurchaseDialog)))
+                        {
+                            new SimplePurchaseExtender();
+                        }
+                    }
+                });
+            }
+        }
+
+        private static bool IsLinkedToModalDialog(WindowBase window, uint eventId, Type dialogType) 
+            => window is not null && UIManager.mEventRegistry.ContainsKey(window.WinHandle) && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks.ContainsKey(eventId)
+                && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks[eventId].mEventHandlers.Find(x => x.Method.DeclaringType == dialogType) is not null;
     }
 }
