@@ -52,10 +52,10 @@
         protected override Document<IShopItem> SelectDocument(IShopItem material)
             => material switch
             {
-                IBookGeneralUIItem item   => new($"{item.Title}", $"{item.Genre};{item.Author}", material),
+                IBookGeneralUIItem item   => new($"{item.Title}", $"{item.Genre}\t{item.Author}", material),
                 IBookUIItem item          => new($"{item.Title}", $"{item.Author}", material),
                 IShoppingUIRecipe recipe  => new(recipe.DisplayName, 
-                                                 string.Join(";", recipe.ItemsForRecipe.Select(item => item.DisplayName)
+                                                 string.Join("\t", recipe.ItemsForRecipe.Select(item => item.DisplayName)
                                                                                                .ToArray()),
                                                  material),
                 IShopItem                 => new(material.DisplayName, "", material)
@@ -64,6 +64,6 @@
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(60, ShoppingController.Instance.mInventoryTabContainer.Visible ? 141 : 120, 300);
 
-        protected override void SetSearchModel() => SetSearchModel(new TFIDF<IShopItem>(Corpus));
+        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IShopItem>(Corpus));
     }
 }

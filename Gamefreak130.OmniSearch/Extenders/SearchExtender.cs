@@ -144,4 +144,11 @@
         {
         }
     }
+
+    public abstract class ModalExtender<T> : DocumentSearchExtender<T>
+    {
+        public ModalExtender(bool visible = true, bool showFullPanel = false) : base(UIManager.GetModalWindow(), "Dialogs", visible, showFullPanel)
+        {
+        }
+    }
 }

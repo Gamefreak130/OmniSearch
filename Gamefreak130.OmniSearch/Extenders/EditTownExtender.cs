@@ -80,8 +80,8 @@
             switch (material)
             {
                 case UIBinInfo binInfo:
-                    name = $"{binInfo.HouseholdName};{binInfo.LotName} {Responder.Instance.EditTownModel.CommercialSubTypeLocalizedName(binInfo.CommercialLotSubType)}";
-                    description = $"{binInfo.HouseholdBio};{binInfo.LotDescription}";
+                    name = $"{binInfo.HouseholdName}\t{binInfo.LotName}\t{Responder.Instance.EditTownModel.CommercialSubTypeLocalizedName(binInfo.CommercialLotSubType)}";
+                    description = $"{binInfo.HouseholdBio}\t{binInfo.LotDescription}";
                     break;
                 case BuildBuyProduct bbp:
                     name = bbp.CatalogName;

@@ -40,7 +40,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             => PlayFlowBinPanel.Singleton.mBinGridControl.BeginPopulating(AddGridItem, results, 5, default, null);
 
         protected override Document<IExportBinContents> SelectDocument(IExportBinContents material)
-            => new($"{material.HouseholdName};{material.LotName}", $"{material.HouseholdBio};{material.LotDescription}", material);
+            => new($"{material.HouseholdName}\t{material.LotName}", $"{material.HouseholdBio}\t{material.LotDescription}", material);
 
         protected override void SetSearchBarVisibility(bool visible)
         {

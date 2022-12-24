@@ -1,13 +1,12 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public class SimplePurchaseExtender : DocumentSearchExtender<ObjectPicker.RowInfo>
+    public class SimplePurchaseExtender : ModalExtender<ObjectPicker.RowInfo>
     {
         protected override IEnumerable<ObjectPicker.RowInfo> Materials => Table.mItems[Table.mSortedTab].RowInfo;
 
         private ObjectPicker Table => mTable ??= ParentWindow.GetChildByID(SimplePurchaseDialog.ITEM_TABLE, true) as ObjectPicker;
 
-        public SimplePurchaseExtender() : base(UIManager.GetModalWindow(), "Dialogs", showFullPanel: false) 
-            => Table.mComboBox.SelectionChange += (_, _) => SetSearchModel();
+        public SimplePurchaseExtender() => Table.mComboBox.SelectionChange += (_,_) => SetSearchModel();
 
         private ObjectPicker mTable;
 
@@ -31,6 +30,6 @@
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(50, 95, 270);
 
-        protected override void SetSearchModel() => SetSearchModel(new TFIDF<ObjectPicker.RowInfo>(Corpus));
+        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<ObjectPicker.RowInfo>(Corpus));
     }
 }

@@ -44,6 +44,7 @@ namespace Gamefreak130
 
         // CONSIDER Play flow sort by in edit town library panel?
         // CONSIDER More robust tokenizer for languages other than English
+        // CONSIDER Spelling correction on query typos?
         // TODO Public API documentation
         // TODO Add tunable toggles for individual search extenders
         private static void TransitionToMainMenu()

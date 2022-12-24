@@ -118,8 +118,8 @@ namespace Gamefreak130.OmniSearchSpace.Models
             => from document in mDocuments
                // Little trick I learned from StackOverflow to efficiently count substring occurrences
                // https://stackoverflow.com/questions/541954/how-would-you-count-occurrences-of-a-string-actually-a-char-within-a-string
-               let titleWeight = (float)(document.Title.Length - document.Title.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kTitleWeight
-               let descWeight = (float)(document.Description.Length - document.Description.Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kDescriptionWeight
+               let titleWeight = (float)(document.Title.Length - document.Title.ToLower().Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kTitleWeight
+               let descWeight = (float)(document.Description.Length - document.Description.ToLower().Replace(query.ToLower(), "").Length) / query.Length * PersistedSettings.kDescriptionWeight
                let weight = titleWeight + descWeight
                where weight > 0
                orderby weight descending
@@ -342,7 +342,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
             {
                 UIBinInfo info              => info.LotSizeX == width && info.LotSizeY == height,
                 ExportBinContents contents  => contents.LotContentsSizeX == width && contents.LotContentsSizeY == height,
-                _                           => throw new NotSupportedException()
+                _                           => throw new ArgumentException($"{document.Tag.GetType().Name} is not a valid Bin object")
             };
     }
 }
