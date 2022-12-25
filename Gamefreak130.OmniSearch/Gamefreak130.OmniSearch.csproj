@@ -206,6 +206,7 @@
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />
+    <Compile Include="Extenders\FestivalDialogExtender.cs" />
     <Compile Include="Extenders\MainMenuExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
     <Compile Include="Extenders\PlayFlowExtender.cs" />
@@ -221,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Gamefreak130.OmniSearch.xml" />
+    <None Include="Resources\S3_025C95B6_00000000_8FF8C8F5F2820540_HUDFestivalTicketDialog%25%25+LAYO.layout" />
     <None Include="Resources\S3_025C95B6_00000000_9C60223F276CC405_OmniSearchBar%25%25+LAYO.layout" />
     <None Include="Resources\S3_F0FF5598_00000000_9C60223F276CC405_OmniSearchBar%25%25+TRIG.triggers" />
   </ItemGroup>

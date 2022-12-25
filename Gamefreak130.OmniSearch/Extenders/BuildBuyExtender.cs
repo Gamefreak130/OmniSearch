@@ -1,5 +1,4 @@
 ﻿using Sims3.Gameplay.Abstracts;
-using Sims3.UI.Hud;
 using Sims3.UI.Store;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders

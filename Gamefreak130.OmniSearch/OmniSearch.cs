@@ -10,6 +10,7 @@ global using Sims3.SimIFace;
 global using Sims3.SimIFace.BuildBuy;
 global using Sims3.UI;
 global using Sims3.UI.GameEntry;
+global using Sims3.UI.Hud;
 global using System;
 global using System.Collections;
 global using System.Collections.Generic;
@@ -108,6 +109,10 @@ namespace Gamefreak130
                         if (IsLinkedToModalDialog(dialog.GetChildByID(SimplePurchaseDialog.OKAY_BUTTON, true), (uint)Button.ButtonEvents.kEventButtonClick, typeof(SimplePurchaseDialog)))
                         {
                             new SimplePurchaseExtender();
+                        }
+                        else if (IsLinkedToModalDialog(dialog.GetChildByID((uint)FestivalTicketDialog.ControlID.AcceptListButton, true), (uint)Button.ButtonEvents.kEventButtonClick, typeof(FestivalTicketDialog)))
+                        {
+                            new FestivalDialogExtender();
                         }
                     }
                 });
