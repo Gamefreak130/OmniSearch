@@ -7,6 +7,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     {
         private readonly IInventory mFamilyInventory;
 
+        private readonly CASCompositorController mCASCompositorController;
+
         private bool mInventoryEventRegistered;
 
         protected override IEnumerable<object> Materials => BuyController.sController.mCurrCatalogType is BuyController.CatalogType.Inventory
@@ -36,7 +38,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 SetSearchModel();
             }
 
-            CASCompositorController.Instance.ExitFullEditMode += ProcessExistingQuery;
+            mCASCompositorController = CASCompositorController.Instance;
+            mCASCompositorController.ExitFullEditMode += ProcessExistingQuery;
 
             controller.mTabContainerSortByFunction.TabSelect += OnTabSelect;
 
@@ -87,6 +90,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 mFamilyInventory.InventoryChanged -= SetSearchModel;
             }
+            mCASCompositorController.ExitFullEditMode -= ProcessExistingQuery;
             base.Dispose();
         }
 
