@@ -324,7 +324,8 @@ namespace Gamefreak130.OmniSearchSpace.Models
                                                             select document;
                     if (!Regex.IsMatch(query, @"\S"))
                     {
-                        return filteredDocs.Select(doc => doc.Tag);
+                        return from document in filteredDocs
+                               select document.Tag;
                     }
 
                     using (TFIDF<T> filteredSearchModel = new(filteredDocs))

@@ -85,17 +85,23 @@
             Vector2 offset = new(x, y);
             Vector2 widthVec;
             mExpandedWidth = width;
+            if (mShowFullPanel && sSearchGroups[mGroup].Collapsed)
+            {
             mCollapseButton.Selected = mInput.Visible 
                                      = mInputBackground.Visible
                                      = mSearchIcon.Visible
-                                     = !sSearchGroups[mGroup].Collapsed;
-            if (mShowFullPanel && sSearchGroups.ContainsKey(mGroup) && sSearchGroups[mGroup].Collapsed)
-            {
+                                         = false;
+
                 widthVec = new(26, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
                 mWindow.Area = new(offset, widthVec + offset);
             }
             else
             {
+                mCollapseButton.Selected = mInput.Visible
+                                         = mInputBackground.Visible
+                                         = mSearchIcon.Visible
+                                         = true;
+
                 widthVec = new(width, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);
                 mWindow.Area = new(offset, widthVec + offset);
 
