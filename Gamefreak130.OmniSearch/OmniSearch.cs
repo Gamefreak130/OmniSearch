@@ -68,10 +68,14 @@ namespace Gamefreak130
             if (GameStates.IsLiveState)
             {
                 UIManager.sDarkenBackground.VisibilityChange += LiveModeModalInject;
+                InventoryPanel.Instance.VisibilityChange += InventoryExtender.InjectIfVisible;
+                InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += InventoryExtender.InjectIfVisible;
             }
             else
             {
                 UIManager.sDarkenBackground.VisibilityChange -= LiveModeModalInject;
+                InventoryPanel.Instance.VisibilityChange -= InventoryExtender.InjectIfVisible;
+                InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 if (BuyController.sController is not null)
                 {
                     new BuyExtender();

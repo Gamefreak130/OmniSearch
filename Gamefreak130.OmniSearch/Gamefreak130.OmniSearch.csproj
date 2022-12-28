@@ -207,6 +207,7 @@
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />
     <Compile Include="Extenders\FestivalDialogExtender.cs" />
+    <Compile Include="Extenders\InventoryExtender.cs" />
     <Compile Include="Extenders\MainMenuExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
     <Compile Include="Extenders\PlayFlowExtender.cs" />
