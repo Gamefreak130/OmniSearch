@@ -338,11 +338,11 @@ namespace Gamefreak130.OmniSearchSpace.Models
             return base.SearchTask(query);
         }
 
-        private static bool LotSizeMatches(Document<T> document, uint width, uint height)
+        private static bool LotSizeMatches(Document<T> document, uint x1, uint x2)
             => document.Tag switch
             {
-                UIBinInfo info              => info.LotSizeX == width && info.LotSizeY == height,
-                ExportBinContents contents  => contents.LotContentsSizeX == width && contents.LotContentsSizeY == height,
+                UIBinInfo info              => (info.LotSizeX == x1 && info.LotSizeY == x2) || (info.LotSizeX == x2 && info.LotSizeY == x1),
+                ExportBinContents contents  => (contents.LotContentsSizeX == x1 && contents.LotContentsSizeY == x2) || (contents.LotContentsSizeX == x2 && contents.LotContentsSizeY == x1),
                 _                           => throw new ArgumentException($"{document.Tag.GetType().Name} is not a valid Bin object")
             };
     }
