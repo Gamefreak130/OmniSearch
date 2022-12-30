@@ -48,13 +48,14 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 }
                 else
                 {
-                    CurrentInventory = InventoryPanel.Instance.mSecondaryInventory;
                     InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += OnVisibilityChange;
                     // Reorder callbacks to ensure that ours is fired before the reference to the old inventory is discarded
                     HudController.Instance.Model.SecondaryInventoryOwnerChanged -= InventoryPanel.Instance.OnSecondaryInventoryOwnerChanged;
                     HudController.Instance.Model.SecondaryInventoryOwnerChanged += OnInventoryOwnerChange;
                     HudController.Instance.Model.SecondaryInventoryOwnerChanged += InventoryPanel.Instance.OnSecondaryInventoryOwnerChanged;
                 }
+                InventoryGrid.InternalGrid.DragEnd -= InventoryPanel.Instance.OnItemGridDragEnd;
+                InventoryGrid.InternalGrid.DragEnd += OnItemGridDragEnd;
             }
             catch (Exception ex)
             {
@@ -117,6 +118,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     {
                         ParentWindow.VisibilityChange -= OnVisibilityChange;
                     }
+                    InventoryGrid.InternalGrid.DragEnd -= OnItemGridDragEnd;
                 }
 
                 CurrentInventory = null;
@@ -154,7 +156,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                             InventoryPanel.Instance.AttachGrabAllHandleEvents(inventoryItemWin2);
                         }
                         inventoryItemWin2.Tag = inventoryItemStack;
-                        InventoryGrid.AddItem(new ItemGridCellItem(inventoryItemWin2, inventoryItemStack));
+                        InventoryGrid.AddItem(new(inventoryItemWin2, inventoryItemStack));
                     }
                 }
             }
@@ -183,5 +185,166 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
 
         protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IInventoryItemStack>(Corpus));
+
+        private void OnItemGridDragEnd(WindowBase sender, UIDragEventArgs eventArgs)
+        {
+            if (eventArgs.Data is not LiveDragData)
+            {
+                return;
+            }
+
+            InventoryPanel.Instance.mbDragging = false;
+            IInventory inventory = (sender == InventoryPanel.Instance.mPrimaryItemGrid.InternalGrid) ? InventoryPanel.Instance.mCurrentSimInventory : InventoryPanel.Instance.mSecondaryInventory;
+            ItemGrid itemGrid = (sender == InventoryPanel.Instance.mPrimaryItemGrid.InternalGrid) ? InventoryPanel.Instance.mPrimaryItemGrid : InventoryPanel.Instance.mSecondaryItemGrid;
+            int num = -1;
+            bool flag = true;
+            if (eventArgs.Result)
+            {
+                InventoryPanel.Instance.UnregisterInventoryEvents(inventory);
+                InventoryPanel.Instance.SetInventoryInUseForLiveDraggedObjects(false);
+                if (InventoryPanel.Instance.mDragInfo is not null)
+                {
+                    if (InventoryPanel.Instance.mDragInfo.mDragOriginStack is not null && InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory is not null)
+                    {
+                        int num2 = InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory.InventoryItems.IndexOf(InventoryPanel.Instance.mDragInfo.mDragOriginStack);
+                        int count = InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory.InventoryItems.Count;
+                        if (InventoryPanel.Instance.mDragInfo.mbDragOriginIsStack && InventoryPanel.Instance.mDragInfo.mDragDestinationInventory is not null)
+                        {
+                            if ((eventArgs.Modifiers & Modifiers.kModifierMaskShift) is Modifiers.kModifierMaskShift)
+                            {
+                                InventoryPanel.Instance.mLiveDragHelper.ShiftedDrop = true;
+                                World.HandToolDetach();
+                                Simulator.AddObject(new OneShotFunctionWithParams(InventoryPanel.Instance.ShiftDragHelper, sender));
+                                return;
+                            }
+
+                            int num3 = InventoryPanel.Instance.mDragInfo.mDragDestinationInventory.MaxInsertNewStackAt(InventoryPanel.Instance.mLiveDragHelper.DraggedObjects, InventoryPanel.Instance.mDragInfo.mDragDestinationIndex, InventoryPanel.Instance.mInsertionType is InventoryItemWin.InsertionType.Stack);
+                            if (num3 > 0 && num3 < InventoryPanel.Instance.mDragInfo.mDragOriginStack.Count)
+                            {
+                                InventoryPanel.Instance.DoPartialDrop(num3, inventory, itemGrid);
+                                return;
+                            }
+
+                            flag &= InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory.TryRemoveStackFromInventory(InventoryPanel.Instance.mDragInfo.mDragOriginStack);
+                        }
+                        else
+                        {
+                            flag &= InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory.TryRemoveObjectFromInventory(InventoryPanel.Instance.mDragInfo.mDragOriginTopObject);
+                            if (flag && InventoryPanel.Instance.mLiveDragHelper.DraggedObjects.Count > 0 && InventoryPanel.Instance.mDragInfo.mDragDestinationInventory is null)
+                            {
+                                InventoryPanel.Instance.mDragInfo.mDragOriginTopObject = InventoryPanel.Instance.mLiveDragHelper.DraggedObjects[0];
+                            }
+                        }
+
+                        if (flag && InventoryPanel.Instance.mDragInfo.mDragDestinationInventory == InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory && InventoryPanel.Instance.mDragInfo.mbDragDestinationInsert && num2 < InventoryPanel.Instance.mDragInfo.mDragDestinationIndex)
+                        {
+                            InventoryPanel.Instance.mDragInfo.mDragDestinationIndex -= count - InventoryPanel.Instance.mDragInfo.mDragOriginatingInventory.InventoryItems.Count;
+                        }
+                    }
+
+                    if (InventoryPanel.Instance.mDragInfo.mDragDestinationInventory is not null)
+                    {
+                        if (InventoryPanel.Instance.mDragInfo.mbDragDestinationInsert)
+                        {
+                            flag &= InventoryPanel.Instance.mDragInfo.mDragDestinationInventory.TryInsertNewStackAt(InventoryPanel.Instance.mLiveDragHelper.DraggedObjects, InventoryPanel.Instance.mDragInfo.mDragDestinationIndex, InventoryPanel.Instance.mInsertionType is InventoryItemWin.InsertionType.Stack);
+                            InventoryPanel.Instance.mLiveDragHelper.PurgeHandToolObjects();
+                            if (flag)
+                            {
+                                Audio.StartSound("ui_object_plop");
+                            }
+                        }
+                        else
+                        {
+                            flag &= InventoryPanel.Instance.mLiveDragHelper.TryAddHandToolObjectsToInventory(InventoryPanel.Instance.mDragInfo.mDragDestinationInventory);
+                        }
+                    }
+                }
+
+                InventoryPanel.Instance.RegisterInventoryEvents(inventory);
+                if (flag)
+                {
+                    if (InventoryPanel.Instance.mDragInfo is not null && InventoryPanel.Instance.mDragInfo.mDragOriginWin is not null)
+                    {
+                        num = itemGrid.Items.FindIndex((ItemGridCellItem item) => item.mWin == InventoryPanel.Instance.mDragInfo.mDragOriginWin);
+                    }
+
+                    InventoryPanel.Instance.RepopulateInventory(inventory);
+                }
+            }
+            else
+            {
+                InventoryPanel.Instance.UnregisterInventoryEvents(inventory);
+                InventoryPanel.Instance.SetInventoryInUseForLiveDraggedObjects(false);
+                InventoryPanel.Instance.RegisterInventoryEvents(inventory);
+                InventoryPanel.Instance.mLiveDragHelper.PurgeHandToolObjects();
+                if (InventoryPanel.Instance.mDragInfo is not null && InventoryPanel.Instance.mDragInfo.mDragOriginWin is not null)
+                {
+                    num = itemGrid.Items.FindIndex((ItemGridCellItem item) => item.mWin == InventoryPanel.Instance.mDragInfo.mDragOriginWin);
+                    if (InventoryPanel.Instance.mDragInfo.mDragOriginStack.Count > 0)
+                    {
+                        WindowBase parent = InventoryPanel.Instance.mDragInfo.mDragOriginWin.Parent;
+                        if (parent is not null)
+                        {
+                            ZoopBack(InventoryPanel.Instance.mDragInfo.mDragOriginStack.TopObject, sender.WindowToScreen(eventArgs.MousePosition), parent.WindowToScreen(InventoryPanel.Instance.mDragInfo.mDragOriginWin.Position), inventory);
+                        }
+                        else
+                        {
+                            ZoopBack(InventoryPanel.Instance.mDragInfo.mDragOriginStack.TopObject, sender.WindowToScreen(eventArgs.MousePosition), InventoryPanel.Instance.mDragInfo.mDragOriginPosition, inventory);
+                        }
+                    }
+                }
+            }
+
+            if (InventoryPanel.Instance.mLiveDragHelper.DraggedObjectsCount == 0)
+            {
+                InventoryPanel.Instance.mDragInfo = null;
+            }
+            else if (InventoryPanel.Instance.mDragInfo is not null && InventoryPanel.Instance.mDragInfo.mDragOriginWin is not null && num != -1)
+            {
+                InventoryItemWin inventoryItemWin = itemGrid.Items[num].mWin as InventoryItemWin;
+                if (inventoryItemWin is not null)
+                {
+                    InventoryPanel.Instance.mDragInfo.mDragOriginWin = inventoryItemWin;
+                    InventoryPanel.Instance.mDragInfo.mDragOriginWin.ItemDrawState = 1u;
+                    InventoryPanel.Instance.mDragInfo.mDragOriginWin.GrabAllHandleWin.DrawState = 1u;
+                    InventoryPanel.Instance.mDragInfo.mDragOriginWin.PreviewStackItemCount = InventoryPanel.Instance.mDragInfo.mDragOriginStack.Count - InventoryPanel.Instance.mLiveDragHelper.DraggedObjectsCount;
+                }
+            }
+        }
+
+        private void ZoopBack(ObjectGuid topObject, Vector2 startPosition, Vector2 endPosition, IInventory inventory)
+        {
+            if (InventoryPanel.Instance.mZoopWindow is null)
+            {
+                Layout layout = UIManager.LoadLayout(ResourceKey.CreateUILayoutKey("HudInventoryItemWin", 0u));
+                InventoryPanel.Instance.mZoopWindow = layout.GetWindowByExportID(1) as InventoryItemWin;
+                InventoryPanel.Instance.mZoopWindow.BackgroundWin.Visible = false;
+                InventoryPanel.Instance.mZoopWindow.Thumbnail = topObject;
+                InventoryPanel.Instance.mZoopWindow.Position = startPosition;
+                GlideEffect glideEffect = new()
+                {
+                    TriggerType = EffectBase.TriggerTypes.Manual,
+                    Duration = 0.2f,
+                    InterpolationType = EffectBase.InterpolationTypes.EaseInOut,
+                    EaseTimes = new(0.2f, 0f),
+                    Offset = endPosition - startPosition
+                };
+                InventoryPanel.Instance.mZoopWindow.EffectList.Add(glideEffect);
+                UIManager.GetUITopWindow().AddChild(InventoryPanel.Instance.mZoopWindow);
+                glideEffect.TriggerEffect(false);
+                TaskEx.Delay(200).ContinueWith(delegate {
+                    if (InventoryPanel.Instance.mZoopWindow is not null)
+                    {
+                        InventoryPanel.Instance.mZoopWindow.Parent.DestroyChild(InventoryPanel.Instance.mZoopWindow);
+                        InventoryPanel.Instance.mZoopWindow = null;
+                    }
+                    SetSearchModel();
+                    if (string.IsNullOrEmpty(SearchBar.Query))
+                    {
+                        InventoryPanel.Instance.RepopulateInventory(inventory);
+                    }
+                });
+            }
+        }
     }
 }
