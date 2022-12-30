@@ -125,7 +125,7 @@
                 if (window != null)
                 {
                     MainMenu.SetupSaveItem(window, saveGameMetadata);
-                    MainMenu.mSaveGrid.AddItem(new ItemGridCellItem(window, saveGameMetadata));
+                    MainMenu.mSaveGrid.AddItem(new(window, saveGameMetadata));
                 }
             }
 

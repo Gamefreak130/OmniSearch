@@ -119,6 +119,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                         ParentWindow.VisibilityChange -= OnVisibilityChange;
                     }
                     InventoryGrid.InternalGrid.DragEnd -= OnItemGridDragEnd;
+                    // Clear search results if cameraman mode activated
+                    InventoryPanel.Instance.RepopulateInventory(CurrentInventory);
                 }
 
                 CurrentInventory = null;
