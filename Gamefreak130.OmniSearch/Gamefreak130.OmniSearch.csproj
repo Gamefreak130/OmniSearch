@@ -79,9 +79,6 @@
     <Compile Include="..\..\CommonUtils\System\Index.cs">
       <Link>System\Index.cs</Link>
     </Compile>
-    <Compile Include="..\..\CommonUtils\System\IValueTupleInternal.cs">
-      <Link>System\IValueTupleInternal.cs</Link>
-    </Compile>
     <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
       <Link>System\Linq\DelegatingComparer.cs</Link>
     </Compile>
@@ -200,16 +197,10 @@
       <Link>System\Linq\OrderedEnumerable.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
-      <Link>System\Runtime.CompilerServices\ExtensionAttribute.cs</Link>
+      <Link>System\ExtensionAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\IsReadOnlyAttribute.cs">
-      <Link>System\Runtime.CompilerServices\IsReadOnlyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\Tuple.cs">
-      <Link>System\Runtime.CompilerServices\Tuple.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CommonUtils\System\ValueTuple.cs">
-      <Link>System\ValueTuple.cs</Link>
+      <Link>System\IsReadOnlyAttribute.cs</Link>
     </Compile>
     <Compile Include="Extenders\BlueprintExtender.cs" />
     <Compile Include="Extenders\BuyExtender.cs" />

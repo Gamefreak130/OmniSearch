@@ -2,7 +2,6 @@
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // TODO properly finalize when traveling?
     public class InventoryExtender : DocumentSearchExtender<IInventoryItemStack>
     {
         protected override IEnumerable<IInventoryItemStack> Materials => CurrentInventory.InventoryItems;

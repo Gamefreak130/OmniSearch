@@ -3,10 +3,10 @@
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     // CONSIDER Add OccultType to document description?
-    public class RelationshipPanelExtender : DocumentSearchExtender<(IMiniSimDescription simDescription, IRelationship relationship)>
+    public class RelationshipPanelExtender : DocumentSearchExtender<Tuple>
     {
-        protected override IEnumerable<(IMiniSimDescription, IRelationship)> Materials 
-            => RelationshipsPanel.Instance.mHudModel.CurrentRelationships.Select(x => (x.Key, x.Value));
+        protected override IEnumerable<Tuple> Materials 
+            => RelationshipsPanel.Instance.mHudModel.CurrentRelationships.Select(x => new Tuple(x.Key, x.Value));
 
         public RelationshipPanelExtender() : base(RelationshipsPanel.Instance, "Relationships")
         {
@@ -20,7 +20,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 ExceptionLogger.sInstance.Log(ex);
             }
         }
-
 
         private bool mDirty;
 
@@ -65,15 +64,18 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void ClearItems() => RelationshipsPanel.Instance.mRelItemGrid.Clear();
 
-        protected override void ProcessResultsTask(IEnumerable<(IMiniSimDescription simDescription, IRelationship relationship)> results)
+        protected override void ProcessResultsTask(IEnumerable<Tuple> results)
         {
             mSearching = true;
-            RelationshipsPanel.Instance.Repopulate(results.ToDictionary(x => x.simDescription, x => x.relationship));
+            RelationshipsPanel.Instance.Repopulate(results.ToDictionary(x => x.mParam1 as IMiniSimDescription, x => x.mParam2 as IRelationship));
             mSearching = false;
         }
 
-        protected override Document<(IMiniSimDescription simDescription, IRelationship relationship)> SelectDocument((IMiniSimDescription simDescription, IRelationship relationship) material) 
-            => new($"{material.relationship.SimName}", $"{material.relationship.CurrentLTRNameLocalized};{material.relationship.FamilialString}", material);
+        protected override Document<Tuple> SelectDocument(Tuple material)
+        {
+            IRelationship relationship = material.mParam2 as IRelationship;
+            return new($"{relationship.SimName}", $"{relationship.CurrentLTRNameLocalized};{relationship.FamilialString}", material);
+        }
 
         protected override void SetSearchBarLocation()
         {
@@ -81,6 +83,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SearchBar.MoveToBack();
         }
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<(IMiniSimDescription, IRelationship)>(Corpus));
+        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<Tuple>(Corpus));
     }
 }
