@@ -53,7 +53,7 @@
                 {
                     sSearchGroups[mGroup].QueryHistory.Add(value);
                 }
-                mHistoryIndex = 1;
+                mHistoryIndex = mQueryEntered ? 1 : 0;
             }
         }
 
