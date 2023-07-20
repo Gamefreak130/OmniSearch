@@ -79,6 +79,9 @@
     <Compile Include="..\..\CommonUtils\System\Index.cs">
       <Link>System\Index.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\System\IValueTupleInternal.cs">
+      <Link>System\IValueTupleInternal.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\System\Linq\DelegatingComparer.cs">
       <Link>System\Linq\DelegatingComparer.cs</Link>
     </Compile>
@@ -197,10 +200,16 @@
       <Link>System\Linq\OrderedEnumerable.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\ExtensionAttribute.cs">
-      <Link>System\ExtensionAttribute.cs</Link>
+      <Link>System\Runtime.CompilerServices\ExtensionAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\IsReadOnlyAttribute.cs">
-      <Link>System\IsReadOnlyAttribute.cs</Link>
+      <Link>System\Runtime.CompilerServices\IsReadOnlyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\Tuple.cs">
+      <Link>System\Runtime.CompilerServices\Tuple.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\System\ValueTuple.cs">
+      <Link>System\ValueTuple.cs</Link>
     </Compile>
     <Compile Include="Extenders\BlueprintExtender.cs" />
     <Compile Include="Extenders\BuyExtender.cs" />
@@ -211,6 +220,7 @@
     <Compile Include="Extenders\MainMenuExtender.cs" />
     <Compile Include="Extenders\EditTownExtender.cs" />
     <Compile Include="Extenders\PlayFlowExtender.cs" />
+    <Compile Include="Extenders\RelationshipPanelExtender.cs" />
     <Compile Include="Extenders\ShoppingExtender.cs" />
     <Compile Include="Extenders\SimplePurchaseExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />

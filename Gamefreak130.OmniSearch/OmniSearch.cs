@@ -44,8 +44,10 @@ namespace Gamefreak130
         }
 
         // CONSIDER Play flow sort by in edit town library panel?
+        // CONSIDER Smoother build/buy/blueprint, edit town, play flow?
+        // CONSIDER Auto-expand Live Mode panels?
         // CONSIDER More robust tokenizer for languages other than English
-        // CONSIDER Spelling correction on query typos?
+        // CONSIDER Spelling correction on query typos? autofill incomplete words?
         // TODO Public API documentation
         // TODO Add tunable toggles for individual search extenders
         private static void TransitionToMainMenu()
@@ -70,12 +72,14 @@ namespace Gamefreak130
                 UIManager.sDarkenBackground.VisibilityChange += LiveModeModalInject;
                 InventoryPanel.Instance.VisibilityChange += InventoryExtender.InjectIfVisible;
                 InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += InventoryExtender.InjectIfVisible;
+                RelationshipsPanel.Instance.VisibilityChange += RelationshipPanelExtender.InjectIfVisible;
             }
             else
             {
                 UIManager.sDarkenBackground.VisibilityChange -= LiveModeModalInject;
                 InventoryPanel.Instance.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange -= InventoryExtender.InjectIfVisible;
+                RelationshipsPanel.Instance.VisibilityChange -= RelationshipPanelExtender.InjectIfVisible;
                 if (BuyController.sController is not null)
                 {
                     new BuyExtender();
