@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonUtils\Common\UI\UIHelper.cs">
+      <Link>Common\UI\UIHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\System\Index.cs">
       <Link>System\Index.cs</Link>
     </Compile>

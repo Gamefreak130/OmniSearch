@@ -15,6 +15,7 @@ global using System;
 global using System.Collections;
 global using System.Collections.Generic;
 global using System.Linq;
+using Gamefreak130.Common.UI;
 using Gamefreak130.OmniSearchSpace.UI.Extenders;
 
 namespace Gamefreak130
@@ -113,7 +114,7 @@ namespace Gamefreak130
             if (UIManager.sDarkenBackground.Visible)
             {
                 TaskEx.Run(() => {
-                    if (UIManager.GetModalWindow() is Dialog dialog && TryGetModalDialog(UIManager.GetModalWindow() as Dialog, out ModalDialog modal))
+                    if (UIManager.GetModalWindow() is Dialog dialog && UIHelper.TryGetModalDialog(UIManager.GetModalWindow() as Dialog, out ModalDialog modal))
                     {
                         switch (modal)
                         {
@@ -130,18 +131,6 @@ namespace Gamefreak130
                     }
                 });
             }
-        }
-
-        private static bool TryGetModalDialog(Dialog window, out ModalDialog modal)
-        {
-            modal = null;
-            if (window is not null && UIManager.mEventRegistry.ContainsKey(window.WinHandle) && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks.ContainsKey((uint)WindowBase.WindowBaseEvents.kEventWindowBaseTriggerDown)
-                && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks[(uint)WindowBase.WindowBaseEvents.kEventWindowBaseTriggerDown].mEventHandlers.Find(x => x.Method.DeclaringType == typeof(ModalDialog)) is Delegate @delegate)
-            {
-                modal = (ModalDialog)@delegate.Target;
-                return true;
-            }
-            return false;
         }
     }
 }
