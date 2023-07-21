@@ -1,4 +1,6 @@
-﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
+﻿using Gamefreak130.Common.UI;
+
+namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     public class MainMenuExtender : DocumentSearchExtender<SaveGameMetadata>
     {
@@ -6,8 +8,7 @@
 
         private MainMenu MainMenu => mMainMenu ??= ParentWindow.Parent.Parent as MainMenu;
 
-        public MainMenuExtender() : base((UIManager.mCustomControlInstanceDict.First(kvp => UIManager.gUIMgr.GetCustomControlID(kvp.Value.WinHandle) == 0xD6DA8D5B)
-                                                                              .Value as MainMenu).mSavedGamesSavedGameInfoWin, 
+        public MainMenuExtender() : base(UIHelper.GetWindowWrapperByType<MainMenu>().mSavedGamesSavedGameInfoWin, 
                                          "MainMenu", showFullPanel: false)
         {
             mDocumentCount = MainMenu.mSaveGameList.Count;
