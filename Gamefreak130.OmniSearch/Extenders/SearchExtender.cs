@@ -145,10 +145,16 @@
         }
     }
 
-    public abstract class ModalExtender<T> : DocumentSearchExtender<T>
+    public abstract class ModalExtender<TModalDialog, TMaterial> : DocumentSearchExtender<TMaterial> where TModalDialog : ModalDialog
     {
-        public ModalExtender(bool visible = true, bool showFullPanel = false) : base(UIManager.GetModalWindow(), "Dialogs", visible, showFullPanel)
+        protected TModalDialog Modal { get; }
+
+        // Set search bar visibility to false initially, then reset it in this constructor after setting Modal
+        // So that we can safely get Materials using Modal if necessary
+        public ModalExtender(TModalDialog modal, bool visible = true, bool showFullPanel = false) : base(modal.ModalDialogWindow, "Dialogs", false, showFullPanel)
         {
+            Modal = modal;
+            SetSearchBarVisibility(visible);
         }
     }
 }

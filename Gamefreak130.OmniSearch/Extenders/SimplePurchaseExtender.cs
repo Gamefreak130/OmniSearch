@@ -1,27 +1,24 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public class SimplePurchaseExtender : ModalExtender<ObjectPicker.RowInfo>
+    public class SimplePurchaseExtender : ModalExtender<SimplePurchaseDialog, ObjectPicker.RowInfo>
     {
-        protected override IEnumerable<ObjectPicker.RowInfo> Materials => Table.mItems[Table.mSortedTab].RowInfo;
+        protected override IEnumerable<ObjectPicker.RowInfo> Materials => Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo;
 
-        private ObjectPicker Table => mTable ??= ParentWindow.GetChildByID(SimplePurchaseDialog.ITEM_TABLE, true) as ObjectPicker;
+        public SimplePurchaseExtender(SimplePurchaseDialog modal) : base(modal)
+            => Modal.mTable.mComboBox.SelectionChange += (_,_) => SetSearchModel();
 
-        public SimplePurchaseExtender() => Table.mComboBox.SelectionChange += (_,_) => SetSearchModel();
-
-        private ObjectPicker mTable;
-
-        protected override void ClearItems() => Table.mItems[Table.mSortedTab].RowInfo = null;
+        protected override void ClearItems() => Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo = null;
 
         protected override void ProcessResultsTask(IEnumerable<ObjectPicker.RowInfo> results)
         {
-            Table.mItems[Table.mSortedTab].RowInfo = results.ToList();
-            if (Table.mItems[Table.mSortedTab].RowInfo.Count > 0)
+            Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo = results.ToList();
+            if (Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo.Count > 0)
             {
-                Table.RepopulateTable();
+                Modal.mTable.RepopulateTable();
             }
             else
             {
-                Table.mTable.Clear();
+                Modal.mTable.mTable.Clear();
             }
         }
 

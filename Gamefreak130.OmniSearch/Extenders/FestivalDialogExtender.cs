@@ -1,29 +1,28 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public class FestivalDialogExtender : ModalExtender<IUIFestivalTicketReward>
+    public class FestivalDialogExtender : ModalExtender<FestivalTicketDialog, IUIFestivalTicketReward>
     {
         protected override IEnumerable<IUIFestivalTicketReward> Materials => HudController.Instance.Model.AllAvailableFestivalTicketRewards;
 
-        private TableContainer Table => mTable ??= ParentWindow.GetChildByID((uint)FestivalTicketDialog.ControlID.FestivalInventoryTable, true) as TableContainer;
-
-        private TableContainer mTable;
+        public FestivalDialogExtender(FestivalTicketDialog modal) : base(modal)
+        {
+        }
 
         protected override void ClearItems()
         {
-            Table.Clear();
-            Table.Flush();
+            Modal.mRewardInventoryTable.Clear();
+            Modal.mRewardInventoryTable.Flush();
         }
 
         protected override void ProcessResultsTask(IEnumerable<IUIFestivalTicketReward> results)
         {
-            FestivalTicketDialog.mStoreItemList = results.ToList();
-            foreach (IUIFestivalTicketReward reward in FestivalTicketDialog.mStoreItemList)
+            foreach (IUIFestivalTicketReward reward in results)
             {
-                TableRow tableRow = Table.CreateRow();
-                FestivalTicketInventoryRowController festivalTicketInventoryRowController = new(tableRow, Table, reward);
+                TableRow tableRow = Modal.mRewardInventoryTable.CreateRow();
+                FestivalTicketInventoryRowController festivalTicketInventoryRowController = new(tableRow, Modal.mRewardInventoryTable, reward);
                 tableRow.RowController = festivalTicketInventoryRowController;
-                Table.AddRow(tableRow);
-                festivalTicketInventoryRowController.Disabled = reward.TicketCost > HudController.Instance.Model.CurrentFestivalTickets;
+                Modal.mRewardInventoryTable.AddRow(tableRow);
+                festivalTicketInventoryRowController.Disabled = Modal.IsRewardDisabled(reward);
             }
         }
 

@@ -109,26 +109,36 @@ namespace Gamefreak130
 
         private static void LiveModeModalInject(WindowBase _, UIVisibilityChangeEventArgs __)
         {
+            // CONSIDER Fix double inject on travel and save/reload? Is this necessary?
             if (UIManager.sDarkenBackground.Visible)
             {
                 TaskEx.Run(() => {
-                    if (UIManager.GetModalWindow() is Dialog dialog)
+                    if (UIManager.GetModalWindow() is Dialog dialog && TryGetModalDialog(UIManager.GetModalWindow() as Dialog, out ModalDialog modal))
                     {
-                        if (IsLinkedToModalDialog(dialog.GetChildByID(SimplePurchaseDialog.OKAY_BUTTON, true), (uint)Button.ButtonEvents.kEventButtonClick, typeof(SimplePurchaseDialog)))
+                        switch (modal)
                         {
-                            new SimplePurchaseExtender();
-                        }
-                        else if (IsLinkedToModalDialog(dialog.GetChildByID((uint)FestivalTicketDialog.ControlID.AcceptListButton, true), (uint)Button.ButtonEvents.kEventButtonClick, typeof(FestivalTicketDialog)))
-                        {
-                            new FestivalDialogExtender();
+                            case SimplePurchaseDialog simplePurchaseDialog:
+                                new SimplePurchaseExtender(simplePurchaseDialog);
+                                break;
+                            case FestivalTicketDialog festivalTicketDialog:
+                                new FestivalDialogExtender(festivalTicketDialog);
+                                break;
                         }
                     }
                 });
             }
         }
 
-        private static bool IsLinkedToModalDialog(WindowBase window, uint eventId, Type dialogType) 
-            => window is not null && UIManager.mEventRegistry.ContainsKey(window.WinHandle) && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks.ContainsKey(eventId)
-                && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks[eventId].mEventHandlers.Find(x => x.Method.DeclaringType == dialogType) is not null;
+        private static bool TryGetModalDialog(Dialog window, out ModalDialog modal)
+        {
+            modal = null;
+            if (window is not null && UIManager.mEventRegistry.ContainsKey(window.WinHandle) && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks.ContainsKey((uint)WindowBase.WindowBaseEvents.kEventWindowBaseTriggerDown)
+                && UIManager.mEventRegistry[window.WinHandle].EventTypesAndCallbacks[(uint)WindowBase.WindowBaseEvents.kEventWindowBaseTriggerDown].mEventHandlers.Find(x => x.Method.DeclaringType == typeof(ModalDialog)) is Delegate @delegate)
+            {
+                modal = (ModalDialog)@delegate.Target;
+                return true;
+            }
+            return false;
+        }
     }
 }
