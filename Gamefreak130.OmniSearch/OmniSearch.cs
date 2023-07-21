@@ -123,6 +123,9 @@ namespace Gamefreak130
                             case FestivalTicketDialog festivalTicketDialog:
                                 new FestivalDialogExtender(festivalTicketDialog);
                                 break;
+                            case AdventureRewardsShopDialog adventureRewardsShopDialog:
+                                new AdventureShopDialogExtender(adventureRewardsShopDialog);
+                                break;
                         }
                     }
                 });

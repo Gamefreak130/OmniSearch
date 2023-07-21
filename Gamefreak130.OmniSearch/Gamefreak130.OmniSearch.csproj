@@ -202,6 +202,7 @@
     <Compile Include="..\..\CommonUtils\System\Runtime.CompilerServices\IsReadOnlyAttribute.cs">
       <Link>System\IsReadOnlyAttribute.cs</Link>
     </Compile>
+    <Compile Include="Extenders\AdventureShopDialogExtender.cs" />
     <Compile Include="Extenders\BlueprintExtender.cs" />
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
