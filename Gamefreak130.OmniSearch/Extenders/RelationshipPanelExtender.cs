@@ -1,4 +1,5 @@
-﻿using Sims3.UI.CAS;
+﻿using Sims3.Gameplay.Objects.HobbiesSkills;
+using Sims3.UI.CAS;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
@@ -73,8 +74,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override Document<Tuple> SelectDocument(Tuple material)
         {
+            IMiniSimDescription simDescription = material.mParam1 as IMiniSimDescription;
             IRelationship relationship = material.mParam2 as IRelationship;
-            return new($"{relationship.SimName}", $"{relationship.CurrentLTRNameLocalized};{relationship.FamilialString}", material);
+            string _ = null;
+            return new($"{relationship.SimName}", $"{relationship.CurrentLTRNameLocalized};{relationship.FamilialString};{Photograph.GameUtilsGetLocalizedWorldName(simDescription.HomeWorld, ref _)}", material);
         }
 
         protected override void SetSearchBarLocation()
