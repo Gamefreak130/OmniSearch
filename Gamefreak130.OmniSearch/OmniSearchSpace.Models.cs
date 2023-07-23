@@ -38,18 +38,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
             mYieldPreprocessing = yielding;
         }
 
-        ~SearchModel() => Dispose(true);
-
-        public void Dispose() => Dispose(false);
-
-        private void Dispose(bool finalizing)
-        {
-            ModelPreprocessTask = null;
-            if (!finalizing)
-            {
-                GC.SuppressFinalize(this);
-            }
-        }
+        public void Dispose() => ModelPreprocessTask = null;
 
         protected bool ShouldYieldPreprocessing(StopWatch startTimer)
             => mYieldPreprocessing && startTimer.GetElapsedTimeFloat() >= 1000f / PersistedSettings.kPreprocessingTickRate;
