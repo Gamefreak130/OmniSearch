@@ -119,7 +119,7 @@ namespace Gamefreak130
                         switch (modal)
                         {
                             case SimplePurchaseDialog simplePurchaseDialog:
-                                new SimplePurchaseExtender(simplePurchaseDialog);
+                                new SimplePurchaseDialogExtender(simplePurchaseDialog);
                                 break;
                             case FestivalTicketDialog festivalTicketDialog:
                                 new FestivalDialogExtender(festivalTicketDialog);

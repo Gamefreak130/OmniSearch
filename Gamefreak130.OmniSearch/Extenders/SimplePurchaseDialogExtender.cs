@@ -1,10 +1,10 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    public class SimplePurchaseExtender : ModalExtender<SimplePurchaseDialog, ObjectPicker.RowInfo>
+    public class SimplePurchaseDialogExtender : ModalExtender<SimplePurchaseDialog, ObjectPicker.RowInfo>
     {
         protected override IEnumerable<ObjectPicker.RowInfo> Materials => Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo;
 
-        public SimplePurchaseExtender(SimplePurchaseDialog modal) : base(modal)
+        public SimplePurchaseDialogExtender(SimplePurchaseDialog modal) : base(modal)
             => Modal.mTable.mComboBox.SelectionChange += (_,_) => SetSearchModel();
 
         protected override void ClearItems() => Modal.mTable.mItems[Modal.mTable.mSortedTab].RowInfo = null;

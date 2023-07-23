@@ -217,7 +217,7 @@
     <Compile Include="Extenders\PlayFlowExtender.cs" />
     <Compile Include="Extenders\RelationshipPanelExtender.cs" />
     <Compile Include="Extenders\ShoppingExtender.cs" />
-    <Compile Include="Extenders\SimplePurchaseExtender.cs" />
+    <Compile Include="Extenders\SimplePurchaseDialogExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />
