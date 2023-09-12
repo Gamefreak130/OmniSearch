@@ -38,8 +38,6 @@
 
         private int mHistoryIndex;
 
-        private AwaitableTask mPendingQueryTask;
-
         private string IndexedHistoryQuery 
             => sSearchGroups[mGroup].QueryHistory.Count == 0 || mHistoryIndex == 0 ? "" : sSearchGroups[mGroup].QueryHistory[^mHistoryIndex];
 
@@ -133,7 +131,7 @@
 
         public void TriggerSearch()
         {
-            mPendingQueryTask = TaskEx.Run(mOnQueryEntered);
+            mOnQueryEntered();
             PreviousQuery = mInput.Caption;
         }
 
@@ -204,7 +202,6 @@
 
         public void Dispose()
         {
-            mPendingQueryTask?.Dispose();
             mWindow.RemoveTriggerHook(mTriggerHandle);
             mLayout.Shutdown();
             mLayout.Dispose();

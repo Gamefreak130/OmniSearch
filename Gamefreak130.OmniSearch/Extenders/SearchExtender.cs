@@ -20,16 +20,24 @@
                 if (mParentWindow is not null)
                 {
                     mParentWindow.Detach -= OnDetach;
+                    if (value is not null)
+                    {
                     SearchBar.Reparent(value);
                 }
+                }
                 mParentWindow = value;
+                if (value is not null)
+                {
                 mParentWindow.Detach += OnDetach;
             }
+        }
         }
 
         protected abstract IEnumerable<TMaterial> Materials { get; }
 
         protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
+
+        protected bool Searching => mSearchTask?.IsCompleted ?? false;
 
         protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true)
         {
@@ -41,11 +49,13 @@
 
         private WindowBase mParentWindow;
 
+        private AwaitableTask mSearchTask;
+
         private void OnDetach(WindowBase _, UIEventArgs __) => Dispose();
 
         public virtual void Dispose()
         {
-            ParentWindow.Detach -= OnDetach;
+            ParentWindow = null;
             SearchBar.Dispose();
             SetSearchModel(null);
         }
@@ -81,7 +91,9 @@
             }
         }
 
-        private void OnQueryEntered()
+        private void OnQueryEntered() => SetSearchTask(TaskEx.Run(ProcessQueryTask));
+
+        private void ProcessQueryTask()
         {
             try
             {
@@ -98,6 +110,10 @@
                 ClearItems();
                 ProcessResultsTask(results);
             }
+            catch (ResetException)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 ExceptionLogger.sInstance.Log(e);
@@ -108,10 +124,17 @@
             }
         }
 
+        private void SetSearchTask(AwaitableTask newTask)
+        {
+            mSearchTask?.Cancel();
+            mSearchTask = newTask;
+        }
+
         protected void SetSearchModel(ISearchModel<TMaterial> value)
         {
             try
             {
+                CancelSearch();
                 SearchModel?.Dispose();
                 SearchModel = value;
                 SearchModel?.Preprocess();
@@ -126,6 +149,8 @@
                 ExceptionLogger.sInstance.Log(e);
             }
         }
+
+        protected void CancelSearch() => SetSearchTask(null);
 
         protected abstract void SetSearchModel();
 
