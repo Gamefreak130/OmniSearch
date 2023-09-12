@@ -9,6 +9,7 @@ global using Sims3.Gameplay.Utilities;
 global using Sims3.SimIFace;
 global using Sims3.SimIFace.BuildBuy;
 global using Sims3.UI;
+global using Sims3.UI.CAS;
 global using Sims3.UI.GameEntry;
 global using Sims3.UI.Hud;
 global using System;
@@ -29,6 +30,7 @@ namespace Gamefreak130
         {
             World.OnStartupAppEventHandler += OnStartupApp;
             World.OnWorldLoadFinishedEventHandler += OnWorldLoadFinished;
+            World.OnDesignModeStartEventHandler += OnDesignModeStarted;
             World.OnEnterNotInWorldEventHandler += (_,_) => TransitionToMainMenu();
         }
 
@@ -45,12 +47,13 @@ namespace Gamefreak130
         }
 
         // CONSIDER Play flow sort by in edit town library panel?
-        // CONSIDER Smoother build/buy/blueprint, edit town, play flow?
+        // CONSIDER Smoother build/buy/blueprint, edit town, play flow, CASt; remove filter/select restriction when populating?
         // CONSIDER Auto-expand Live Mode panels?
         // CONSIDER More robust tokenizer for languages other than English
         // CONSIDER Spelling correction on query typos? autofill incomplete words?
         // TODO Public API documentation
         // TODO Add tunable toggles for individual search extenders
+        // TODO Refactor SetSearchModel
         private static void TransitionToMainMenu()
         {
             // Inject search bar only if there is at least one save game
@@ -107,6 +110,10 @@ namespace Gamefreak130
                 }
             }
         }
+
+        private static void OnDesignModeStarted(object _, EventArgs __)
+            // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
+            => CASCompositorController.Instance.EnterFullEditMode += CompositorExtender.Inject;
 
         private static void LiveModeModalInject(WindowBase _, UIVisibilityChangeEventArgs __)
         {

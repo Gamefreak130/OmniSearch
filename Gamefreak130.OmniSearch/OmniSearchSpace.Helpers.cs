@@ -1,7 +1,24 @@
-﻿using System.Text.RegularExpressions;
+﻿using Sims3.Metadata;
+using System.Text.RegularExpressions;
 
 namespace Gamefreak130.OmniSearchSpace.Helpers
 {
+    public readonly struct PatternInfo
+    {
+        public ResourceKey Key { get; }
+
+        public Complate Complate { get; }
+
+        public ColorInfo ColorInfo { get; }
+
+        public PatternInfo(ResourceKey key, Complate complate, ColorInfo colorInfo)
+        {
+            Key = key;
+            Complate = complate;
+            ColorInfo = colorInfo;
+        }
+    }
+
     public class SearchGroup
     {
         public List<string> QueryHistory { get; } = new();

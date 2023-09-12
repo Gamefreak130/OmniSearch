@@ -1,5 +1,4 @@
 ﻿using Sims3.Gameplay.Objects.HobbiesSkills;
-using Sims3.UI.CAS;
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {

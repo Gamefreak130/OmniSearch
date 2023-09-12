@@ -210,6 +210,7 @@
     <Compile Include="Extenders\BuyExtender.cs" />
     <Compile Include="Extenders\BuildExtender.cs" />
     <Compile Include="Extenders\BuildBuyExtender.cs" />
+    <Compile Include="Extenders\CompositorExtender.cs" />
     <Compile Include="Extenders\FestivalDialogExtender.cs" />
     <Compile Include="Extenders\InventoryExtender.cs" />
     <Compile Include="Extenders\MainMenuExtender.cs" />

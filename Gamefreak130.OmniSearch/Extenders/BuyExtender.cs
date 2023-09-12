@@ -1,6 +1,4 @@
-﻿using Sims3.UI.CAS;
-
-namespace Gamefreak130.OmniSearchSpace.UI.Extenders
+﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
     // TODO exactmatch for inventory, wall/floor, world editor searches?
     public class BuyExtender : BuildBuyExtender
