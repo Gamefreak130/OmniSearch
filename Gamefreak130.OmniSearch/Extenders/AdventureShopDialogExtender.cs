@@ -26,7 +26,7 @@
         protected override Document<IUIAdventureReward> SelectDocument(IUIAdventureReward material) 
             => new(material.Name, material.Description, material);
 
-        protected override void SetSearchBarLocation() => SearchBar.SetLocation(50, 95, 270);
+        protected override void SetSearchBarLocation() => SearchBar.SetLocation(70, 57, 330);
 
         protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IUIAdventureReward>(Corpus));
     }
