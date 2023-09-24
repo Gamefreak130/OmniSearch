@@ -76,6 +76,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\TaskCompletionSource.cs">
+      <Link>Common\Tasks\TaskCompletionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonUtils\Common\Tasks\WhenAnyAll.cs">
+      <Link>Common\Tasks\WhenAnyAll.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\Common\UI\UIHelper.cs">
       <Link>Common\UI\UIHelper.cs</Link>
     </Compile>
