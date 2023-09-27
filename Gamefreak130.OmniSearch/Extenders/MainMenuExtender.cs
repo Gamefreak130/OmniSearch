@@ -8,8 +8,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private MainMenu MainMenu => mMainMenu ??= ParentWindow.Parent.Parent as MainMenu;
 
-        public MainMenuExtender() : base(UIHelper.GetWindowWrapperByType<MainMenu>().mSavedGamesSavedGameInfoWin, 
-                                         "MainMenu", showFullPanel: false)
+        public MainMenuExtender(WindowBase menuWindow) : base(menuWindow, "MainMenu", showFullPanel: false)
         {
             mDocumentCount = MainMenu.mSaveGameList.Count;
             MainMenu.mFsiWorldWindow.VisibilityChange += OnVisibilityChange;
@@ -35,7 +34,14 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 TaskEx.Yield();
             }
 
-            new MainMenuExtender();
+            // CONSIDER Try to fix non-reproducible bug where quit to main menu does not show extender
+            MainMenu menu = UIHelper.GetWindowWrapperByType<MainMenu>();
+            while (menu.mSavedGamesSavedGameInfoWin is null)
+            {
+                TaskEx.Yield();
+            }
+
+            new MainMenuExtender(menu.mSavedGamesSavedGameInfoWin);
         }
 
         public static void CacheWorldNames()
