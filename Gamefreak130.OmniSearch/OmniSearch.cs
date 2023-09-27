@@ -26,6 +26,8 @@ namespace Gamefreak130
         [Tunable]
         private static readonly bool kCJackB;
 
+        private static ModalRetriever<ModalDialog> sModalRetriever;
+
         static OmniSearch()
         {
             World.OnStartupAppEventHandler += OnStartupApp;
@@ -64,23 +66,27 @@ namespace Gamefreak130
         }
 
         private static void OnWorldLoadFinished(object sender, EventArgs e)
-            => EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {
+        {
+            sModalRetriever?.Dispose();
+            sModalRetriever = new();
+            sModalRetriever.ModalPushed += OnModalPushed;
+
+            EventTracker.AddListener(EventTypeId.kEnterInWorldSubState, delegate {
                 TaskEx.Run(OnEnterSubState);
                 return ListenerAction.Keep;
             });
+        }
 
         private static void OnEnterSubState()
         {
             if (GameStates.IsLiveState)
             {
-                UIManager.sDarkenBackground.VisibilityChange += LiveModeModalInject;
                 InventoryPanel.Instance.VisibilityChange += InventoryExtender.InjectIfVisible;
                 InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += InventoryExtender.InjectIfVisible;
                 RelationshipsPanel.Instance.VisibilityChange += RelationshipPanelExtender.InjectIfVisible;
             }
             else
             {
-                UIManager.sDarkenBackground.VisibilityChange -= LiveModeModalInject;
                 InventoryPanel.Instance.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 RelationshipsPanel.Instance.VisibilityChange -= RelationshipPanelExtender.InjectIfVisible;
@@ -111,17 +117,7 @@ namespace Gamefreak130
             }
         }
 
-        private static void OnDesignModeStarted(object _, EventArgs __)
-            // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
-            => CASCompositorController.Instance.EnterFullEditMode += CompositorExtender.Inject;
-
-        private static void LiveModeModalInject(WindowBase _, UIVisibilityChangeEventArgs __)
-        {
-            // CONSIDER Fix double inject on travel and save/reload? Is this necessary?
-            if (UIManager.sDarkenBackground.Visible)
-            {
-                TaskEx.Run(() => {
-                    if (UIManager.GetModalWindow() is Dialog dialog && UIHelper.TryGetModalDialog(UIManager.GetModalWindow() as Dialog, out ModalDialog modal))
+        private static void OnModalPushed(ModalDialog modal)
                     {
                         switch (modal)
                         {
@@ -136,8 +132,9 @@ namespace Gamefreak130
                                 break;
                         }
                     }
-                });
-            }
-        }
+
+        private static void OnDesignModeStarted(object _, EventArgs __)
+            // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
+            => CASCompositorController.Instance.EnterFullEditMode += CompositorExtender.Inject;
     }
 }

@@ -82,6 +82,9 @@
     <Compile Include="..\..\CommonUtils\Common\Tasks\WhenAnyAll.cs">
       <Link>Common\Tasks\WhenAnyAll.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonUtils\Common\UI\ModalRetriever.cs">
+      <Link>Common\UI\ModalRetriever.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\Common\UI\UIHelper.cs">
       <Link>Common\UI\UIHelper.cs</Link>
     </Compile>
