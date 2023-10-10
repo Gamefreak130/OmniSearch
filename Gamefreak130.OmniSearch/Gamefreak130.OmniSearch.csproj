@@ -228,6 +228,7 @@
     <Compile Include="Extenders\RelationshipPanelExtender.cs" />
     <Compile Include="Extenders\ShoppingExtender.cs" />
     <Compile Include="Extenders\SimplePurchaseDialogExtender.cs" />
+    <Compile Include="Extenders\TraitsPickerDialogExtender.cs" />
     <Compile Include="OmniSearchSpace.Helpers.cs" />
     <Compile Include="OmniSearch.cs" />
     <Compile Include="OmniSearchSpace.Models.cs" />

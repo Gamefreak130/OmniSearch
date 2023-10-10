@@ -130,6 +130,9 @@ namespace Gamefreak130
                             case AdventureRewardsShopDialog adventureRewardsShopDialog:
                                 new AdventureShopDialogExtender(adventureRewardsShopDialog);
                                 break;
+                case TraitsPickerDialog traitsPickerDialog:
+                    new TraitsPickerDialogExtender(traitsPickerDialog);
+                    break;
                         }
                     }
 
