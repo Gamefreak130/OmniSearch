@@ -2,12 +2,12 @@
 {
     public class OmniSearchBar : IDisposable
     {
-        private enum ControlIDs : byte
+        private enum ControlIDs : uint
         {
-            kTextInput = 2,
-            kTextInputBackground = 6,
-            kSearchIcon = 8,
-            kCollapseButton = 13
+            kTextInput = 0x424E996A,             // Gamefreak130_OmniSearchBarTextInput
+            kTextInputBackground = 0xFC97BFB2,   // Gamefreak130_OmniSearchBarTextInputBackground
+            kSearchIcon = 0x8D35DC00,            // Gamefreak130_OmniSearchBarSearchIcon 
+            kCollapseButton = 0x4C60C9DE         // Gamefreak130_OmniSearchBarCollapseButton
         }
 
         private static readonly Dictionary<string, SearchGroup> sSearchGroups = new();

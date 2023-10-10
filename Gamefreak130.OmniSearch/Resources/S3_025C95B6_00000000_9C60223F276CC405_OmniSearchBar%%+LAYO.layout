@@ -13,7 +13,8 @@
     <prop name="Children" propid="0xeec1b00b" type="object" count="4">
       <object cls="Window" clsid="0x4ec1b8d8" id="0x00000008">
         <prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x00002003" />
-        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x00000008" />
+		<!--Gamefreak130_OmniSearchBarSearchIcon-->
+        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x8d35dc00" />
         <prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
         <prop name="Area" propid="0xeec1b005" type="rectf" value="26,12,47,32" />
         <prop name="FillColor" propid="0xeec1b006" type="uint32" value="0x00000000" />
@@ -61,7 +62,8 @@
       </object>
       <object cls="TextEdit" clsid="0x6f42b4f0" id="0x00000002">
         <prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x0000004b" />
-        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x00000002" />
+		<!--Gamefreak130_OmniSearchBarTextInput-->
+        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x424e996a" />
         <prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
 		<prop name="Area" propid="0xeec1b005" type="rectf" value="54.00074,9.99982,374.0008,32.99982" />
         <prop name="Caption" propid="0xeec1b00a" type="string" value="testing to see what happens when I write a really long text string" key="00000012:00000000:81a77f4aeeb89690" />
@@ -134,7 +136,8 @@
       </object>
       <object cls="Window" clsid="0x4ec1b8d8">
         <prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x00000013" />
-        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x00000006" />
+		<!--Gamefreak130_OmniSearchBarTextInputBackground-->
+        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0xfc97bfb2" />
         <prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
 		<prop name="Area" propid="0xeec1b005" type="rectf" value="20.00037,8.00002,384.0004,34.00002" />
         <prop name="FillColor" propid="0xeec1b006" type="uint32" value="0x00000000" />
@@ -183,7 +186,8 @@
       </object>
       <object cls="Sims3IconButton" clsid="0x062569a8">
         <prop name="WindowFlags" propid="0xeec1b000" type="uint32" value="0x0000200b" />
-        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x0000000d" />
+		<!--Gamefreak130_OmniSearchBarCollapseButton-->
+        <prop name="ControlID" propid="0xeec1b001" type="uint32" value="0x4c60c9de" />
         <prop name="CommandID" propid="0xeec1b002" type="uint32" value="0" />
         <prop name="Area" propid="0xeec1b005" type="rectf" value="3,8,23,34" />
         <prop name="FillColor" propid="0xeec1b006" type="uint32" value="0x00000000" />
