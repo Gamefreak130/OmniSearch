@@ -8,6 +8,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         public TraitsPickerDialogExtender(TraitsPickerDialog modal) : base(modal)
         {
+            int buttonOffset = -50;
+            Modal.mAddTraitButton.Area = new(Modal.mAddTraitButton.Area.TopLeft + new Vector2(buttonOffset, 0), Modal.mAddTraitButton.Area.BottomRight + new Vector2(buttonOffset, 0));
+            Modal.mRemoveTraitButton.Area = new(Modal.mRemoveTraitButton.Area.TopLeft + new Vector2(buttonOffset, 0), Modal.mRemoveTraitButton.Area.BottomRight + new Vector2(buttonOffset, 0));
+
             ControlIDs[] categoryButtonIds =
             {
                 ControlIDs.ButtonSortAll,
@@ -48,13 +52,8 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             return new(title, description, material);
         }
 
-        protected override void SetSearchBarLocation()
-        {
-            int buttonOffset = -50;
-            Modal.mAddTraitButton.Area = new(Modal.mAddTraitButton.Area.TopLeft + new Vector2(buttonOffset, 0), Modal.mAddTraitButton.Area.BottomRight + new Vector2(buttonOffset, 0));
-            Modal.mRemoveTraitButton.Area = new(Modal.mRemoveTraitButton.Area.TopLeft + new Vector2(buttonOffset, 0), Modal.mRemoveTraitButton.Area.BottomRight + new Vector2(buttonOffset, 0));
-            SearchBar.SetLocation(130, (Modal.mbInCAS ? 85 : 150) + (26 * Modal.mCurrentTraitsItemGrid.VisibleRows), 150);
-        }
+        protected override void SetSearchBarLocation() 
+            => SearchBar.SetLocation(130, (Modal.mbInCAS ? 85 : 150) + (26 * Modal.mCurrentTraitsItemGrid.VisibleRows), 150);
 
         protected override void SetSearchModel() => SetSearchModel(new TFIDF<ITraitEntryInfo>(Corpus));
     }

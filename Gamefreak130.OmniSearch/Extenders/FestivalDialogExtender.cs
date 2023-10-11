@@ -6,6 +6,22 @@
 
         public FestivalDialogExtender(FestivalTicketDialog modal) : base(modal)
         {
+            int verticalOffset = 30;
+            int horizontalOffset = -4;
+            WindowBase window = ParentWindow.GetChildByIndex(1);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, verticalOffset), window.Area.BottomRight + new Vector2(0, verticalOffset));
+
+            window = ParentWindow.GetChildByIndex(2);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, verticalOffset), window.Area.BottomRight + new Vector2(horizontalOffset, 0));
+
+            window = ParentWindow.GetChildByID((uint)FestivalTicketDialog.ControlID.FestivalInventoryTable, true);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, verticalOffset), window.Area.BottomRight + new Vector2(0, verticalOffset));
+
+            window = window.GetChildByIndex(1);
+            window.Area = new(window.Area.TopLeft, window.Area.BottomRight + new Vector2(-1, 0));
+
+            window = ParentWindow.GetChildByIndex(9);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, verticalOffset), window.Area.BottomRight + new Vector2(-390, 0));
         }
 
         protected override void ClearItems()

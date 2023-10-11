@@ -7,6 +7,24 @@
 
         public AdventureShopDialogExtender(AdventureRewardsShopDialog modal) : base(modal) 
         {
+            int topOffset = 30;
+            int bottomOffset = -10;
+            WindowBase window = ParentWindow.GetChildByIndex(1);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, topOffset), window.Area.BottomRight + new Vector2(0, bottomOffset));
+
+            window = ParentWindow.GetChildByIndex(2);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, topOffset), window.Area.BottomRight + new Vector2(0, bottomOffset));
+
+            window = ParentWindow.GetChildByIndex(3);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, topOffset), window.Area.BottomRight + new Vector2(0, bottomOffset));
+
+            window = ParentWindow.GetChildByIndex(12);
+            window.Area = new(window.Area.TopLeft + new Vector2(0, topOffset), window.Area.BottomRight + new Vector2(0, bottomOffset));
+
+            bottomOffset = -30;
+            TableContainer table = ParentWindow.GetChildByID((uint)AdventureRewardsShopDialog.ControlID.TraitInventoryTable, true) as TableContainer;
+            table.Area = new(table.Area.TopLeft + new Vector2(0, topOffset), table.Area.BottomRight + new Vector2(0, bottomOffset));
+            table.VisibleRows = 6;
         }
 
         protected override void ClearItems() => Modal.mRewardInventoryTable.Clear();
@@ -16,7 +34,7 @@
             foreach (IUIAdventureReward reward in results)
             {
                 TableRow tableRow = Modal.mRewardInventoryTable.CreateRow();
-                AdventureRewardStoreInventoryRowController adventureRewardStoreInventoryRowController = new AdventureRewardStoreInventoryRowController(tableRow, Modal.mRewardInventoryTable, reward);
+                AdventureRewardStoreInventoryRowController adventureRewardStoreInventoryRowController = new(tableRow, Modal.mRewardInventoryTable, reward);
                 tableRow.RowController = adventureRewardStoreInventoryRowController;
                 Modal.mRewardInventoryTable.AddRow(tableRow);
                 adventureRewardStoreInventoryRowController.Disabled = Modal.IsRewardDisabled(reward);
