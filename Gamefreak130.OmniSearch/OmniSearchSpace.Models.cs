@@ -91,14 +91,15 @@ namespace Gamefreak130.OmniSearchSpace.Models
         IEnumerable ISearchModel.Search(string query) => Search(query);
 
         protected abstract IEnumerable<T> SearchTask(string query);
-        // TODO Fixup before release
-//#if DEBUG
+
         protected T LogWeight(Document<T> document, float weight)
         {
-            DocumentLogger.sInstance.Log<T>(new(document, weight));
+            if (PersistedSettings.kEnableLogging)
+            {
+                DocumentLogger.sInstance.Log<T>(new(document, weight));
+            }
             return document.Tag;
         }
-//#endif
     }
 
     public class ExactMatch<T> : SearchModel<T>
@@ -116,11 +117,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                let weight = titleWeight + descWeight
                where weight > 0
                orderby weight descending
-//#if DEBUG
                select LogWeight(document, weight);
-//#else
-//               select document.Tag;
-//#endif
     }
 
     public class TFIDF<T> : SearchModel<T>
@@ -237,11 +234,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
                         if (mDocuments.Count() == 1)
                         {
                             return from document in mDocuments
-//#if DEBUG
                                    select LogWeight(document, float.NaN);
-//#else
-//                                 select document.Tag;
-//#endif
                         }
 
                         if (!queryVector.ContainsKey(fullWord))
@@ -304,11 +297,7 @@ namespace Gamefreak130.OmniSearchSpace.Models
             return from kvp in championDocs
                    where kvp.Value != 0
                    orderby kvp.Value descending
-//#if DEBUG
                    select LogWeight(mDocuments.Skip(kvp.Key).First(), (float)kvp.Value);
-//#else
-                   //select mDocuments.Skip(kvp.Key).First().Tag;
-//#endif
         }
     }
 

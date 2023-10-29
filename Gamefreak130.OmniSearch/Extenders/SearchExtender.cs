@@ -102,14 +102,14 @@
             try
             {
                 ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"), UIManager.sDarkenBackground is null || !UIManager.sDarkenBackground.Visible);
-//#if DEBUG
-                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query)
-                                                            .ToList();
 
-                DocumentLogger.sInstance.WriteLog(SearchBar.Query);
-//#else
-//              IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
-//#endif
+                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
+
+                if (PersistedSettings.kEnableLogging)
+                {
+                    results = results.ToList();
+                    DocumentLogger.sInstance.WriteLog(SearchBar.Query);
+                }
 
                 ClearItems();
                 ProcessResultsTask(results);

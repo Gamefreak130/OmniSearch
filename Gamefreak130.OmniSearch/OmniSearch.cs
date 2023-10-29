@@ -54,6 +54,7 @@ namespace Gamefreak130
         // CONSIDER More robust tokenizer for languages other than English
         // CONSIDER Spelling correction on query typos?
         // TODO Public API documentation
+        // TODO Change XML EnableLogging value before release
         // TODO Refactor SetSearchModel
         private static void TransitionToMainMenu()
         {

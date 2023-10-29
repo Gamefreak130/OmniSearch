@@ -2,6 +2,9 @@
 {
     public static class PersistedSettings
     {
+        [Tunable, TunableComment("True/False: Whether or not to enable debug logging of search results")]
+        public static bool kEnableLogging = false;
+
         [Tunable, TunableComment("Weight applied to the title/name of an object when searching; the higher the ratio of title weight to description weight, the more search results will prioritize titles over descriptions")]
         public static float kTitleWeight = 0.6f;
 

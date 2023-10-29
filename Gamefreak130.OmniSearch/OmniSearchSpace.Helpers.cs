@@ -88,7 +88,6 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
                select character.ToString();
     }
 
-//#if DEBUG
     public class DocumentLogger : Logger<Tuple>
     {
         public static readonly DocumentLogger sInstance = new();
@@ -119,5 +118,4 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
 
         protected override string WriteNotification() => $"Search results logged: {mCount} documents found";
     }
-//#endif
 }

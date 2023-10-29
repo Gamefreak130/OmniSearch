@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <base>
   <Current_Tuning>
+    <kEnableLogging value="True">
+      <!--True/False: Whether or not to enable debug logging of search results-->
+    </kEnableLogging>
     <kTitleWeight value="0.6">
       <!--Weight applied to the title/name of an object when searching; the higher the ratio of title weight to description weight, the more search results will prioritize titles over descriptions-->
     </kTitleWeight>
