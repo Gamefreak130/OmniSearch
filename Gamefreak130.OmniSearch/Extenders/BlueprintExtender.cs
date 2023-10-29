@@ -27,8 +27,7 @@
         }
 
         protected override void ProcessResultsTask(IEnumerable<object> results)
-            // TODO Performance
-            => BlueprintController.sController.mCatalogGrid.BeginPopulating(BlueprintController.sController.AddGridItem, results, 5, ResourceKey.CreateUILayoutKey("BlueprintCatalogItem", 0), null);
+            => BlueprintController.sController.mCatalogGrid.BeginPopulating(BlueprintController.sController.AddGridItem, results, 1, ResourceKey.CreateUILayoutKey("BlueprintCatalogItem", 0), null);
 
         protected override void ClearItems()
         {

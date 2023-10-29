@@ -69,8 +69,7 @@
                 layoutKey = ResourceKey.CreateUILayoutKey("BuildCatalogItem", 0);
             }
 
-            // TODO performance improvement
-            itemGrid.BeginPopulating(populateCallback, results, 5, layoutKey, null);
+            itemGrid.BeginPopulating(populateCallback, results, 1, layoutKey, null);
         }
 
         protected override Document<object> SelectDocument(object material)
@@ -119,7 +118,7 @@
         private void OnVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __)
         {
             SearchBar.Clear();
-            // TODO Perf improvement
+            // CONSIDER Perf improvement
             if (EditTownPuck.Instance.IsInPloppablesMode)
             {
                 EditTownNeighborhoodPloppablesPanel.Instance.PopulateGrid();

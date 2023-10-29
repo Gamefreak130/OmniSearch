@@ -36,8 +36,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
 
         protected override void ProcessResultsTask(IEnumerable<IExportBinContents> results)
-            // TODO Performance improvement
-            => PlayFlowBinPanel.Singleton.mBinGridControl.BeginPopulating(AddGridItem, results, 5, default, null);
+            => PlayFlowBinPanel.Singleton.mBinGridControl.BeginPopulating(AddGridItem, results, 1, default, null);
 
         protected override Document<IExportBinContents> SelectDocument(IExportBinContents material)
             => new($"{material.HouseholdName}\t{material.LotName}", $"{material.HouseholdBio}\t{material.LotDescription}", material);
