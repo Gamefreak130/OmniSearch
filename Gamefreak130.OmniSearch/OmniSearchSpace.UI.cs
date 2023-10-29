@@ -24,7 +24,7 @@
 
         private WindowBase mSearchIcon;
 
-        private Button mCollapseButton;
+        private Button mCollapseButton; 
 
         private uint mTriggerHandle;
 
@@ -78,6 +78,13 @@
         public OmniSearchBar(string group, WindowBase parent, Action onQueryEntered, float x, float y, float width, bool showFullPanel = true) : this(group, parent, onQueryEntered, showFullPanel) 
             => SetLocation(x, y, width);
 
+#if DEBUG
+        ~OmniSearchBar()
+        {
+            SimpleMessageDialog.Show("Finalized searchbar", mOnQueryEntered.Target.GetType().Name);
+        }
+#endif
+
         public void SetLocation(float x, float y, float width)
         {
             Vector2 offset = new(x, y);
@@ -85,9 +92,9 @@
             mExpandedWidth = width;
             if (mShowFullPanel && sSearchGroups[mGroup].Collapsed)
             {
-            mCollapseButton.Selected = mInput.Visible 
-                                     = mInputBackground.Visible
-                                     = mSearchIcon.Visible
+                mCollapseButton.Selected = mInput.Visible
+                                         = mInputBackground.Visible
+                                         = mSearchIcon.Visible
                                          = false;
 
                 widthVec = new(26, mWindow.Area.BottomRight.y - mWindow.Area.TopLeft.y);

@@ -22,15 +22,15 @@
                     mParentWindow.Detach -= OnDetach;
                     if (value is not null)
                     {
-                    SearchBar.Reparent(value);
-                }
+                        SearchBar.Reparent(value);
+                    }
                 }
                 mParentWindow = value;
                 if (value is not null)
                 {
-                mParentWindow.Detach += OnDetach;
+                    mParentWindow.Detach += OnDetach;
+                }
             }
-        }
         }
 
         protected abstract IEnumerable<TMaterial> Materials { get; }
@@ -46,6 +46,10 @@
             SearchBar = new(searchBarGroup, ParentWindow, OnQueryEntered, showFullPanel);
             SetSearchBarVisibility(visible);
         }
+
+#if DEBUG
+        ~SearchExtender() => SimpleMessageDialog.Show("Finalized extender", GetType().Name);
+#endif
 
         private WindowBase mParentWindow;
 
@@ -98,14 +102,14 @@
             try
             {
                 ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"), UIManager.sDarkenBackground is null || !UIManager.sDarkenBackground.Visible);
-#if DEBUG
+//#if DEBUG
                 IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query)
                                                             .ToList();
 
-                //DocumentLogger.sInstance.WriteLog();
-#else
-                IEnumerable<TResult> results = SearchModel.Search(SearchBar.Query);
-#endif
+                DocumentLogger.sInstance.WriteLog();
+//#else
+//                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
+//#endif
 
                 ClearItems();
                 ProcessResultsTask(results);
