@@ -3,7 +3,7 @@
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // CONSIDER RefreshSearchBarVisibility is only used for BuildBuyExtender; can we make it an abstract method there instead?
-    // TODO WishPickerDialog extenders?
+    // CONSIDER RewardTraitDialog extender as tutorial example?
     // TEST resort build/buy
     // TEST interior design
     public abstract class SearchExtender<TDocument, TMaterial> : IDisposable

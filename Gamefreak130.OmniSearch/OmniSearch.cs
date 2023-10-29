@@ -118,23 +118,26 @@ namespace Gamefreak130
         }
 
         private static void OnModalPushed(ModalDialog modal)
-                    {
-                        switch (modal)
-                        {
-                            case SimplePurchaseDialog simplePurchaseDialog:
-                                new SimplePurchaseDialogExtender(simplePurchaseDialog);
-                                break;
-                            case FestivalTicketDialog festivalTicketDialog:
-                                new FestivalDialogExtender(festivalTicketDialog);
-                                break;
-                            case AdventureRewardsShopDialog adventureRewardsShopDialog:
-                                new AdventureShopDialogExtender(adventureRewardsShopDialog);
-                                break;
+        {
+            switch (modal)
+            {
+                case SimplePurchaseDialog simplePurchaseDialog:
+                    new SimplePurchaseDialogExtender(simplePurchaseDialog);
+                    break;
+                case FestivalTicketDialog festivalTicketDialog:
+                    new FestivalDialogExtender(festivalTicketDialog);
+                    break;
+                case AdventureRewardsShopDialog adventureRewardsShopDialog:
+                    new AdventureShopDialogExtender(adventureRewardsShopDialog);
+                    break;
                 case TraitsPickerDialog traitsPickerDialog:
                     new TraitsPickerDialogExtender(traitsPickerDialog);
                     break;
-                        }
-                    }
+                case WishPickerDialog wishPickerDialog:
+                    new WishPickerDialogExtender(wishPickerDialog);
+                    break;
+            }
+        }
 
         private static void OnDesignModeStarted(object _, EventArgs __)
             // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
