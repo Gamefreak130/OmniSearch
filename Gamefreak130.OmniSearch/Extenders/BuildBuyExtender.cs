@@ -49,8 +49,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
-        private IEnumerable<Document<object>> mDocuments;
-
         protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy", false)
         {
         }
@@ -95,12 +93,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void SetSearchModel()
         {
-            mDocuments = Corpus;
             bool searchCollections = BuyController.sController is not null
                                    ? BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory)
                                    : BuildController.sController is not null && BuildController.sController.mCollectionWindow.Visible;
 
-            SetSearchModel(new BuildBuySearchModel(mDocuments, this, searchCollections));
+            SetSearchModel(new BuildBuySearchModel(Corpus, this, searchCollections));
         }
     }
 }
