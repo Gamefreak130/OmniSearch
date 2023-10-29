@@ -6,8 +6,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
     public class PlayFlowExtender : DocumentSearchExtender<IExportBinContents>
     {
         protected override IEnumerable<IExportBinContents> Materials => Responder.Instance.BinModel.ExportBinContents
-                                                                                                   .Where(ItemFilter)
-                                                                                                   .Order(PlayFlowBinPanel.Singleton.mComparer);
+                                                                                                   .Where(ItemFilter);
 
         protected override bool IsSearchBarVisible => PlayFlowBinPanel.Singleton.Visible;
 
@@ -38,7 +37,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         }
 
         protected override void ProcessResultsTask(IEnumerable<IExportBinContents> results)
-            => PlayFlowBinPanel.Singleton.mBinGridControl.BeginPopulating(AddGridItem, results, 1, default, null);
+            => PlayFlowBinPanel.Singleton.mBinGridControl.BeginPopulating(AddGridItem, results.Order(PlayFlowBinPanel.Singleton.mComparer), 1, default, null);
 
         protected override Document<IExportBinContents> SelectDocument(IExportBinContents material)
             => new($"{material.HouseholdName}\t{material.LotName}", $"{material.HouseholdBio}\t{material.LotDescription}", material);
