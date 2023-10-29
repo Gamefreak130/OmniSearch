@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base>
+  <Current_Tuning>
+    <kTitleWeight value="0.6">
+      <!--Weight applied to the title/name of an object when searching; the higher the ratio of title weight to description weight, the more search results will prioritize titles over descriptions-->
+    </kTitleWeight>
+    <kDescriptionWeight value="0.4">
+      <!--Weight applied to the description of an object when searching; the higher the ratio of description weight to title weight, the more search results will prioritize descriptions over titles-->
+    </kDescriptionWeight>
+    <kChampionListLength value="20">
+      <!--Size of each champion list; higher values may result in more accurate search results at the cost of lower performance-->
+    </kChampionListLength>
+    <kQuerySimilarityThreshold value="0.5">
+      <!--Range 0-1: Minimum fraction of query terms that an object must contain in its title or description to be returned as a result-->
+    </kQuerySimilarityThreshold>
+    <kPreprocessingTickRate value="60">
+      <!--Tick rate of the model preprocessing function. Set to your monitor's refresh rate for best results.-->
+    </kPreprocessingTickRate>
+    <kCollapseSearchBarByDefault value="False">
+      <!--True/False: Whether or not search bars will be collapsed by default when first loading the game-->
+    </kCollapseSearchBarByDefault>
+    <kEnableAdventureShopDialogSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the special merchant dialog-->
+    </kEnableAdventureShopDialogSearch>
+    <kEnableBlueprintSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in Blueprint Mode-->
+    </kEnableBlueprintSearch>
+    <kEnableBuildSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in Build Mode-->
+    </kEnableBuildSearch>
+    <kEnableBuySearch value="True">
+      <!--True/False: Whether or not a search bar should appear in Buy Mode-->
+    </kEnableBuySearch>
+    <kEnableCASTSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in Create a Style-->
+    </kEnableCASTSearch>
+    <kEnableEditTownSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in Edit Town mode-->
+    </kEnableEditTownSearch>
+    <kEnableFestivalDialogSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the Redeem Festival Tickets dialog-->
+    </kEnableFestivalDialogSearch>
+    <kEnableInventorySearch value="True">
+      <!--True/False: Whether or not a search bar should appear in inventory panels-->
+    </kEnableInventorySearch>
+    <kEnableMainMenuSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the main menu-->
+    </kEnableMainMenuSearch>
+    <kEnableNewGameSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the household selection panel when starting a new game-->
+    </kEnableNewGameSearch>
+    <kEnableRelationshipPanelSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the relationship panel-->
+    </kEnableRelationshipPanelSearch>
+    <kEnableShoppingSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the grocery store and register purchase dialogs-->
+    </kEnableShoppingSearch>
+    <kEnableSimplePurchaseDialogSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the 'simple purchase dialog' used by concession stands, food trucks, etc.-->
+    </kEnableSimplePurchaseDialogSearch>
+    <kEnableTraitsPickerDialogSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the trait selection dialog-->
+    </kEnableTraitsPickerDialogSearch>
+    <kEnableWishPickerDialogSearch value="True">
+      <!--True/False: Whether or not a search bar should appear in the lifetime wish selection dialog-->
+    </kEnableWishPickerDialogSearch>
+  </Current_Tuning>
+</base>
