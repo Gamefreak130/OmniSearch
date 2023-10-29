@@ -34,7 +34,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             }
         }
 
-        public CompositorExtender() : base(CASCompositorController.Instance.mMaterialsBinWindow, "Design", showFullPanel: false)
+        public CompositorExtender() : base(CASCompositorController.Instance.mMaterialsBinWindow, "Design", false)
         {
             Controller.mDebugTooltips = true;
             Controller.mFilterButton.Click += OnMaterialChange;

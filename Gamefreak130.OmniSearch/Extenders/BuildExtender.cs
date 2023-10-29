@@ -9,6 +9,10 @@
 
         protected override IEnumerable<object> Materials => BuildController.sController.mProductList ?? BuildController.sController.mPresetList;
 
+        protected override bool IsSearchBarVisible 
+            => BuildController.sController.mMiddlePuckWin.Visible && BuildController.sController.mCurrentCatalogGrid is not null 
+            && (!BuildController.sCollectionMode || BuildController.sController.mCollectionCatalogWindow.Visible);
+
         public BuildExtender() : base(BuildController.sLayout.GetWindowByExportID(1).GetChildByIndex(2))
         {
             SearchBar.MoveToBack();
@@ -75,10 +79,10 @@
             BuildController.sController.mCurrentCatalogGrid.Clear();
         }
 
-        protected override void SetSearchBarVisibility(bool visible)
+        protected override void RefreshSearchBar()
         {
             BuildController controller = BuildController.sController;
-            SearchBar.Visible = visible;
+            SetSearchBarVisibility();
 
             if (SearchBar.Visible)
             {
@@ -119,12 +123,6 @@
             {
                 SearchBar.Clear();
             }
-        }
-
-        protected override void RefreshSearchBarVisibility()
-        {
-            BuildController controller = BuildController.sController;
-            SetSearchBarVisibility(controller.mMiddlePuckWin.Visible && controller.mCurrentCatalogGrid is not null && (!BuildController.sCollectionMode || controller.mCollectionCatalogWindow.Visible));
         }
 
         protected override void SetSearchBarLocation()
@@ -188,12 +186,12 @@
         private void OnCategorySelected(object _, EventArgs __)
         {
             SearchBar.Clear();
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
         }
 
         private void OnTabSelect(TabControl _, TabControl __) => SetSearchModel();
 
-        private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => RefreshSearchBarVisibility();
+        private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => RefreshSearchBar();
 
         private void OnEyedropperPick(object _, EventArgs __)
         {

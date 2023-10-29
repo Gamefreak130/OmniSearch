@@ -9,13 +9,15 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                                                                                                    .Where(ItemFilter)
                                                                                                    .Order(PlayFlowBinPanel.Singleton.mComparer);
 
-        public PlayFlowExtender() : base(PlayFlowPuck.gSingleton.GetChildByIndex(0), "EditTown", false)
+        protected override bool IsSearchBarVisible => PlayFlowBinPanel.Singleton.Visible;
+
+        public PlayFlowExtender() : base(PlayFlowPuck.gSingleton.GetChildByIndex(0), "EditTown")
         {
             SetSearchBarLocation();
             SearchBar.MoveToBack();
             SetSearchModel();
             Responder.Instance.BinModel.OnUpdateExportBin += OnExportBinChanged;
-            PlayFlowBinPanel.Singleton.VisibilityChange += (_, eventArgs) => SetSearchBarVisibility(eventArgs.Visible);
+            PlayFlowBinPanel.Singleton.VisibilityChange += (_,_) => RefreshSearchBar();
             PlayFlowBinPanel.Singleton.mCustomContent.Click += OnItemReshuffle;
             PlayFlowBinPanel.Singleton.mSortDifficulty.Click += OnItemReshuffle;
             PlayFlowBinPanel.Singleton.mSortFunds.Click += OnItemReshuffle;
@@ -41,10 +43,10 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected override Document<IExportBinContents> SelectDocument(IExportBinContents material)
             => new($"{material.HouseholdName}\t{material.LotName}", $"{material.HouseholdBio}\t{material.LotDescription}", material);
 
-        protected override void SetSearchBarVisibility(bool visible)
+        protected override void RefreshSearchBar()
         {
-            SearchBar.Visible = visible;
-            if (!visible)
+            SetSearchBarVisibility();
+            if (!SearchBar.Visible)
             {
                 SearchBar.Clear();
             }

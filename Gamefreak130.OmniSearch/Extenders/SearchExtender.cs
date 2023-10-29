@@ -2,7 +2,7 @@
 {
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
-    // TODO RefreshSearchBarVisibility is only used for BuildBuyExtender; can we make it an abstract method there instead?
+    // TODO Refactor SetSearchModel
     // TODO RewardTraitDialog extender as tutorial example?
     // TEST resort build/buy
     // TEST interior design
@@ -37,14 +37,19 @@
 
         protected IEnumerable<TDocument> Corpus => Materials.Select(SelectDocument);
 
+        protected virtual bool IsSearchBarVisible => true;
+
         protected bool Searching => mSearchTask?.IsCompleted ?? false;
 
-        protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true)
+        protected SearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true, bool refreshAtStart = true)
         {
             ParentWindow = parentWindow;
-
             SearchBar = new(searchBarGroup, ParentWindow, OnQueryEntered, showFullPanel);
-            SetSearchBarVisibility(visible);
+
+            if (refreshAtStart)
+            {
+                RefreshSearchBar();
+            }
         }
 
 #if DEBUG
@@ -64,9 +69,11 @@
             SetSearchModel(null);
         }
 
-        protected virtual void SetSearchBarVisibility(bool visible)
+        protected void SetSearchBarVisibility() => SearchBar.Visible = IsSearchBarVisible;
+
+        protected virtual void RefreshSearchBar()
         {
-            SearchBar.Visible = visible;
+            SetSearchBarVisibility();
             if (SearchBar.Visible)
             {
                 SetSearchBarLocation();
@@ -76,10 +83,6 @@
             {
                 SearchBar.Clear();
             }
-        }
-
-        protected virtual void RefreshSearchBarVisibility()
-        {
         }
 
         protected void ProcessExistingQuery()
@@ -169,7 +172,7 @@
 
     public abstract class DocumentSearchExtender<T> : SearchExtender<Document<T>, T>
     {
-        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup, bool visible = true, bool showFullPanel = true) : base(parentWindow, searchBarGroup, visible, showFullPanel)
+        protected DocumentSearchExtender(WindowBase parentWindow, string searchBarGroup, bool showFullPanel = true, bool refreshAtStart = true) : base(parentWindow, searchBarGroup, showFullPanel, refreshAtStart)
         {
         }
     }
@@ -178,12 +181,10 @@
     {
         protected TModalDialog Modal { get; }
 
-        // Set search bar visibility to false initially, then reset it in this constructor after setting Modal
-        // So that we can safely get Materials using Modal if necessary
-        public ModalExtender(TModalDialog modal, bool visible = true, bool showFullPanel = false) : base(modal.ModalDialogWindow, "Dialogs", false, showFullPanel)
+        public ModalExtender(TModalDialog modal, bool showFullPanel = false) : base(modal.ModalDialogWindow, "Dialogs", showFullPanel, false)
         {
             Modal = modal;
-            SetSearchBarVisibility(visible);
+            RefreshSearchBar();
         }
     }
 }

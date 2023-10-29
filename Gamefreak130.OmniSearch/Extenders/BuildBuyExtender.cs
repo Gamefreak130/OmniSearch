@@ -49,7 +49,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected const ulong kFloorDescriptionHash = 0x2DE87A7A181E89C4;
 
-        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy", false)
+        protected BuildBuyExtender(WindowBase parentWindow) : base(parentWindow, "BuildBuy", refreshAtStart: false)
         {
         }
 

@@ -8,7 +8,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private MainMenu MainMenu => mMainMenu ??= ParentWindow.Parent.Parent as MainMenu;
 
-        public MainMenuExtender(WindowBase menuWindow) : base(menuWindow, "MainMenu", showFullPanel: false)
+        public MainMenuExtender(WindowBase menuWindow) : base(menuWindow, "MainMenu", false)
         {
             mDocumentCount = MainMenu.mSaveGameList.Count;
             MainMenu.mFsiWorldWindow.VisibilityChange += OnVisibilityChange;

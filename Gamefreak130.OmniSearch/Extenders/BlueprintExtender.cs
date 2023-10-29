@@ -14,16 +14,18 @@
             }
         }
 
+        protected override bool IsSearchBarVisible => BlueprintController.sController is not null && BlueprintController.sController.mMiddlePuckWin.Visible;
+
         public BlueprintExtender() : base(BlueprintController.sController.GetChildByIndex(1))
         {
             SearchBar.MoveToBack();
 
             BlueprintController controller = BlueprintController.sController;
-            controller.mMiddlePuckWin.VisibilityChange += (_,_) => RefreshSearchBarVisibility();
+            controller.mMiddlePuckWin.VisibilityChange += (_,_) => RefreshSearchBar();
             controller.mTabContainer.TabSelect += (_,_) => SetSearchModel();
             controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
             controller.mCatalogGrid.AreaChange += (_, _) => TaskEx.Run(SetSearchBarLocation);
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
         }
 
         protected override void ProcessResultsTask(IEnumerable<object> results)
@@ -35,11 +37,17 @@
             BlueprintController.sController.mCatalogGrid.Clear();
         }
 
-        protected override void RefreshSearchBarVisibility()
+        protected override void RefreshSearchBar()
         {
-            if (BlueprintController.sController is not null)
+            SetSearchBarVisibility();
+            if (SearchBar.Visible)
             {
-                SetSearchBarVisibility(BlueprintController.sController.mMiddlePuckWin.Visible);
+                SetSearchBarLocation();
+                SetSearchModel();
+            }
+            else if (BlueprintController.sController.mbPreviewModeActive)
+            {
+                SearchBar.Clear();
             }
         }
 

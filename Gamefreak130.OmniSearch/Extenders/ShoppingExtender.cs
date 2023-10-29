@@ -11,7 +11,7 @@
                 _                                    => throw new NotSupportedException()
             };
 
-        public ShoppingExtender() : base(ShoppingController.Instance, "Shopping", showFullPanel: false)
+        public ShoppingExtender() : base(ShoppingController.Instance, "Shopping", false)
         {
             ShoppingController controller = ShoppingController.Instance;
             controller.mInventoryTabContainer.VisibilityChange += (_,_) => SetSearchBarLocation();

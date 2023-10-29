@@ -29,6 +29,9 @@
             }
         }
 
+        protected override bool IsSearchBarVisible
+            => EditTownLibraryPanel.Instance.Visible || (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab);
+
         public EditTownExtender() : base(EditTownPuck.Instance.GetChildByIndex(3), "EditTown")
         {
             SearchBar.MoveToBack();
@@ -93,9 +96,6 @@
             return new(name, description, material);
         }
 
-        protected override void RefreshSearchBarVisibility() 
-            => SetSearchBarVisibility(EditTownLibraryPanel.Instance.Visible || (EditTownNeighborhoodPloppablesPanel.Instance.Visible && EditTownNeighborhoodPloppablesPanel.Instance.mTabSelection is not EditTownNeighborhoodPloppablesPanel.ControlID.LotsTab));
-
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
 
@@ -127,12 +127,12 @@
             {
                 EditTownLibraryPanel.Instance.PopulateGrid();
             }
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
         }
 
         private void OnExportBinChanged(List<UIBinInfo> _) => SetSearchModel();
 
-        private void OnTabSelect(object _, object __) => RefreshSearchBarVisibility();
+        private void OnTabSelect(object _, object __) => RefreshSearchBar();
 
         private static bool AddGridItem(ItemGrid _, object current, ResourceKey __, object ___)
         {

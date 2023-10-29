@@ -17,7 +17,15 @@
                                                                 : BuyController.sController.mPopulateGridTaskHelper.Collection
                                                                                                                    .Cast<object>();
 
-        public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
+        protected override bool IsSearchBarVisible 
+            => mController.mCurrCatalogType switch
+            {
+                BuyController.CatalogType.ByRoom or BuyController.CatalogType.ByCategory  => mController.mCatalogGrid.Visible && mController.mMiddlePuckWin.Visible,
+                BuyController.CatalogType.Collections                                     => mController.mCollectionCatalogWindow.Visible,
+                _                                                                         => true
+            };
+
+    public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
         {
             mController = BuyController.sController;
 
@@ -28,6 +36,7 @@
             }
 
             SearchBar.MoveToBack();
+            RefreshSearchBar();
             bool defaultInventory = mController.mCurrCatalogType is BuyController.CatalogType.Inventory;
             if (defaultInventory || mController.mPopulateGridTaskHelper is not null)
             {
@@ -35,7 +44,6 @@
                 {
                     RegisterInventoryEvents();
                 }
-                RefreshSearchBarVisibility();
                 SetSearchModel();
             }
 
@@ -72,17 +80,17 @@
             mController.mButtonShopModeSortByFunction.Click += OnCatalogButtonClick;
             mController.mButtonShopModeNotable.Click += OnCatalogButtonClick;
             mController.mButtonShopModeEmpty.Click += OnCatalogButtonClick;
-            mController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
+            mController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBar);
 
             mController.mCollectionGrid.ItemClicked += OnCollectionItemClick;
             mController.mCatalogProductFilter.FiltersChanged += SetSearchModel;
 
-            mController.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
+            mController.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(RefreshSearchBar);
             mController.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
             mController.mCollectionCatalogWindow.VisibilityChange += OnCatalogGridToggled;
             mController.mGridSortByFunction.Grid.VisibilityChange += OnCatalogGridToggled;
 
-            mController.mMiddlePuckWin.VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBarVisibility);
+            mController.mMiddlePuckWin.VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBar);
         }
 
         public override void Dispose()
@@ -388,25 +396,13 @@
             mController.mNumObjectsInGrid = 0;
         }
 
-        protected override void SetSearchBarVisibility(bool visible)
+        protected override void RefreshSearchBar()
         {
-            SearchBar.Visible = visible;
+            SetSearchBarVisibility();
             if (SearchBar.Visible)
             {
                 SetSearchBarLocation();
             }
-        }
-
-        protected override void RefreshSearchBarVisibility()
-        {
-            bool visible = mController.mCurrCatalogType switch
-            {
-                BuyController.CatalogType.ByRoom or BuyController.CatalogType.ByCategory  => mController.mCatalogGrid.Visible && mController.mMiddlePuckWin.Visible,
-                BuyController.CatalogType.Collections                                     => mController.mCollectionCatalogWindow.Visible,
-                _                                                                         => true
-            };
-
-            SetSearchBarVisibility(visible);
         }
 
         protected override void SetSearchBarLocation()
@@ -461,7 +457,7 @@
 
         private void OnTabSelect(TabControl _, TabControl __)
         {
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
             SetSearchModel();
         }
 
@@ -470,7 +466,7 @@
         private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
             SearchBar.Clear();
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
             if (mController.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
                 SetSearchModel();
@@ -490,7 +486,7 @@
 
         private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
             if (!string.IsNullOrEmpty(SearchBar.Query))
             {
                 ClearItems();
@@ -499,7 +495,7 @@
 
         private void OnCatalogGridToggled(WindowBase _, UIVisibilityChangeEventArgs args)
         {
-            RefreshSearchBarVisibility();
+            RefreshSearchBar();
             SearchBar.Clear();
             SetSearchModel();
         }
