@@ -17,6 +17,7 @@ global using System.Collections;
 global using System.Collections.Generic;
 global using System.Linq;
 using Gamefreak130.Common.UI;
+using Gamefreak130.OmniSearchSpace;
 using Gamefreak130.OmniSearchSpace.UI.Extenders;
 
 namespace Gamefreak130
@@ -38,7 +39,7 @@ namespace Gamefreak130
 
         private static void OnStartupApp(object sender, EventArgs e)
         {
-            if (CommandLine.FindSwitch("ccinstall") is null && CommandLine.FindSwitch("ccuninstall") is null)
+            if (PersistedSettings.kEnableMainMenuSearch && CommandLine.FindSwitch("ccinstall") is null && CommandLine.FindSwitch("ccuninstall") is null)
             {
                 // GetWorldFileDetails takes an absurdly long time, presumably due to disk access
                 // This function does the work and caches it while the initial loading screen is still up
@@ -50,7 +51,6 @@ namespace Gamefreak130
 
         // CONSIDER Play flow sort by in edit town library panel?
         // CONSIDER Smoother build/buy/blueprint, edit town, play flow, CASt; remove filter/select restriction when populating?
-        // CONSIDER Auto-expand Live Mode panels?
         // CONSIDER More robust tokenizer for languages other than English
         // CONSIDER Spelling correction on query typos? autofill incomplete words?
         // TODO Public API documentation
@@ -59,7 +59,7 @@ namespace Gamefreak130
         private static void TransitionToMainMenu()
         {
             // Inject search bar only if there is at least one save game
-            if (GameStates.sSingleton.mStateMachine.CurState is not ToMainMenuState && new WorldFileSearch(1).Renumerable<object>().Skip(1).FirstOrDefault() is not null)
+            if (PersistedSettings.kEnableMainMenuSearch && GameStates.sSingleton.mStateMachine.CurState is not ToMainMenuState && new WorldFileSearch(1).Renumerable<object>().Skip(1).FirstOrDefault() is not null)
             {
                 TaskEx.Run(MainMenuExtender.Inject);
             }
@@ -81,36 +81,42 @@ namespace Gamefreak130
         {
             if (GameStates.IsLiveState)
             {
-                InventoryPanel.Instance.VisibilityChange += InventoryExtender.InjectIfVisible;
-                InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += InventoryExtender.InjectIfVisible;
-                RelationshipsPanel.Instance.VisibilityChange += RelationshipPanelExtender.InjectIfVisible;
+                if (PersistedSettings.kEnableInventorySearch)
+                {
+                    InventoryPanel.Instance.VisibilityChange += InventoryExtender.InjectIfVisible;
+                    InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange += InventoryExtender.InjectIfVisible;
+                }
+                if (PersistedSettings.kEnableRelationshipPanelSearch)
+                {
+                    RelationshipsPanel.Instance.VisibilityChange += RelationshipPanelExtender.InjectIfVisible;
+                }
             }
             else
             {
                 InventoryPanel.Instance.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 InventoryPanel.Instance.mSecondaryInventoryWin.VisibilityChange -= InventoryExtender.InjectIfVisible;
                 RelationshipsPanel.Instance.VisibilityChange -= RelationshipPanelExtender.InjectIfVisible;
-                if (BuyController.sController is not null)
+                if (PersistedSettings.kEnableBuySearch && BuyController.sController is not null)
                 {
                     new BuyExtender();
                 }
-                else if (BuildController.sController is not null)
+                else if (PersistedSettings.kEnableBuildSearch && BuildController.sController is not null)
                 {
                     new BuildExtender();
                 }
-                else if (EditTownController.Instance is not null)
+                else if (PersistedSettings.kEnableEditTownSearch && EditTownController.Instance is not null)
                 {
                     new EditTownExtender();
                 }
-                else if (BlueprintController.Active)
+                else if (PersistedSettings.kEnableBlueprintSearch && BlueprintController.Active)
                 {
                     new BlueprintExtender();
                 }
-                else if (PlayFlowController.Singleton is not null)
+                else if (PersistedSettings.kEnableNewGameSearch && PlayFlowController.Singleton is not null)
                 {
                     new PlayFlowExtender();
                 }
-                else if (ShoppingController.Instance is not null)
+                else if (PersistedSettings.kEnableShoppingSearch && ShoppingController.Instance is not null)
                 {
                     new ShoppingExtender();
                 }
@@ -121,26 +127,31 @@ namespace Gamefreak130
         {
             switch (modal)
             {
-                case SimplePurchaseDialog simplePurchaseDialog:
+                case SimplePurchaseDialog simplePurchaseDialog when PersistedSettings.kEnableSimplePurchaseDialogSearch:
                     new SimplePurchaseDialogExtender(simplePurchaseDialog);
                     break;
-                case FestivalTicketDialog festivalTicketDialog:
+                case FestivalTicketDialog festivalTicketDialog when PersistedSettings.kEnableFestivalDialogSearch:
                     new FestivalDialogExtender(festivalTicketDialog);
                     break;
-                case AdventureRewardsShopDialog adventureRewardsShopDialog:
+                case AdventureRewardsShopDialog adventureRewardsShopDialog when PersistedSettings.kEnableAdventureShopDialogSearch:
                     new AdventureShopDialogExtender(adventureRewardsShopDialog);
                     break;
-                case TraitsPickerDialog traitsPickerDialog:
+                case TraitsPickerDialog traitsPickerDialog when PersistedSettings.kEnableTraitsPickerDialogSearch:
                     new TraitsPickerDialogExtender(traitsPickerDialog);
                     break;
-                case WishPickerDialog wishPickerDialog:
+                case WishPickerDialog wishPickerDialog when PersistedSettings.kEnableWishPickerDialogSearch:
                     new WishPickerDialogExtender(wishPickerDialog);
                     break;
             }
         }
 
         private static void OnDesignModeStarted(object _, EventArgs __)
-            // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
-            => CASCompositorController.Instance.EnterFullEditMode += CompositorExtender.Inject;
+        {
+            if (PersistedSettings.kEnableCASTSearch)
+            {
+                // Start inject task on EnterFullEditMode, so that the task to initialize the CASCompositorController comes before it
+                CASCompositorController.Instance.EnterFullEditMode += CompositorExtender.Inject;
+            }
+        }
     }
 }
