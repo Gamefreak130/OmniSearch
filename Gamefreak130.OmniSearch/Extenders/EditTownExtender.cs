@@ -118,7 +118,7 @@
         private void OnVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __)
         {
             SearchBar.Clear();
-            // CONSIDER Perf improvement
+            // CONSIDER Rework to avoid freezing
             if (EditTownPuck.Instance.IsInPloppablesMode)
             {
                 EditTownNeighborhoodPloppablesPanel.Instance.PopulateGrid();

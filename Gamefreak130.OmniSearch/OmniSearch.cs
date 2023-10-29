@@ -49,12 +49,11 @@ namespace Gamefreak130
             }
         }
 
-        // CONSIDER Play flow sort by in edit town library panel?
-        // CONSIDER Smoother build/buy/blueprint, edit town, play flow, CASt; remove filter/select restriction when populating?
+        // OUT OF SCOPE Play flow sort by in edit town library panel?
+        // OUT OF SCOPE Smoother build/buy/blueprint, edit town, play flow, CASt; remove filter/select restriction when populating?
         // CONSIDER More robust tokenizer for languages other than English
-        // CONSIDER Spelling correction on query typos? autofill incomplete words?
+        // CONSIDER Spelling correction on query typos?
         // TODO Public API documentation
-        // TODO Add tunable toggles for individual search extenders
         // TODO Refactor SetSearchModel
         private static void TransitionToMainMenu()
         {

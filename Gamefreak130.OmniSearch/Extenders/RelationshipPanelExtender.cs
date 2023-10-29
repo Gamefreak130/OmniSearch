@@ -2,7 +2,7 @@
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // CONSIDER Add OccultType to document description?
+    // TODO Add OccultType to document description?
     public class RelationshipPanelExtender : DocumentSearchExtender<Tuple>
     {
         protected override IEnumerable<Tuple> Materials 

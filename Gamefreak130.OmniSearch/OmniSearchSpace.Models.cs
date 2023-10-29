@@ -221,29 +221,44 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
         protected override IEnumerable<T> SearchTask(string query)
         {
-            // Calculate TF-IDF vector embedding for the query, as well as its magnitude
+            // Calculate frequency of full or sufficiently partial term matches
             Dictionary<string, double> queryVector = new();
             double queryMagnitude = 0;
-            foreach (var group in mTokenizer.Tokenize(query).GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
+            List<string> queryTokens = mTokenizer.Tokenize(query).ToList();
+            foreach (var group in queryTokens.GroupBy(word => word, (word, elements) => new { word, count = elements.Count() }))
             {
-                if (mWordOccurences.ContainsKey(group.word))
+                foreach (string fullWord in mWordOccurences.Keys.Where(x => x.StartsWith(group.word)))
                 {
-                    // If there is only one document, we are guaranteed to have reached a matching word at this point
-                    // Stop early and return it to avoid calculating a TF-IDF of 0 and missing it
-                    if (mDocuments.Count() == 1)
+                    float matchPercentage = (float)group.word.Length / fullWord.Length;
+                    if (matchPercentage >= PersistedSettings.kPartialMatchThreshold)
                     {
-                        return from document in mDocuments
+                        // If there is only one document, we are guaranteed to have reached a matching word at this point
+                        // Stop early and return it to avoid calculating a TF-IDF of 0 and missing it
+                        if (mDocuments.Count() == 1)
+                        {
+                            return from document in mDocuments
 //#if DEBUG
-                               select LogWeight(document, float.NaN);
+                                   select LogWeight(document, float.NaN);
 //#else
-//                                select document.Tag;
+//                                 select document.Tag;
 //#endif
-                    }
+                        }
 
-                    double tfidf = Math.Log10(1 + group.count) * Math.Log10((double)mDocuments.Count() / mWordOccurences[group.word].Count);
-                    queryVector[group.word] = tfidf;
-                    queryMagnitude += tfidf * tfidf;
+                        if (!queryVector.ContainsKey(fullWord))
+                        {
+                            queryVector[fullWord] = 0;
+                        }
+                        queryVector[fullWord] += group.count * matchPercentage;
+                    }
                 }
+            }
+
+            // Calculate TF-IDF vector embedding for the query, as well as its magnitude
+            foreach (string word in new List<string>(queryVector.Keys))
+            {
+                double tfidf = Math.Log10(1 + queryVector[word]) * Math.Log10((double)mDocuments.Count() / mWordOccurences[word].Count);
+                queryVector[word] = tfidf;
+                queryMagnitude += tfidf * tfidf;
             }
             queryMagnitude = Math.Sqrt(queryMagnitude);
 
@@ -264,18 +279,21 @@ namespace Gamefreak130.OmniSearchSpace.Models
                     Dictionary<string, double> documentVector = mTfidfMatrix[i];
                     double docMagnitude = 0;
                     double dot = 0;
-                    float numWords = 0;
+                    HashSet<string> matchedTokens = new();
                     foreach (string word in documentVector.Keys)
                     {
                         double tfidf = documentVector[word];
                         if (queryVector.ContainsKey(word))
                         {
-                            numWords++;
                             dot += tfidf * queryVector[word];
+                            foreach (string token in queryTokens.Where(word.StartsWith))
+                            {
+                                matchedTokens.Add(token);
+                            }
                         }
                         docMagnitude += tfidf * tfidf;
                     }
-                    if (numWords / queryVector.Count >= PersistedSettings.kQuerySimilarityThreshold)
+                    if (matchedTokens.Count / queryTokens.Count >= PersistedSettings.kQuerySimilarityThreshold)
                     {
                         docMagnitude = Math.Sqrt(docMagnitude);
                         championDocs[i] = docMagnitude != 0 ? dot / (docMagnitude * queryMagnitude) : 0;

@@ -11,7 +11,10 @@
         [Tunable, TunableComment("Size of each champion list; higher values may result in more accurate search results at the cost of lower performance")]
         public static int kChampionListLength = 20;
 
-        [Tunable, TunableComment("Range 0-1: Minimum fraction of query terms that an object must contain in its title or description to be returned as a result")]
+        [Tunable, TunableComment("Range 0-1: Minimum fraction of a query term that a word in an object's title or description must match for it to be returned as a result. Lower values will return a greater number of results, but those results may be less accurate.")]
+        public static float kPartialMatchThreshold = 0.5f;
+
+        [Tunable, TunableComment("Range 0-1: Minimum fraction of query terms that an object must contain in its title or description to be returned as a result. Lower values will return a greater number of results, but those results may be less accurate.")]
         public static float kQuerySimilarityThreshold = 0.5f;
 
         [Tunable, TunableComment("Tick rate of the model preprocessing function. Set to your monitor's refresh rate for best results.")]
