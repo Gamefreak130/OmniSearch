@@ -3,7 +3,6 @@
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
     // TODO RefreshSearchBarVisibility is only used for BuildBuyExtender; can we make it an abstract method there instead?
-    // TODO Add query to document log & log when zero docs found
     // TODO RewardTraitDialog extender as tutorial example?
     // TEST resort build/buy
     // TEST interior design
@@ -107,9 +106,9 @@
                 IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query)
                                                             .ToList();
 
-                DocumentLogger.sInstance.WriteLog();
+                DocumentLogger.sInstance.WriteLog(SearchBar.Query);
 //#else
-//                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
+//              IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
 //#endif
 
                 ClearItems();

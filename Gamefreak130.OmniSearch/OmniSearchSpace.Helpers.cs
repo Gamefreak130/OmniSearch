@@ -107,11 +107,11 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
             mLog.AppendLine($"{document.Title}\n{document.Description}\n{weight}\n");
         }
 
-        public void WriteLog()
+        public void WriteLog(string query)
         {
-            if (mLog.Length > 0)
+            if (!string.IsNullOrEmpty(query))
             {
-                base.WriteLog(mLog);
+                base.WriteLog(mLog.Insert(0, $"Query: {query}\n\nResults:\n\n"));
                 mLog.Remove(0, mLog.Length);
                 mCount = 0;
             }
