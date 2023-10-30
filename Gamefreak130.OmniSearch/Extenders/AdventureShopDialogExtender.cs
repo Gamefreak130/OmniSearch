@@ -46,6 +46,6 @@
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(70, 57, 330);
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IUIAdventureReward>(Corpus));
+        protected override ISearchModel<IUIAdventureReward> GetSearchModel() => new ExactMatch<IUIAdventureReward>(Corpus);
     }
 }

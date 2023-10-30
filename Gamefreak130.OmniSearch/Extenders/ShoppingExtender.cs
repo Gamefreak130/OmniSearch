@@ -21,7 +21,7 @@
             controller.mBySellButton.Click += OnShoppingListUpdated;
         }
 
-        private void OnShoppingListUpdated(object _, object __) => SetSearchModel();
+        private void OnShoppingListUpdated(object _, object __) => ResetSearchModel();
 
         protected override void ClearItems() => ShoppingController.Instance.mStoreTable.Clear();
 
@@ -64,6 +64,6 @@
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(60, ShoppingController.Instance.mInventoryTabContainer.Visible ? 141 : 120, 300);
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IShopItem>(Corpus));
+        protected override ISearchModel<IShopItem> GetSearchModel() => new ExactMatch<IShopItem>(Corpus);
     }
 }

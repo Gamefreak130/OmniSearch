@@ -91,13 +91,13 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             return new(name, description, product);
         }
 
-        protected override void SetSearchModel()
+        protected override ISearchModel<object> GetSearchModel()
         {
             bool searchCollections = BuyController.sController is not null
                                    ? BuyController.sController.mCurrCatalogType is not (BuyController.CatalogType.Collections or BuyController.CatalogType.Inventory)
                                    : BuildController.sController is not null && BuildController.sController.mCollectionWindow.Visible;
 
-            SetSearchModel(new BuildBuySearchModel(Corpus, this, searchCollections));
+            return new BuildBuySearchModel(Corpus, this, searchCollections);
         }
     }
 }

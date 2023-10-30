@@ -37,7 +37,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         private void OnDirtyTick(WindowBase _, UIEventArgs __)
         {
-            SetSearchModel();
+            ResetSearchModel();
             mDirty = false;
             RelationshipsPanel.Instance.Tick -= OnDirtyTick;
         }
@@ -85,6 +85,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SearchBar.MoveToBack();
         }
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<Tuple>(Corpus));
+        protected override ISearchModel<Tuple> GetSearchModel() => new ExactMatch<Tuple>(Corpus);
     }
 }

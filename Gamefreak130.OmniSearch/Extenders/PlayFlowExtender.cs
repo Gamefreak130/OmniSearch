@@ -14,7 +14,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         {
             SetSearchBarLocation();
             SearchBar.MoveToBack();
-            SetSearchModel();
+            ResetSearchModel();
             Responder.Instance.BinModel.OnUpdateExportBin += OnExportBinChanged;
             PlayFlowBinPanel.Singleton.VisibilityChange += (_,_) => RefreshSearchBar();
             PlayFlowBinPanel.Singleton.mCustomContent.Click += OnItemReshuffle;
@@ -53,11 +53,11 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(640, -37, 250);
 
-        protected override void SetSearchModel() => SetSearchModel(new ExportBinSearchModel<IExportBinContents>(Corpus, true));
+        protected override ISearchModel<IExportBinContents> GetSearchModel() => new ExportBinSearchModel<IExportBinContents>(Corpus, true);
 
-        private void OnExportBinChanged(List<UIBinInfo> _) => SetSearchModel();
+        private void OnExportBinChanged(List<UIBinInfo> _) => ResetSearchModel();
 
-        private void OnItemReshuffle(WindowBase _, UIButtonClickEventArgs __) => SetSearchModel();
+        private void OnItemReshuffle(WindowBase _, UIButtonClickEventArgs __) => ResetSearchModel();
 
         private bool ItemFilter(IExportBinContents item) 
             => !UIUtils.IsContentTypeDisabled((ResourceKeyContentCategory)item.DownloadType) && ((int)item.Type & 0b11) != 0

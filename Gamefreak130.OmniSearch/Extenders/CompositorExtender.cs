@@ -59,7 +59,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                 // For some reason MouseUp won't register after a standard yield, leading to unintentional click-dragging when selecting a part
                 // Delay(0) puts this thread on indefinite sleep before immediately waking, allowing the events to register properly
                 TaskEx.Delay(0).Await();
-                SetSearchModel();
+                ResetSearchModel();
             });
         }
 
@@ -148,6 +148,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(200, 242, 125);
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<PatternInfo>(Corpus));
+        protected override ISearchModel<PatternInfo> GetSearchModel() => new ExactMatch<PatternInfo>(Corpus);
     }
 }

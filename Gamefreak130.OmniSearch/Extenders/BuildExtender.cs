@@ -51,8 +51,8 @@
             (controller.GetChildByID((uint)BuildController.ControlID.TerrainPaintButton, true) as Button).Click += OnCategorySelected;
             (controller.GetChildByID((uint)BuildController.ControlID.TerrainEraseButton, true) as Button).Click += OnCategorySelected;
 
-            controller.mCollectionGrid.ItemClicked += (_, _) => SetSearchModel();
-            controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
+            controller.mCollectionGrid.ItemClicked += (_, _) => ResetSearchModel();
+            controller.mCatalogProductFilter.FiltersChanged += ResetSearchModel;
 
             controller.mConstructionCatalogTabContainer.TabSelect += OnTabSelect;
             controller.mFloorPaintTabContainer.TabSelect += OnTabSelect;
@@ -98,7 +98,7 @@
                 }
                 else
                 {
-                    SetSearchModel();
+                    ResetSearchModel();
                     // In certain cases the catalog grid doesn't actually repopulate if you search, go back, then select the same tool again
                     // Even though the search bar itself is cleared
                     // This ensures that the previous filtered results don't get "stuck" when this happens
@@ -189,7 +189,7 @@
             RefreshSearchBar();
         }
 
-        private void OnTabSelect(TabControl _, TabControl __) => SetSearchModel();
+        private void OnTabSelect(TabControl _, TabControl __) => ResetSearchModel();
 
         private void OnMiddlePuckVisibilityChange(WindowBase _, UIVisibilityChangeEventArgs __) => RefreshSearchBar();
 

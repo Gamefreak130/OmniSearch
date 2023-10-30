@@ -28,6 +28,6 @@
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(5, Modal.mbInCAS ? 10 : 75, 280);
 
-        protected override void SetSearchModel() => SetSearchModel(new TFIDF<IInitialMajorWish>(Corpus));
+        protected override ISearchModel<IInitialMajorWish> GetSearchModel() => new TFIDF<IInitialMajorWish>(Corpus);
     }
 }

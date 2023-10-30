@@ -22,8 +22,8 @@
 
             BlueprintController controller = BlueprintController.sController;
             controller.mMiddlePuckWin.VisibilityChange += (_,_) => RefreshSearchBar();
-            controller.mTabContainer.TabSelect += (_,_) => SetSearchModel();
-            controller.mCatalogProductFilter.FiltersChanged += SetSearchModel;
+            controller.mTabContainer.TabSelect += (_,_) => ResetSearchModel();
+            controller.mCatalogProductFilter.FiltersChanged += ResetSearchModel;
             controller.mCatalogGrid.AreaChange += (_, _) => TaskEx.Run(SetSearchBarLocation);
             RefreshSearchBar();
         }
@@ -43,7 +43,7 @@
             if (SearchBar.Visible)
             {
                 SetSearchBarLocation();
-                SetSearchModel();
+                ResetSearchModel();
             }
             else if (BlueprintController.sController.mbPreviewModeActive)
             {

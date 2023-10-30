@@ -24,7 +24,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             foreach (ControlIDs id in categoryButtonIds)
             {
                 Button button = ParentWindow.GetChildByID((uint)id, true) as Button;
-                button.Click += (_,_) => SetSearchModel();
+                button.Click += (_,_) => ResetSearchModel();
             }
         }
 
@@ -55,6 +55,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(130, (Modal.mbInCAS ? 85 : 150) + (26 * Modal.mCurrentTraitsItemGrid.VisibleRows), 150);
 
-        protected override void SetSearchModel() => SetSearchModel(new TFIDF<ITraitEntryInfo>(Corpus));
+        protected override ISearchModel<ITraitEntryInfo> GetSearchModel() => new TFIDF<ITraitEntryInfo>(Corpus);
     }
 }

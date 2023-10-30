@@ -32,7 +32,7 @@
             mFamilyInventory = mController.mFamilyInventory;
             if (mFamilyInventory is not null)
             {
-                mFamilyInventory.InventoryChanged += SetSearchModel;
+                mFamilyInventory.InventoryChanged += ResetSearchModel;
             }
 
             SearchBar.MoveToBack();
@@ -44,7 +44,7 @@
                 {
                     RegisterInventoryEvents();
                 }
-                SetSearchModel();
+                ResetSearchModel();
             }
 
             mCASCompositorController = CASCompositorController.Instance;
@@ -83,7 +83,7 @@
             mController.mCategorySelectionPanel.GetChildByID((uint)BuyController.ControlID.LastCategoryTypeButton, true).VisibilityChange += (_,_) => TaskEx.Run(RefreshSearchBar);
 
             mController.mCollectionGrid.ItemClicked += OnCollectionItemClick;
-            mController.mCatalogProductFilter.FiltersChanged += SetSearchModel;
+            mController.mCatalogProductFilter.FiltersChanged += ResetSearchModel;
 
             mController.mGridSortByRoom.AreaChange += (_,_) => TaskEx.Run(RefreshSearchBar);
             mController.mGridSortByRoom.Grid.VisibilityChange += OnCatalogGridToggled;
@@ -97,10 +97,10 @@
         {
             if (mFamilyInventory is not null)
             {
-                mFamilyInventory.InventoryChanged -= SetSearchModel;
+                mFamilyInventory.InventoryChanged -= ResetSearchModel;
             }
             mCASCompositorController.ExitFullEditMode -= ProcessExistingQuery;
-            mController.mCatalogProductFilter.FiltersChanged -= SetSearchModel;
+            mController.mCatalogProductFilter.FiltersChanged -= ResetSearchModel;
             mController.mTabContainerSortByFunction.TabSelect -= OnTabSelect;
             mController.mCollectionGrid.ItemClicked -= OnCollectionItemClick;
             base.Dispose();
@@ -202,7 +202,7 @@
                     {
                         result = true;
                         mFamilyInventory.InventoryChanged -= mController.OnInventoryChanged;
-                        mFamilyInventory.InventoryChanged -= SetSearchModel;
+                        mFamilyInventory.InventoryChanged -= ResetSearchModel;
                         World.OnHandToolRotateToMoveCallback -= mController.HandToolPickupHandler;
                         if (flag)
                         {
@@ -225,9 +225,9 @@
                             }
                         }
                         mFamilyInventory.InventoryChanged += mController.OnInventoryChanged;
-                        mFamilyInventory.InventoryChanged += SetSearchModel;
+                        mFamilyInventory.InventoryChanged += ResetSearchModel;
                         World.OnHandToolRotateToMoveCallback += mController.HandToolPickupHandler;
-                        SetSearchModel();
+                        ResetSearchModel();
                         if (string.IsNullOrEmpty(SearchBar.Query))
                         {
                             mController.RepopulateInventory();
@@ -257,7 +257,7 @@
                     {
                         bool flag = true;
                         mFamilyInventory.InventoryChanged -= mController.OnInventoryChanged;
-                        mFamilyInventory.InventoryChanged -= SetSearchModel;
+                        mFamilyInventory.InventoryChanged -= ResetSearchModel;
                         World.OnHandToolRotateToMoveCallback -= mController.HandToolPickupHandler;
                         if (mController.mDragInfo is not null)
                         {
@@ -293,7 +293,7 @@
                             }
                         }
                         mFamilyInventory.InventoryChanged += mController.OnInventoryChanged;
-                        mFamilyInventory.InventoryChanged += SetSearchModel;
+                        mFamilyInventory.InventoryChanged += ResetSearchModel;
                         World.OnHandToolRotateToMoveCallback += mController.HandToolPickupHandler;
                         if (flag)
                         {
@@ -301,7 +301,7 @@
                             {
                                 num = mController.mCatalogGrid.Items.FindIndex(item => item.mWin == originWin);
                             }
-                            SetSearchModel();
+                            ResetSearchModel();
                             if (string.IsNullOrEmpty(SearchBar.Query))
                             {
                                 mController.RepopulateInventory();
@@ -368,7 +368,7 @@
                         mController.mZoopWindow.Parent.DestroyChild(mController.mZoopWindow);
                         mController.mZoopWindow = null;
                     }
-                    SetSearchModel();
+                    ResetSearchModel();
                     if (string.IsNullOrEmpty(SearchBar.Query))
                     {
                         mController.RepopulateInventory();
@@ -458,10 +458,10 @@
         private void OnTabSelect(TabControl _, TabControl __)
         {
             RefreshSearchBar();
-            SetSearchModel();
+            ResetSearchModel();
         }
 
-        private void OnCollectionItemClick(ItemGrid _, ItemGridCellClickEvent __) => SetSearchModel();
+        private void OnCollectionItemClick(ItemGrid _, ItemGridCellClickEvent __) => ResetSearchModel();
 
         private void OnCatalogButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
@@ -469,20 +469,20 @@
             RefreshSearchBar();
             if (mController.mCurrCatalogType is BuyController.CatalogType.Inventory)
             {
-                SetSearchModel();
+                ResetSearchModel();
                 RegisterInventoryEvents();
             }
             else
             {
                 if (mController.mCurrCatalogType is BuyController.CatalogType.Collections or BuyController.CatalogType.StoreNotable)
                 {
-                    SetSearchModel();
+                    ResetSearchModel();
                 }
                 UnregisterInventoryEvents();
             }
         }
 
-        private void OnRoomSelect(WindowBase _, UIButtonClickEventArgs __) => SetSearchModel();
+        private void OnRoomSelect(WindowBase _, UIButtonClickEventArgs __) => ResetSearchModel();
 
         private void OnCategoryButtonClick(WindowBase _, UIButtonClickEventArgs __)
         {
@@ -497,7 +497,7 @@
         {
             RefreshSearchBar();
             SearchBar.Clear();
-            SetSearchModel();
+            ResetSearchModel();
         }
     }
 }

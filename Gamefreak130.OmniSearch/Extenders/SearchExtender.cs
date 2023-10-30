@@ -2,14 +2,11 @@
 {
     // CONSIDER Hide/show toggle using tab or something
     // CONSIDER Let user choose search model?
-    // TODO Refactor SetSearchModel
     // TODO RewardTraitDialog extender as tutorial example?
     // TEST resort build/buy
     // TEST interior design
     public abstract class SearchExtender<TDocument, TMaterial> : IDisposable
     {
-        protected ISearchModel<TMaterial> SearchModel { get; private set; }
-
         protected OmniSearchBar SearchBar { get; private set; }
 
         protected WindowBase ParentWindow
@@ -55,8 +52,10 @@
 #if DEBUG
         ~SearchExtender() => SimpleMessageDialog.Show("Finalized extender", GetType().Name);
 #endif
-
+        
         private WindowBase mParentWindow;
+
+        private ISearchModel<TMaterial> mSearchModel;
 
         private AwaitableTask mSearchTask;
 
@@ -77,7 +76,7 @@
             if (SearchBar.Visible)
             {
                 SetSearchBarLocation();
-                SetSearchModel();
+                ResetSearchModel();
             }
             else
             {
@@ -106,7 +105,7 @@
             {
                 ProgressDialog.Show(Localization.LocalizeString("Ui/Caption/Global:Processing"), UIManager.sDarkenBackground is null || !UIManager.sDarkenBackground.Visible);
 
-                IEnumerable<TMaterial> results = SearchModel.Search(SearchBar.Query);
+                IEnumerable<TMaterial> results = mSearchModel.Search(SearchBar.Query);
 
                 if (PersistedSettings.kEnableLogging)
                 {
@@ -137,16 +136,18 @@
             mSearchTask = newTask;
         }
 
-        protected void SetSearchModel(ISearchModel<TMaterial> value)
+        protected void ResetSearchModel() => SetSearchModel(GetSearchModel());
+
+        private void SetSearchModel(ISearchModel<TMaterial> value)
         {
             try
             {
                 CancelSearch();
-                SearchModel?.Dispose();
-                SearchModel = value;
-                SearchModel?.Preprocess();
+                mSearchModel?.Dispose();
+                mSearchModel = value;
+                mSearchModel?.Preprocess();
 
-                if (SearchModel is not null)
+                if (mSearchModel is not null)
                 {
                     ProcessExistingQuery();
                 }
@@ -159,7 +160,7 @@
 
         protected void CancelSearch() => SetSearchTask(null);
 
-        protected abstract void SetSearchModel();
+        protected abstract ISearchModel<TMaterial> GetSearchModel();
 
         protected abstract void SetSearchBarLocation();
 

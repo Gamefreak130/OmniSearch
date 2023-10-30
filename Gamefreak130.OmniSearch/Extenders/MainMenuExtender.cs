@@ -106,7 +106,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                     return;
                 }
                 SetSearchBarLocation();
-                SetSearchModel();
+                ResetSearchModel();
                 mDocumentCount = MainMenu.mSaveGameList.Count;
             }
         }
@@ -175,6 +175,6 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SearchBar.MoveToBack();
         }
 
-        protected override void SetSearchModel() => SetSearchModel(new TFIDF<SaveGameMetadata>(Corpus));
+        protected override ISearchModel<SaveGameMetadata> GetSearchModel() => new TFIDF<SaveGameMetadata>(Corpus);
     }
 }

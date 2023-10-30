@@ -99,8 +99,8 @@
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
 
-        protected override void SetSearchModel() 
-            => SetSearchModel(new ExportBinSearchModel<object>(Corpus, !EditTownPuck.Instance.IsInPloppablesMode));
+        protected override ISearchModel<object> GetSearchModel() 
+            => new ExportBinSearchModel<object>(Corpus, !EditTownPuck.Instance.IsInPloppablesMode);
 
         protected override void ClearItems()
         {
@@ -130,7 +130,7 @@
             RefreshSearchBar();
         }
 
-        private void OnExportBinChanged(List<UIBinInfo> _) => SetSearchModel();
+        private void OnExportBinChanged(List<UIBinInfo> _) => ResetSearchModel();
 
         private void OnTabSelect(object _, object __) => RefreshSearchBar();
 

@@ -47,6 +47,6 @@
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(100, 57, 270);
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IUIFestivalTicketReward>(Corpus));
+        protected override ISearchModel<IUIFestivalTicketReward> GetSearchModel() => new ExactMatch<IUIFestivalTicketReward>(Corpus);
     }
 }

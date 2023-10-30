@@ -81,7 +81,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             {
                 if (InventoryPanel.Instance is not null)
                 {
-                    TaskEx.Run(SetSearchModel);
+                    TaskEx.Run(ResetSearchModel);
                 }
             }
             catch (Exception ex)
@@ -186,7 +186,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             SearchBar.MoveToBack();
         }
 
-        protected override void SetSearchModel() => SetSearchModel(new ExactMatch<IInventoryItemStack>(Corpus));
+        protected override ISearchModel<IInventoryItemStack> GetSearchModel() => new ExactMatch<IInventoryItemStack>(Corpus);
 
         private void OnItemGridDragEnd(WindowBase sender, UIDragEventArgs eventArgs)
         {
@@ -340,7 +340,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
                         InventoryPanel.Instance.mZoopWindow.Parent.DestroyChild(InventoryPanel.Instance.mZoopWindow);
                         InventoryPanel.Instance.mZoopWindow = null;
                     }
-                    SetSearchModel();
+                    ResetSearchModel();
                     if (string.IsNullOrEmpty(SearchBar.Query))
                     {
                         InventoryPanel.Instance.RepopulateInventory(inventory);
