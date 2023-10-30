@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonUtils\Common\Helpers\OccultTypeHelper.cs">
+      <Link>Common\Helpers\OccultTypeHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\CommonUtils\Common\Tasks\TaskCompletionSource.cs">
       <Link>Common\Tasks\TaskCompletionSource.cs</Link>
     </Compile>

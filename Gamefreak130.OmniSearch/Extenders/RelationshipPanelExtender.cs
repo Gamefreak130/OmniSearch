@@ -2,7 +2,6 @@
 
 namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // TODO Add OccultType to document description?
     public class RelationshipPanelExtender : DocumentSearchExtender<Tuple>
     {
         protected override IEnumerable<Tuple> Materials 
@@ -76,7 +75,9 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
             IMiniSimDescription simDescription = material.mParam1 as IMiniSimDescription;
             IRelationship relationship = material.mParam2 as IRelationship;
             string _ = null;
-            return new($"{relationship.SimName}", $"{relationship.CurrentLTRNameLocalized};{relationship.FamilialString};{Photograph.GameUtilsGetLocalizedWorldName(simDescription.HomeWorld, ref _)}", material);
+            return new($"{relationship.SimName}", 
+                $"{relationship.CurrentLTRNameLocalized};{relationship.FamilialString};{OccultTypeHelper.GetLocalizedName(OccultTypeHelper.OccultFromMiniSimDescription(simDescription))};{Photograph.GameUtilsGetLocalizedWorldName(simDescription.HomeWorld, ref _)}", 
+                material);
         }
 
         protected override void SetSearchBarLocation()
