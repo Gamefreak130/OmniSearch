@@ -53,7 +53,7 @@ namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 
         protected override void SetSearchBarLocation() => SearchBar.SetLocation(640, -37, 250);
 
-        protected override ISearchModel<IExportBinContents> GetSearchModel() => new ExportBinSearchModel<IExportBinContents>(Corpus, true);
+        protected override ISearchModel<IExportBinContents> GetSearchModel() => new ExportBinSearchModel<IExportBinContents>(Corpus);
 
         private void OnExportBinChanged(List<UIBinInfo> _) => ResetSearchModel();
 

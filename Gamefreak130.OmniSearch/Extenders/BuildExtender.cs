@@ -183,6 +183,11 @@
             SearchBar.SetLocation(x, y, width);
         }
 
+        protected override ISearchModel<object> GetSearchModel()
+            => BuildController.sController.mFloorPaintTypesWindow.Visible || BuildController.sController.mWallCreateAndPaintWindow.Visible
+            ? new ExactMatch<object>(Corpus)
+            : base.GetSearchModel();
+
         private void OnCategorySelected(object _, EventArgs __)
         {
             SearchBar.Clear();

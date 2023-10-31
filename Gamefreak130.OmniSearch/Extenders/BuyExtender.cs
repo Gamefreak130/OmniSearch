@@ -1,6 +1,5 @@
 ﻿namespace Gamefreak130.OmniSearchSpace.UI.Extenders
 {
-    // TODO exactmatch for inventory, wall/floor, world editor searches?
     public class BuyExtender : BuildBuyExtender
     {
         private readonly IInventory mFamilyInventory;
@@ -25,7 +24,7 @@
                 _                                                                         => true
             };
 
-    public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
+        public BuyExtender() : base(BuyController.sLayout.GetWindowByExportID(1).GetChildByIndex(0))
         {
             mController = BuyController.sController;
 
@@ -117,6 +116,9 @@
                 mController.PopulateGrid(results, mController.mCurrCatalogType is BuyController.CatalogType.Collections ? BuyController.kBuildCatalogPatternItemKey : BuyController.kBuyCatalogItemKey);
             }
         }
+
+        protected override ISearchModel<object> GetSearchModel() 
+            => mController.mCurrCatalogType is BuyController.CatalogType.Inventory ? new ExactMatch<object>(Corpus) : base.GetSearchModel();
 
         private void PopulateInventory(IEnumerable results)
         {

@@ -303,36 +303,32 @@ namespace Gamefreak130.OmniSearchSpace.Models
 
     internal class ExportBinSearchModel<T> : TFIDF<T>
     {
-        private readonly bool mLotSearch;
-
-        public ExportBinSearchModel(IEnumerable<Document<T>> documents, bool lotSearch) : base(documents)
-            => mLotSearch = lotSearch;
+        public ExportBinSearchModel(IEnumerable<Document<T>> documents) : base(documents)
+        {
+        }
 
         protected override IEnumerable<T> SearchTask(string query)
         {
-            if (mLotSearch)
+            Match lotSizeMatch = Regex.Match(query, @"(?:^|(?<=[^\d-]))(\d\d?)\s*[xX]\s*(\d\d?)(?!\d)");
+            if (lotSizeMatch.Success && uint.TryParse(lotSizeMatch.Groups[1].Value, out uint width) && uint.TryParse(lotSizeMatch.Groups[2].Value, out uint height)
+                && width <= 64 && width > 0 && height <= 64 && height > 0)
             {
-                Match lotSizeMatch = Regex.Match(query, @"(?:^|(?<=[^\d-]))(\d\d?)\s*[xX]\s*(\d\d?)(?!\d)");
-                if (lotSizeMatch.Success && uint.TryParse(lotSizeMatch.Groups[1].Value, out uint width) && uint.TryParse(lotSizeMatch.Groups[2].Value, out uint height)
-                    && width <= 64 && width > 0 && height <= 64 && height > 0)
+                query = query.Remove(lotSizeMatch.Index, lotSizeMatch.Length)
+                                .Insert(lotSizeMatch.Index, " ");
+
+                IEnumerable<Document<T>> filteredDocs = from document in mDocuments
+                                                        where LotSizeMatches(document, width, height)
+                                                        select document;
+                if (!Regex.IsMatch(query, @"\S"))
                 {
-                    query = query.Remove(lotSizeMatch.Index, lotSizeMatch.Length)
-                                 .Insert(lotSizeMatch.Index, " ");
+                    return from document in filteredDocs
+                            select document.Tag;
+                }
 
-                    IEnumerable<Document<T>> filteredDocs = from document in mDocuments
-                                                            where LotSizeMatches(document, width, height)
-                                                            select document;
-                    if (!Regex.IsMatch(query, @"\S"))
-                    {
-                        return from document in filteredDocs
-                               select document.Tag;
-                    }
-
-                    using (TFIDF<T> filteredSearchModel = new(filteredDocs))
-                    {
-                        filteredSearchModel.Preprocess();
-                        return filteredSearchModel.Search(query);
-                    }
+                using (TFIDF<T> filteredSearchModel = new(filteredDocs))
+                {
+                    filteredSearchModel.Preprocess();
+                    return filteredSearchModel.Search(query);
                 }
             }
             return base.SearchTask(query);

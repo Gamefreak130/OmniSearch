@@ -99,8 +99,10 @@
         protected override void SetSearchBarLocation() 
             => SearchBar.SetLocation(EditTownLibraryPanel.Instance.Visible ? 350 : 405, -35, 250);
 
-        protected override ISearchModel<object> GetSearchModel() 
-            => new ExportBinSearchModel<object>(Corpus, !EditTownPuck.Instance.IsInPloppablesMode);
+        protected override ISearchModel<object> GetSearchModel()
+            => EditTownPuck.Instance.IsInPloppablesMode
+            ? new ExactMatch<object>(Corpus)
+            : new ExportBinSearchModel<object>(Corpus);
 
         protected override void ClearItems()
         {
