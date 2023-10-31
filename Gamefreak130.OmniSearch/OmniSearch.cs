@@ -55,6 +55,7 @@ namespace Gamefreak130
         // CONSIDER Spelling correction on query typos?
         // TODO Public API documentation
         // TODO Change XML EnableLogging value before release
+        // TODO Can we hardcode RefSafetyRulesAttribute, rather than letting the compiler generate it?
         private static void TransitionToMainMenu()
         {
             // Inject search bar only if there is at least one save game

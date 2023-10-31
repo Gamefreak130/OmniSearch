@@ -205,11 +205,11 @@
                   <value type="image" key="2f7d0004:00000000:ed3ec5d04ead8b08" />
                   <value type="image" key="" />
                   <value type="image" key="2f7d0004:00000000:ec193ef9529dc6bb" />
-                  <value type="image" key="2f7d0004:00000000:8e92d52b0200d281" />
-                  <value type="image" key="2f7d0004:00000000:8e92d52b0200d281" />
+                  <value type="image" key="2f7d0004:00000000:ec1935f9529db7ef" />
+                  <value type="image" key="2f7d0004:00000000:ec1935f9529db7ef" />
                   <value type="image" key="" />
                   <value type="image" key="2f7d0004:00000000:fe4d2bb360ed17e6" />
-                  <value type="image" key="2f7d0004:00000000:8e92d52b0200d281" />
+                  <value type="image" key="2f7d0004:00000000:ec1935f9529db7ef" />
                 </prop>
                 <prop name="DrawMask" propid="0x0f3c000f" type="image" count="8">
                   <value type="image" key="" />
