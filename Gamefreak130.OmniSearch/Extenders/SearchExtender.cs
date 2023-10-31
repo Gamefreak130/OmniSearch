@@ -110,7 +110,7 @@
                 if (PersistedSettings.kEnableLogging)
                 {
                     results = results.ToList();
-                    DocumentLogger.sInstance.WriteLog(SearchBar.Query);
+                    DocumentLogger.sInstance.WriteLog(mSearchModel.GetType().Name, SearchBar.Query);
                 }
 
                 ClearItems();

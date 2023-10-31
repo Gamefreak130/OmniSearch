@@ -106,11 +106,11 @@ namespace Gamefreak130.OmniSearchSpace.Helpers
             mLog.AppendLine($"{document.Title}\n{document.Description}\n{weight}\n");
         }
 
-        public void WriteLog(string query)
+        public void WriteLog(string searchModel, string query)
         {
             if (!string.IsNullOrEmpty(query))
             {
-                base.WriteLog(mLog.Insert(0, $"Query: {query}\n\nResults:\n\n"));
+                base.WriteLog(mLog.Insert(0, $"Model: {searchModel}\n\nQuery: {query}\n\nResults:\n\n"));
                 mLog.Remove(0, mLog.Length);
                 mCount = 0;
             }
