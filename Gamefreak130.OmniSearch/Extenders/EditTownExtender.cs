@@ -23,7 +23,6 @@
                 {
                     return Responder.Instance.EditTownModel.GetExportBinInfoList()
                                                            .Where(EditTownLibraryPanel.Instance.ItemFilter)
-                                                           .Order(new EditTownLibraryPanel.GridComparer())
                                                            .Cast<object>();
                 }
             }
